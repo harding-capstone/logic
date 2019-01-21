@@ -1,0 +1,2 @@
+# logic
+Quoridor game logic
