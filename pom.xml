@@ -123,7 +123,25 @@
         </dependencies>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>com.gkatzioura.maven.cloud</groupId>
+        <artifactId>s3-storage-wagon</artifactId>
+        <version>1.6</version>
+      </extension>
+    </extensions>
   </build>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>capstone-snapshots</id>
+      <url>s3://com.shepherdjerred.capstone/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>capstone-releases</id>
+      <url>s3://com.shepherdjerred.capstone/releases</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>
