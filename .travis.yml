@@ -10,7 +10,11 @@ notifications:
     on_pull_requests: false
 after_success:
 - mvn clean test jacoco:report coveralls:report
-- mvn deploy
+deploy:
+  provider: script
+  script: mvn deploy
+  on:
+    jdk: oraclejdk11
 cache:
   directories:
   - "$HOME/.m2"
