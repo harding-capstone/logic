@@ -27,12 +27,12 @@
 
   <repositories>
     <repository>
-      <id>capstone-releases</id>
-      <url>http://capstone.shepherdjerred.com:8081/repository/capstone-releases/</url>
-    </repository>
-    <repository>
       <id>capstone-snapshots</id>
       <url>http://capstone.shepherdjerred.com:8081/repository/capstone-snapshots/</url>
+    </repository>
+    <repository>
+      <id>capstone-releases</id>
+      <url>http://capstone.shepherdjerred.com:8081/repository/capstone-releases/</url>
     </repository>
   </repositories>
 
