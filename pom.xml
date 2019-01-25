@@ -35,4 +35,15 @@
       <url>http://capstone.shepherdjerred.com:8081/repository/capstone-snapshots/</url>
     </repository>
   </repositories>
+
+  <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+      </dependency>
+  </dependencies>
 </project>
