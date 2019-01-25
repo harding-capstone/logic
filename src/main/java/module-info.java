@@ -1,3 +1,2 @@
-module edu.harding.capstone {
-  exports edu.harding.capstone;
+module com.shepherdjererd.capstone {
 }

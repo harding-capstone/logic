@@ -1,4 +1,4 @@
-package edu.harding.capstone;
+package com.shepherdjerred.capstone;
 
 public class Player {
   enum Type {

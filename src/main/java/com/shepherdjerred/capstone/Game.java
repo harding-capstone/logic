@@ -1,7 +1,7 @@
-package edu.harding.capstone;
+package com.shepherdjerred.capstone;
 
-import edu.harding.capstone.action.Action;
-import edu.harding.capstone.exceptions.InvalidActionException;
+import com.shepherdjerred.capstone.action.Action;
+import com.shepherdjerred.capstone.exceptions.InvalidActionException;
 import java.util.HashMap;
 
 public class Game {

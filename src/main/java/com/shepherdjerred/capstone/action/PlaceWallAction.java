@@ -1,6 +1,6 @@
-package edu.harding.capstone.action;
+package com.shepherdjerred.capstone.action;
 
-import edu.harding.capstone.Cell;
+import com.shepherdjerred.capstone.Cell;
 import java.util.Set;
 
 public class PlaceWallAction extends Action {

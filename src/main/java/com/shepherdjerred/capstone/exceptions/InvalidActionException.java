@@ -1,4 +1,4 @@
-package edu.harding.capstone.exceptions;
+package com.shepherdjerred.capstone.exceptions;
 
 public class InvalidActionException extends Exception {
 
