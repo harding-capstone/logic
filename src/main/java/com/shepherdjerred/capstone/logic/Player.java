@@ -1,4 +1,4 @@
-package com.shepherdjerred.capstone;
+package com.shepherdjerred.capstone.logic;
 
 public class Player {
   enum Type {

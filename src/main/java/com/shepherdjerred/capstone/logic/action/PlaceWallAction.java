@@ -1,6 +1,6 @@
-package com.shepherdjerred.capstone.action;
+package com.shepherdjerred.capstone.logic.action;
 
-import com.shepherdjerred.capstone.Cell;
+import com.shepherdjerred.capstone.logic.Cell;
 import java.util.Set;
 
 public class PlaceWallAction extends Action {

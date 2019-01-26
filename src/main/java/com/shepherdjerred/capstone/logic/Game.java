@@ -1,7 +1,7 @@
-package com.shepherdjerred.capstone;
+package com.shepherdjerred.capstone.logic;
 
-import com.shepherdjerred.capstone.action.Action;
-import com.shepherdjerred.capstone.exceptions.InvalidActionException;
+import com.shepherdjerred.capstone.logic.action.Action;
+import com.shepherdjerred.capstone.logic.exceptions.InvalidActionException;
 import java.util.HashMap;
 
 public class Game {
