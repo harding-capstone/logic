@@ -18,6 +18,25 @@
   <description>Logic for the game</description>
   <url>https://github.com/harding-capstone/logic</url>
 
+  <repositories>
+    <repository>
+      <id>capstone-snapshots</id>
+      <url>http://capstone.shepherdjerred.com:8081/repository/capstone-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>capstone-releases</id>
+      <url>http://capstone.shepherdjerred.com:8081/repository/capstone-releases/</url>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <scm>
     <connection>scm:git:https://github.com/harding-capstone/logic</connection>
     <developerConnection>scm:git:https://github.com/harding-capstone/logic</developerConnection>
