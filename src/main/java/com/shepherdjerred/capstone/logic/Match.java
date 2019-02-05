@@ -1,5 +1,5 @@
 package com.shepherdjerred.capstone.logic;
 
-public class Board {
+public class Match {
 
 }
