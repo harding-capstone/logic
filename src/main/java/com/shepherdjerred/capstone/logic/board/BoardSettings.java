@@ -1,4 +1,4 @@
-package com.shepherdjerred.capstone.logic;
+package com.shepherdjerred.capstone.logic.board;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
