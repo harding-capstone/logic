@@ -12,6 +12,12 @@ import java.util.Map;
 public enum MovePawnTurnEnactor implements TurnEnactor {
   INSTANCE;
 
+  /**
+   * Takes the steps to transform a given board state by the parameters in a turn
+   * @param turn The turn to use when transforming the board
+   * @param board The initial board state
+   * @return The initial board state transformed by the turn
+   */
   @Override
   public Board enactTurn(Turn turn, Board board) {
     if (turn instanceof MovePawnTurn) {
@@ -21,18 +27,25 @@ public enum MovePawnTurnEnactor implements TurnEnactor {
     }
   }
 
-  // TODO this API is disgusting
   private Board enactMovePawnTurn(MovePawnTurn turn, Board board) {
-    var sourceCoord = turn.getSource();
-    var destinationCoord = turn.getDestination();
-    var sourceCell = board.getCell(sourceCoord);
+    var updatedCells = getUpdatedCells(turn, board);
+    return board.updateBoardCells(updatedCells);
+  }
 
-    Map<Coordinate, BoardCell> newCells = new HashMap<>();
-    var newSourceCell = board.getCell(sourceCoord).setPiece(NullPiece.INSTANCE);
-    var newDestCell = board.getCell(destinationCoord).setPiece(sourceCell.getPiece());
-    newCells.put(sourceCoord, newSourceCell);
-    newCells.put(destinationCoord, newDestCell);
+  private Map<Coordinate, BoardCell> getUpdatedCells(MovePawnTurn turn, Board board) {
+    var sourceCoordinate = turn.getSource();
+    var destinationCoordinate = turn.getDestination();
 
-    return board.updateBoardCells(newCells);
+    var sourceCell = board.getCell(sourceCoordinate);
+    var destinationCell = board.getCell(destinationCoordinate);
+    var piece = sourceCell.getPiece();
+
+    Map<Coordinate, BoardCell> updatedCells = new HashMap<>();
+    var updatedSourceCell = sourceCell.setPiece(NullPiece.INSTANCE);
+    var updatedDestinationCell = destinationCell.setPiece(piece);
+
+    updatedCells.put(sourceCoordinate, updatedSourceCell);
+    updatedCells.put(destinationCoordinate, updatedDestinationCell);
+    return updatedCells;
   }
 }

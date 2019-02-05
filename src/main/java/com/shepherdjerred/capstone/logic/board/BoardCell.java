@@ -5,34 +5,43 @@ import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@Builder
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class BoardCell {
+public final class BoardCell {
 
   private final CellType cellType;
   private final Piece piece;
 
   /**
-   * Returns a new BoardCell with the specific piece
-   * @param piece
-   * @return
+   * Returns a new BoardCell with the specified piece
+   *
+   * @param piece The piece to set
+   * @return A new cell with the given piece
    */
   public BoardCell setPiece(Piece piece) {
     return new BoardCell(cellType, piece);
   }
 
+  /**
+   * Checks if there is a pawn on this cell
+   *
+   * @return True if there is a pawn in this cell, false otherwise
+   */
   public boolean hasPawn() {
     return piece instanceof PawnPiece;
   }
 
+  /**
+   * Creates a character representation of this BoardCell
+   *
+   * @return A character representing the cell
+   */
   public char toChar() {
     if (getPiece() instanceof NullPiece) {
       switch (getCellType()) {

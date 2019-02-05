@@ -14,6 +14,6 @@ import lombok.ToString;
 public final class PlaceWallTurn implements Turn {
 
   private final Player causer;
-  private final Coordinate c1;
-  private final Coordinate c2;
+  private final Coordinate firstCoordinate;
+  private final Coordinate secondCoordinate;
 }

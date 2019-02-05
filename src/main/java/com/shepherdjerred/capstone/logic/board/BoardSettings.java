@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public final class BoardSettings {
+
   private final PlayerCount playerCount;
   private final int boardSize;
   private final int gridSize;
@@ -18,11 +19,7 @@ public final class BoardSettings {
     this.gridSize = boardSize * 2;
   }
 
-  public int getGridSize() {
-    return gridSize;
-  }
-
   public enum PlayerCount {
-      TWO, FOUR
+    TWO, FOUR
   }
 }
