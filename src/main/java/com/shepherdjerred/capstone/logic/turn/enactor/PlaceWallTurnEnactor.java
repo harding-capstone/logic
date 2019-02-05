@@ -12,6 +12,12 @@ import java.util.Map;
 public enum PlaceWallTurnEnactor implements TurnEnactor {
   INSTANCE;
 
+  /**
+   * Takes the steps to transform a given board state by the parameters in a turn
+   * @param turn The turn to use when transforming the board
+   * @param board The initial board state
+   * @return The initial board state transformed by the turn
+   */
   @Override
   public Board enactTurn(Turn turn, Board board) {
     if (turn instanceof PlaceWallTurn) {
@@ -21,19 +27,25 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
     }
   }
 
-  // TODO this API is disgusting
   private Board enactPlaceWallTurn(PlaceWallTurn turn, Board board) {
-    var c1 = turn.getC1();
-    var c2 = turn.getC2();
-    var owner = turn.getCauser();
+    var updatedCells = getUpdatedCells(turn, board);
+    return board.updateBoardCells(updatedCells);
+  }
 
-    Map<Coordinate, BoardCell> cellMap = new HashMap<>();
-    var newC1Cell = board.getCell(c1).setPiece(new WallPiece(owner));
-    var newC2Cell = board.getCell(c2).setPiece(new WallPiece(owner));
+  private Map<Coordinate, BoardCell> getUpdatedCells(PlaceWallTurn turn, Board board) {
+    var firstCoordinate = turn.getFirstCoordinate();
+    var secondCoordinate = turn.getSecondCoordinate();
+    var turnCauser = turn.getCauser();
 
-    cellMap.put(c1, newC1Cell);
-    cellMap.put(c2, newC2Cell);
+    var firstCoordinateCell = board.getCell(firstCoordinate);
+    var secondCoordinateCell = board.getCell(secondCoordinate);
 
-    return board.updateBoardCells(cellMap);
+    Map<Coordinate, BoardCell> updatedCells = new HashMap<>();
+    var updatedFirstCoordinateCell = firstCoordinateCell.setPiece(new WallPiece(turnCauser));
+    var updatedSecondCoordinateCell = secondCoordinateCell.setPiece(new WallPiece(turnCauser));
+
+    updatedCells.put(firstCoordinate, updatedFirstCoordinateCell);
+    updatedCells.put(secondCoordinate, updatedSecondCoordinateCell);
+    return updatedCells;
   }
 }

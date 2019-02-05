@@ -13,6 +13,12 @@ import com.shepherdjerred.capstone.logic.piece.Piece;
 public enum DefaultBoardInitializer implements BoardInitializer {
   INSTANCE;
 
+  /**
+   * Creates a matrix of BoardCells
+   *
+   * @param boardSettings Settings to use when creating the board
+   * @return A matrix of BoardCells based on the board settings
+   */
   public BoardCell[][] createBoardCells(BoardSettings boardSettings) {
     var gridSize = boardSettings.getGridSize();
     var boardCells = new BoardCell[gridSize][gridSize];
@@ -26,31 +32,47 @@ public enum DefaultBoardInitializer implements BoardInitializer {
     return boardCells;
   }
 
+  /**
+   * Creates a single BoardCell
+   *
+   * @param settings Settings to use when creating the cell
+   * @param coordinate The coordinate that the cell will exist
+   * @return The BoardCell that should exist a the coordinate
+   */
   private BoardCell createBoardCell(BoardSettings settings, Coordinate coordinate) {
     var cellType = getCellTypeForCoordinate(coordinate);
     var piece = getPieceForCoordinate(settings, coordinate);
     return new BoardCell(cellType, piece);
   }
 
+  /**
+   * Gets the Piece for a BoardCell
+   *
+   * @param settings Settings to use when creating the cell
+   * @param coordinate The coordinate that the cell will exist
+   * @return The piece that should exist at the coordinate
+   */
   private Piece getPieceForCoordinate(BoardSettings settings, Coordinate coordinate) {
+    var gridSize = settings.getGridSize();
+    var midpoint = gridSize / 2;
     var playerCount = settings.getPlayerCount();
     int x = coordinate.getX();
     int y = coordinate.getY();
 
-    if (x == 9 && y == 1) {
+    if (x == midpoint && y == 1) {
       return new PawnPiece(Player.ONE);
     }
 
-    if (x == 9 && y == 17) {
+    if (x == midpoint && y == gridSize - 1) {
       return new PawnPiece(Player.TWO);
     }
 
     if (playerCount == PlayerCount.FOUR) {
-      if (x == 1 && y == 9) {
+      if (x == 1 && y == midpoint) {
         return new PawnPiece(Player.THREE);
       }
 
-      if (x == 17 && y == 9) {
+      if (x == gridSize - 1 && y == midpoint) {
         return new PawnPiece(Player.FOUR);
       }
     }
@@ -58,20 +80,32 @@ public enum DefaultBoardInitializer implements BoardInitializer {
     return NullPiece.INSTANCE;
   }
 
+  /**
+   * Gets the CellType for a coordinate
+   *
+   * @param coordinate The coordinate to use when getting the type
+   * @return The CellType that should exist at the given coordinate
+   */
   private CellType getCellTypeForCoordinate(Coordinate coordinate) {
 
-    if (isInvalidCell(coordinate)) {
+    if (shouldBeNullCell(coordinate)) {
       return CellType.NULL;
-    } else if (isPawnCell(coordinate)) {
+    } else if (shouldBePawnCell(coordinate)) {
       return CellType.PAWN;
-    } else if (isWallCell(coordinate)) {
+    } else if (shouldBeWallCell(coordinate)) {
       return CellType.WALL;
     }
 
     throw new IllegalStateException("Couldn't get cell type for " + coordinate);
   }
 
-  private boolean isInvalidCell(Coordinate coordinate) {
+  /**
+   * Checks if a cell should be null
+   *
+   * @param coordinate The coordinate to check
+   * @return True if the cell should be null, or false otherwise
+   */
+  private boolean shouldBeNullCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
@@ -81,13 +115,25 @@ public enum DefaultBoardInitializer implements BoardInitializer {
         || x % 2 == 0 && y % 2 == 0;
   }
 
-  private boolean isPawnCell(Coordinate coordinate) {
+  /**
+   * Checks if a cell should be a pawn cell
+   *
+   * @param coordinate The coordinate to check
+   * @return True if the cell should be a pawn cell, or false otherwise
+   */
+  private boolean shouldBePawnCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
     return x % 2 != 0 && y % 2 != 0;
   }
 
-  private boolean isWallCell(Coordinate coordinate) {
+  /**
+   * Checks if a cell should be a wall cell
+   *
+   * @param coordinate The coordinate to check
+   * @return True if the cell should be a wall cell, or false otherwise
+   */
+  private boolean shouldBeWallCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
     return x % 2 != 0 && y % 2 == 0 || x % 2 == 0 && y % 2 != 0;
