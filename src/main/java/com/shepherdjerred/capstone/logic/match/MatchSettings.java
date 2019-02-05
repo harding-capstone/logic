@@ -1,5 +1,6 @@
-package com.shepherdjerred.capstone.logic;
+package com.shepherdjerred.capstone.logic.match;
 
+import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,8 +13,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public final class MatchSettings {
 
-  private PlayerCount playerCount;
-  private BoardSettings boardSettings;
+  private final PlayerCount playerCount;
+  private final int wallsPerPlayer;
+  private final BoardSettings boardSettings;
+  private final Player startingPlayer;
 
   public enum PlayerCount {
     TWO, FOUR

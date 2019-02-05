@@ -37,6 +37,22 @@ public final class BoardCell {
     return piece instanceof PawnPiece;
   }
 
+  public boolean hasWall() {
+    return piece instanceof WallPiece;
+  }
+
+  public boolean hasPiece() {
+    return piece instanceof NullPiece;
+  }
+
+  public boolean isWallCell() {
+    return cellType == CellType.WALL;
+  }
+
+  public boolean isPawnCell() {
+    return cellType == CellType.PAWN;
+  }
+
   /**
    * Creates a character representation of this BoardCell
    *

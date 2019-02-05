@@ -1,8 +1,12 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardCell;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -14,22 +18,33 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
 
   /**
    * Takes the steps to transform a given board state by the parameters in a turn
+   *
    * @param turn The turn to use when transforming the board
-   * @param board The initial board state
-   * @return The initial board state transformed by the turn
+   * @param match The initial match state
+   * @return The initial match state transformed by the turn
    */
   @Override
-  public Board enactTurn(Turn turn, Board board) {
+  public Match enactTurn(Turn turn, Match match) {
     if (turn instanceof PlaceWallTurn) {
-      return enactPlaceWallTurn((PlaceWallTurn) turn, board);
+      return enactPlaceWallTurn((PlaceWallTurn) turn, match);
     } else {
       throw new IllegalArgumentException("Turn is not a PlaceWallTurn " + turn);
     }
   }
 
-  private Board enactPlaceWallTurn(PlaceWallTurn turn, Board board) {
+  private Match enactPlaceWallTurn(PlaceWallTurn turn, Match match) {
+    var board = match.getBoard();
     var updatedCells = getUpdatedCells(turn, board);
-    return board.updateBoardCells(updatedCells);
+    var newBoard = board.updateBoardCells(updatedCells);
+    var updatedWalls = updatePlayerWalls(turn, match);
+    return Match.builder()
+        .board(newBoard)
+        .matchSettings(match.getMatchSettings())
+        .turnEnactorFactory(match.getTurnEnactorFactory())
+        .turnValidatorFactory(match.getTurnValidatorFactory())
+        .currentPlayerTurn(match.getNextPlayer())
+        .playerWalls(updatedWalls)
+        .build();
   }
 
   private Map<Coordinate, BoardCell> getUpdatedCells(PlaceWallTurn turn, Board board) {
@@ -40,12 +55,23 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
     var firstCoordinateCell = board.getCell(firstCoordinate);
     var secondCoordinateCell = board.getCell(secondCoordinate);
 
-    Map<Coordinate, BoardCell> updatedCells = new HashMap<>();
+    var updatedCells = new HashMap<Coordinate, BoardCell>();
     var updatedFirstCoordinateCell = firstCoordinateCell.setPiece(new WallPiece(turnCauser));
     var updatedSecondCoordinateCell = secondCoordinateCell.setPiece(new WallPiece(turnCauser));
 
     updatedCells.put(firstCoordinate, updatedFirstCoordinateCell);
     updatedCells.put(secondCoordinate, updatedSecondCoordinateCell);
     return updatedCells;
+  }
+
+  private ImmutableMap<Player, Integer> updatePlayerWalls(PlaceWallTurn turn, Match match) {
+    var target = turn.getCauser();
+    var oldWallValue = match.getRemainingWallCount(target);
+    var updatedPlayerWalls = ImmutableMap.<Player, Integer>builder()
+        .put(turn.getCauser(), oldWallValue - 1).build();
+    return ImmutableMap.<Player, Integer>builder()
+        .putAll(updatedPlayerWalls)
+        .putAll(Maps.difference(match.getPlayerWalls(), updatedPlayerWalls).entriesOnlyOnLeft())
+        .build();
   }
 }

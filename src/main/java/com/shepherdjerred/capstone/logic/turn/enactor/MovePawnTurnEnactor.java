@@ -3,6 +3,7 @@ package com.shepherdjerred.capstone.logic.turn.enactor;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardCell;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -14,22 +15,35 @@ public enum MovePawnTurnEnactor implements TurnEnactor {
 
   /**
    * Takes the steps to transform a given board state by the parameters in a turn
+   *
    * @param turn The turn to use when transforming the board
-   * @param board The initial board state
-   * @return The initial board state transformed by the turn
+   * @param match The initial match state
+   * @return The initial match state transformed by the turn
    */
   @Override
-  public Board enactTurn(Turn turn, Board board) {
+  public Match enactTurn(Turn turn, Match match) {
     if (turn instanceof MovePawnTurn) {
-      return enactMovePawnTurn((MovePawnTurn) turn, board);
+      return enactMovePawnTurn((MovePawnTurn) turn, match);
     } else {
       throw new IllegalArgumentException("Turn is not a MovePawnTurn " + turn);
     }
   }
 
-  private Board enactMovePawnTurn(MovePawnTurn turn, Board board) {
+  // TODO check for victory
+  // TODO consider jumps
+  private Match enactMovePawnTurn(MovePawnTurn turn, Match match) {
+    var board = match.getBoard();
     var updatedCells = getUpdatedCells(turn, board);
-    return board.updateBoardCells(updatedCells);
+    var newBoard = board.updateBoardCells(updatedCells);
+    return Match.builder()
+        .board(newBoard)
+        .matchSettings(match.getMatchSettings())
+        .turnEnactorFactory(match.getTurnEnactorFactory())
+        .turnValidatorFactory(match.getTurnValidatorFactory())
+        .currentPlayerTurn(match.getNextPlayer())
+        .playerWalls(match.getPlayerWalls())
+        .status(match.getStatus())
+        .build();
   }
 
   private Map<Coordinate, BoardCell> getUpdatedCells(MovePawnTurn turn, Board board) {
