@@ -60,6 +60,24 @@ public final class Board {
     return boardCells[coordinate.getX()][coordinate.getY()];
   }
 
+  public boolean isCellEmpty(Coordinate coordinate) {
+    var x = coordinate.getX();
+    var y = coordinate.getY();
+    return !boardCells[x][y].hasPiece();
+  }
+
+  public boolean isWallCell(Coordinate coordinate) {
+    var x = coordinate.getX();
+    var y = coordinate.getY();
+    return boardCells[x][y].isWallCell();
+  }
+
+  public boolean isPawnCell(Coordinate coordinate) {
+    var x = coordinate.getX();
+    var y = coordinate.getY();
+    return boardCells[x][y].isPawnCell();
+  }
+
   /**
    * Returns the location of a player's pawn
    *
