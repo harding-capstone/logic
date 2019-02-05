@@ -1,19 +1,19 @@
-package com.shepherdjerred.capstone.logic.board;
+package com.shepherdjerred.capstone.logic.board.initializer;
 
-import com.shepherdjerred.capstone.logic.BoardSettings;
-import com.shepherdjerred.capstone.logic.BoardSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.board.BoardCell;
 import com.shepherdjerred.capstone.logic.board.BoardCell.CellType;
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
+import com.shepherdjerred.capstone.logic.board.BoardSettings.PlayerCount;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
-import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 
-public enum BoardInitializer {
+public enum DefaultBoardInitializer implements BoardInitializer {
   INSTANCE;
 
-  public Board createBoard(BoardSettings boardSettings) {
+  public BoardCell[][] createBoardCells(BoardSettings boardSettings) {
     var gridSize = boardSettings.getGridSize();
     var boardCells = new BoardCell[gridSize][gridSize];
     for (int x = 0; x < gridSize; x++) {
@@ -23,14 +23,13 @@ public enum BoardInitializer {
       }
     }
 
-    return new Board(boardSettings, boardCells, TurnValidatorFactory.INSTANCE,
-        TurnEnactorFactory.INSTANCE);
+    return boardCells;
   }
 
   private BoardCell createBoardCell(BoardSettings settings, Coordinate coordinate) {
     var cellType = getCellTypeForCoordinate(coordinate);
     var piece = getPieceForCoordinate(settings, coordinate);
-    return new BoardCell(coordinate, cellType, piece);
+    return new BoardCell(cellType, piece);
   }
 
   private Piece getPieceForCoordinate(BoardSettings settings, Coordinate coordinate) {
@@ -62,7 +61,7 @@ public enum BoardInitializer {
   private CellType getCellTypeForCoordinate(Coordinate coordinate) {
 
     if (isInvalidCell(coordinate)) {
-      return CellType.INVALID;
+      return CellType.NULL;
     } else if (isPawnCell(coordinate)) {
       return CellType.PAWN;
     } else if (isWallCell(coordinate)) {

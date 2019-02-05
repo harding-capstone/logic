@@ -1,10 +1,10 @@
 package com.shepherdjerred.capstone.logic.logic;
 
-import com.shepherdjerred.capstone.logic.BoardSettings;
-import com.shepherdjerred.capstone.logic.BoardSettings.PlayerCount;
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
+import com.shepherdjerred.capstone.logic.board.BoardSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
-import com.shepherdjerred.capstone.logic.board.BoardInitializer;
+import com.shepherdjerred.capstone.logic.board.initializer.DefaultBoardInitializer;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
@@ -16,10 +16,10 @@ public class BoardTest {
   @Test
   public void doThing() {
     BoardSettings boardSettings = new BoardSettings(PlayerCount.TWO, 9);
-    Board board = BoardInitializer.INSTANCE.createBoard(boardSettings);
+    Board board = DefaultBoardInitializer.INSTANCE.createBoard(boardSettings);
 
-    Turn firstTurn = new MovePawnTurn(Player.ONE, new Coordinate(9 , 1), new Coordinate(9, 2));
-    Turn secondTurn = new PlaceWallTurn(Player.TWO, new Coordinate(10, 1), new Coordinate(10, 2));
+    Turn firstTurn = new MovePawnTurn(Player.ONE, new Coordinate(9 , 1), new Coordinate(9, 3));
+    Turn secondTurn = new PlaceWallTurn(Player.TWO, new Coordinate(10, 3), new Coordinate(10, 1));
 
     try {
       Board newBoard = board.doTurn(firstTurn);

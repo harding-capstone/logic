@@ -2,11 +2,12 @@ package com.shepherdjerred.capstone.logic.turn.enactor;
 
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardCell;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PlaceWallTurnEnactor implements TurnEnactor {
   INSTANCE;
@@ -26,13 +27,13 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
     var c2 = turn.getC2();
     var owner = turn.getCauser();
 
-    Set<BoardCell> cellSet = new HashSet<>();
-    var newC1 = board.getCell(c1).setPiece(new WallPiece(owner));
-    var newC2 = board.getCell(c2).setPiece(new WallPiece(owner));
+    Map<Coordinate, BoardCell> cellMap = new HashMap<>();
+    var newC1Cell = board.getCell(c1).setPiece(new WallPiece(owner));
+    var newC2Cell = board.getCell(c2).setPiece(new WallPiece(owner));
 
-    cellSet.add(newC1);
-    cellSet.add(newC2);
+    cellMap.put(c1, newC1Cell);
+    cellMap.put(c2, newC2Cell);
 
-    return board.updateCells(cellSet);
+    return board.updateBoardCells(cellMap);
   }
 }

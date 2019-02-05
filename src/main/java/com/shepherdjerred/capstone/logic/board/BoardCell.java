@@ -17,18 +17,20 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BoardCell {
 
-  private final Coordinate coordinate;
   private final CellType cellType;
   private final Piece piece;
 
-  public BoardCell(BoardCell boardCell) {
-    this.coordinate = boardCell.coordinate;
-    this.cellType = boardCell.cellType;
-    this.piece = boardCell.piece;
+  /**
+   * Returns a new BoardCell with the specific piece
+   * @param piece
+   * @return
+   */
+  public BoardCell setPiece(Piece piece) {
+    return new BoardCell(cellType, piece);
   }
 
-  public BoardCell setPiece(Piece piece) {
-    return new BoardCell(coordinate, cellType, piece);
+  public boolean hasPawn() {
+    return piece instanceof PawnPiece;
   }
 
   public char toChar() {
@@ -38,7 +40,7 @@ public class BoardCell {
           return '.';
         case WALL:
           return ' ';
-        case INVALID:
+        case NULL:
           return ' ';
         default:
           throw new IllegalStateException("Unknown cell type " + getCellType());
@@ -67,6 +69,6 @@ public class BoardCell {
   }
 
   public enum CellType {
-    PAWN, WALL, INVALID
+    PAWN, WALL, NULL
   }
 }

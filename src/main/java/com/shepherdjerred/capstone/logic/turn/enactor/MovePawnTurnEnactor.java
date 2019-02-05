@@ -2,11 +2,12 @@ package com.shepherdjerred.capstone.logic.turn.enactor;
 
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardCell;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum MovePawnTurnEnactor implements TurnEnactor {
   INSTANCE;
@@ -26,12 +27,12 @@ public enum MovePawnTurnEnactor implements TurnEnactor {
     var destinationCoord = turn.getDestination();
     var sourceCell = board.getCell(sourceCoord);
 
-    Set<BoardCell> newCells = new HashSet<>();
+    Map<Coordinate, BoardCell> newCells = new HashMap<>();
     var newSourceCell = board.getCell(sourceCoord).setPiece(NullPiece.INSTANCE);
     var newDestCell = board.getCell(destinationCoord).setPiece(sourceCell.getPiece());
-    newCells.add(newSourceCell);
-    newCells.add(newDestCell);
+    newCells.put(sourceCoord, newSourceCell);
+    newCells.put(destinationCoord, newDestCell);
 
-    return board.updateCells(newCells);
+    return board.updateBoardCells(newCells);
   }
 }
