@@ -42,8 +42,8 @@ public enum PlaceWallTurnValidator implements TurnValidator {
     var firstCoordinate = turn.getFirstCoordinate();
     var secondCoordinate = turn.getSecondCoordinate();
 
-    return board.isCellEmpty(firstCoordinate)
-        && board.isCellEmpty(secondCoordinate);
+    return board.isPieceEmpty(firstCoordinate)
+        && board.isPieceEmpty(secondCoordinate);
   }
 
   // TODO

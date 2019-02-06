@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.board.initializer;
 
-import com.shepherdjerred.capstone.logic.board.BoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 
 public interface BoardInitializer {
