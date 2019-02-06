@@ -1,13 +1,13 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
-import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.match.MatchState;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
 public class JumpPawnTurnEnactor implements TurnEnactor {
 
   @Override
-  public Match enactTurn(Turn turn, Match match) {
+  public MatchState enactTurn(Turn turn, MatchState matchState) {
     // TODO
-    return match;
+    return matchState;
   }
 }

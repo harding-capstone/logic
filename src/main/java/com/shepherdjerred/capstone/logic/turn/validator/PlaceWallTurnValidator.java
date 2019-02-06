@@ -1,8 +1,9 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
 import com.shepherdjerred.capstone.logic.Player;
-import com.shepherdjerred.capstone.logic.board.Board;
-import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.board.BoardState;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
+import com.shepherdjerred.capstone.logic.match.MatchState;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
@@ -10,49 +11,49 @@ public enum PlaceWallTurnValidator implements TurnValidator {
   INSTANCE;
 
   @Override
-  public boolean isTurnValid(Turn turn, Match match) {
+  public boolean isTurnValid(Turn turn, MatchState matchState) {
     if (turn instanceof PlaceWallTurn) {
-      return isPlaceWallTurnValid((PlaceWallTurn) turn, match);
+      return isPlaceWallTurnValid((PlaceWallTurn) turn, matchState);
     } else {
       throw new IllegalArgumentException("Turn is not a PlaceWallTurn " + turn);
     }
   }
 
-  public boolean isPlaceWallTurnValid(PlaceWallTurn turn, Match match) {
+  public boolean isPlaceWallTurnValid(PlaceWallTurn turn, MatchState matchState) {
     var player = turn.getCauser();
-    var board = match.getBoard();
-    return doesPlayerHaveWalls(player, match)
+    var board = matchState.getBoardState();
+    return doesPlayerHaveWalls(player, matchState)
         && canPlaceWall(turn, board);
   }
 
-  public boolean canPlaceWall(PlaceWallTurn turn, Board board) {
-    return isLocationOpen(turn, board)
-        && willWallBlock(turn, board);
+  public boolean canPlaceWall(PlaceWallTurn turn, BoardState boardState) {
+    return isLocationOpen(turn, boardState)
+        && willWallBlock(turn, boardState.getBoardLayout());
   }
 
-  public boolean isWallCell(PlaceWallTurn turn, Board board) {
+  public boolean isWallCell(PlaceWallTurn turn, BoardLayout boardLayout) {
     var firstCoordinate = turn.getFirstCoordinate();
     var secondCoordinate = turn.getSecondCoordinate();
 
-    return board.isWallCell(firstCoordinate)
-        && board.isWallCell(secondCoordinate);
+    return boardLayout.canHoldWall(firstCoordinate)
+        && boardLayout.canHoldWall(secondCoordinate);
   }
 
-  public boolean isLocationOpen(PlaceWallTurn turn, Board board) {
+  public boolean isLocationOpen(PlaceWallTurn turn, BoardState boardState) {
     var firstCoordinate = turn.getFirstCoordinate();
     var secondCoordinate = turn.getSecondCoordinate();
 
-    return board.isPieceEmpty(firstCoordinate)
-        && board.isPieceEmpty(secondCoordinate);
+    return boardState.isEmpty(firstCoordinate)
+        && boardState.isEmpty(secondCoordinate);
   }
 
   // TODO
   // Implement Djikstra's shortest path algorithm
-  public boolean willWallBlock(PlaceWallTurn turn, Board board) {
+  public boolean willWallBlock(PlaceWallTurn turn, BoardLayout boardLayout) {
     return false;
   }
 
-  public boolean doesPlayerHaveWalls(Player player, Match match) {
-    return match.getRemainingWallCount(player) > 0;
+  public boolean doesPlayerHaveWalls(Player player, MatchState matchState) {
+    return matchState.getRemainingWallCount(player) > 0;
   }
 }
