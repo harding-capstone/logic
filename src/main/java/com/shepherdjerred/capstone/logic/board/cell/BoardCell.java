@@ -5,10 +5,15 @@ import com.shepherdjerred.capstone.logic.piece.Piece;
 public interface BoardCell {
 
   Piece getPiece();
+
   BoardCell setPiece(Piece piece);
+
   char toChar();
+
   boolean hasPiece();
+
   boolean hasPawn();
+
   boolean hasWall();
 
 }

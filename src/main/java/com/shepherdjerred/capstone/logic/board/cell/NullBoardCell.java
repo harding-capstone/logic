@@ -5,7 +5,7 @@ import com.shepherdjerred.capstone.logic.piece.Piece;
 import lombok.ToString;
 
 @ToString
-public enum NullCell implements BoardCell {
+public enum NullBoardCell implements BoardCell {
   INSTANCE;
 
   @Override
@@ -15,7 +15,7 @@ public enum NullCell implements BoardCell {
 
   @Override
   public BoardCell setPiece(Piece piece) {
-    throw new IllegalArgumentException("Cannot set piece of a NullCell " + piece.toString());
+    throw new UnsupportedOperationException("Cannot set the piece of a null cell");
   }
 
   @Override

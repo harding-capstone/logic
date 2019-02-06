@@ -12,14 +12,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class PawnCell implements BoardCell {
+public final class PawnBoardCell implements BoardCell {
 
   private final Piece piece;
 
   @Override
   public BoardCell setPiece(Piece piece) {
     if (piece instanceof PawnPiece || piece == NullPiece.INSTANCE) {
-      return new PawnCell(piece);
+      return new PawnBoardCell(piece);
     } else {
       throw new IllegalArgumentException(piece.toString());
     }
@@ -28,7 +28,7 @@ public final class PawnCell implements BoardCell {
   @Override
   public char toChar() {
     if (piece == NullPiece.INSTANCE) {
-      return '.';
+      return '·';
     } else {
       return (char) piece.getOwner().toInt();
     }

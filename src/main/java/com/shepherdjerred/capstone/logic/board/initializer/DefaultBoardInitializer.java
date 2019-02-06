@@ -5,9 +5,9 @@ import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.BoardSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
-import com.shepherdjerred.capstone.logic.board.cell.NullCell;
-import com.shepherdjerred.capstone.logic.board.cell.PawnCell;
-import com.shepherdjerred.capstone.logic.board.cell.WallCell;
+import com.shepherdjerred.capstone.logic.board.cell.NullBoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.PawnBoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.WallBoardCell;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
@@ -43,12 +43,12 @@ public enum DefaultBoardInitializer implements BoardInitializer {
    */
   private BoardCell createBoardCell(BoardSettings settings, Coordinate coordinate) {
     if (shouldBeNullCell(coordinate)) {
-      return NullCell.INSTANCE;
+      return NullBoardCell.INSTANCE;
     } else if (shouldBePawnCell(coordinate)) {
       var piece = getPieceForCoordinate(settings, coordinate);
-      return new PawnCell(piece);
+      return new PawnBoardCell(piece);
     } else if (shouldBeWallCell(coordinate)) {
-      return new WallCell(NullPiece.INSTANCE);
+      return new WallBoardCell(NullPiece.INSTANCE);
     }
 
     throw new IllegalStateException("Couldn't get cell type for " + coordinate);

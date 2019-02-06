@@ -6,6 +6,7 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 
 public enum DefaultTurnValidatorFactory implements TurnValidatorFactory {
   INSTANCE;
+
   public TurnValidator getValidator(Turn turn) {
     if (turn instanceof MovePawnTurn) {
       return MovePawnTurnValidator.INSTANCE;
