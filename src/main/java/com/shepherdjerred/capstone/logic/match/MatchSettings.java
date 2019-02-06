@@ -18,7 +18,19 @@ public final class MatchSettings {
   private final BoardSettings boardSettings;
   private final Player startingPlayer;
 
+  @ToString
   public enum PlayerCount {
-    TWO, FOUR
+    TWO, FOUR;
+
+    int toInt() {
+      switch (this) {
+        case TWO:
+          return 2;
+        case FOUR:
+          return 4;
+        default:
+          throw new IllegalStateException(this.toString());
+      }
+    }
   }
 }
