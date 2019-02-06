@@ -26,6 +26,10 @@ public final class Board {
     this.pieceLocations = pieceLocations;
   }
 
+  public Coordinate getPawnLocation(Player player) {
+    return pieceLocations.getPawnLocation(player);
+  }
+
   public boolean hasPiece(Coordinate coordinate) {
     return pieceLocations.hasPiece(coordinate);
   }

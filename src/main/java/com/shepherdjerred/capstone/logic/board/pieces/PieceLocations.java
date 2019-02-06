@@ -43,6 +43,10 @@ public class PieceLocations {
     this.pawnLocations = pawnLocations;
   }
 
+  public Coordinate getPawnLocation(Player player) {
+    return pawnLocations.get(player);
+  }
+
   public PieceLocations movePawn(Player player, Coordinate source, Coordinate destination) {
     if (boardLayout.isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
