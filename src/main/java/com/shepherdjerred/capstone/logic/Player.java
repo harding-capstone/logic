@@ -4,6 +4,6 @@ public enum Player {
   ONE, TWO, THREE, FOUR, NULL;
 
   public int toInt() {
-    return this.ordinal();
+    return this.ordinal() + 1;
   }
 }

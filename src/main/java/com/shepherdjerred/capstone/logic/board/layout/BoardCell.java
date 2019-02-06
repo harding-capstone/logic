@@ -14,7 +14,7 @@ public enum BoardCell {
     } else if (this == NULL) {
       return ' ';
     } else {
-      throw new IllegalStateException("Unknown boardState layout " + this);
+      throw new IllegalStateException("Unknown boardcell " + this);
     }
   }
 

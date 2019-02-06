@@ -13,4 +13,9 @@ import lombok.ToString;
 public final class WallPiece implements Piece {
 
   private final Player owner;
+
+  @Override
+  public char toChar() {
+    return 'W';
+  }
 }

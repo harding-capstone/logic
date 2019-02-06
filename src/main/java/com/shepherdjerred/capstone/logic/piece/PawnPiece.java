@@ -13,4 +13,9 @@ import lombok.ToString;
 public final class PawnPiece implements Piece {
 
   private final Player owner;
+
+  @Override
+  public char toChar() {
+    return (char) (owner.toInt() + '0');
+  }
 }

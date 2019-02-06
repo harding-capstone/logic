@@ -9,4 +9,9 @@ public enum NullPiece implements Piece {
   public Player getOwner() {
     return Player.NULL;
   }
+
+  @Override
+  public char toChar() {
+    return ' ';
+  }
 }

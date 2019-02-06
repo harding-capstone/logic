@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class MatchStatus {
+public final class MatchStatus {
 
   private final Player victor;
   private final Status status;
