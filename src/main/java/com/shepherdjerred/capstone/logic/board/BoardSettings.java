@@ -16,7 +16,7 @@ public final class BoardSettings {
   public BoardSettings(PlayerCount playerCount, int boardSize) {
     this.playerCount = playerCount;
     this.boardSize = boardSize;
-    this.gridSize = boardSize * 2;
+    this.gridSize = boardSize * 2 - 1;
   }
 
   public enum PlayerCount {

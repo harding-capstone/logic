@@ -1,11 +1,13 @@
 package com.shepherdjerred.capstone.logic.board.initializer;
 
 import com.shepherdjerred.capstone.logic.Player;
-import com.shepherdjerred.capstone.logic.board.BoardCell;
-import com.shepherdjerred.capstone.logic.board.BoardCell.CellType;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.BoardSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.NullCell;
+import com.shepherdjerred.capstone.logic.board.cell.PawnCell;
+import com.shepherdjerred.capstone.logic.board.cell.WallCell;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
@@ -40,9 +42,16 @@ public enum DefaultBoardInitializer implements BoardInitializer {
    * @return The BoardCell that should exist a the coordinate
    */
   private BoardCell createBoardCell(BoardSettings settings, Coordinate coordinate) {
-    var cellType = getCellTypeForCoordinate(coordinate);
-    var piece = getPieceForCoordinate(settings, coordinate);
-    return new BoardCell(cellType, piece);
+    if (shouldBeNullCell(coordinate)) {
+      return NullCell.INSTANCE;
+    } else if (shouldBePawnCell(coordinate)) {
+      var piece = getPieceForCoordinate(settings, coordinate);
+      return new PawnCell(piece);
+    } else if (shouldBeWallCell(coordinate)) {
+      return new WallCell(NullPiece.INSTANCE);
+    }
+
+    throw new IllegalStateException("Couldn't get cell type for " + coordinate);
   }
 
   /**
@@ -59,7 +68,7 @@ public enum DefaultBoardInitializer implements BoardInitializer {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
-    if (x == midpoint && y == 1) {
+    if (x == midpoint && y == 0) {
       return new PawnPiece(Player.ONE);
     }
 
@@ -68,7 +77,7 @@ public enum DefaultBoardInitializer implements BoardInitializer {
     }
 
     if (playerCount == PlayerCount.FOUR) {
-      if (x == 1 && y == midpoint) {
+      if (x == 0 && y == midpoint) {
         return new PawnPiece(Player.THREE);
       }
 
@@ -81,25 +90,6 @@ public enum DefaultBoardInitializer implements BoardInitializer {
   }
 
   /**
-   * Gets the CellType for a coordinate
-   *
-   * @param coordinate The coordinate to use when getting the type
-   * @return The CellType that should exist at the given coordinate
-   */
-  private CellType getCellTypeForCoordinate(Coordinate coordinate) {
-
-    if (shouldBeNullCell(coordinate)) {
-      return CellType.NULL;
-    } else if (shouldBePawnCell(coordinate)) {
-      return CellType.PAWN;
-    } else if (shouldBeWallCell(coordinate)) {
-      return CellType.WALL;
-    }
-
-    throw new IllegalStateException("Couldn't get cell type for " + coordinate);
-  }
-
-  /**
    * Checks if a cell should be null
    *
    * @param coordinate The coordinate to check
@@ -109,10 +99,7 @@ public enum DefaultBoardInitializer implements BoardInitializer {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
-    return x == 0 && y == 0
-        || x == 0 && y % 2 == 0
-        || y == 0 && x % 2 == 0
-        || x % 2 == 0 && y % 2 == 0;
+    return x % 2 != 0 && y % 2 != 0;
   }
 
   /**
@@ -124,7 +111,8 @@ public enum DefaultBoardInitializer implements BoardInitializer {
   private boolean shouldBePawnCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
-    return x % 2 != 0 && y % 2 != 0;
+    return x % 2 == 0
+        && y % 2 == 0;
   }
 
   /**
@@ -136,6 +124,9 @@ public enum DefaultBoardInitializer implements BoardInitializer {
   private boolean shouldBeWallCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
-    return x % 2 != 0 && y % 2 == 0 || x % 2 == 0 && y % 2 != 0;
+    return x % 2 != 0
+        && y % 2 == 0
+        || x % 2 == 0
+        && y % 2 != 0;
   }
 }

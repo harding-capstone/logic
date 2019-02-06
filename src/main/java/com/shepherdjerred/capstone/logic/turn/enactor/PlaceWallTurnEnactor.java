@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
-import com.shepherdjerred.capstone.logic.board.BoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;

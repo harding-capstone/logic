@@ -1,10 +1,10 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.google.common.collect.ImmutableMap;
-import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.initializer.DefaultBoardInitializer;
+import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.match.initializer.MatchInitializer;
 import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -34,13 +34,13 @@ public final class Match {
 
   public Match(
       MatchSettings matchSettings,
-      TurnValidatorFactory turnValidatorFactory,
+      TurnValidatorFactory TurnValidatorFactory,
       TurnEnactorFactory turnEnactorFactory,
       MatchInitializer matchInitializer
   ) {
     this.board = new Board(matchSettings.getBoardSettings(), DefaultBoardInitializer.INSTANCE);
     this.matchSettings = matchSettings;
-    this.turnValidatorFactory = turnValidatorFactory;
+    this.turnValidatorFactory = TurnValidatorFactory;
     this.turnEnactorFactory = turnEnactorFactory;
     this.currentPlayerTurn = matchSettings.getStartingPlayer();
     this.playerWalls = matchInitializer.initializePlayerWalls(matchSettings);
@@ -52,6 +52,10 @@ public final class Match {
   }
 
   public Match doTurn(Turn turn) throws InvalidTurnException {
+    if (currentPlayerTurn == turn.getCauser()) {
+      throw new InvalidTurnException(
+          "Out of order. Current turn: " + currentPlayerTurn + " Actual: " + turn.getCauser());
+    }
     var turnValidator = turnValidatorFactory.getValidator(turn);
     turnValidator.isTurnValid(turn, this);
     return doTurnUnchecked(turn);

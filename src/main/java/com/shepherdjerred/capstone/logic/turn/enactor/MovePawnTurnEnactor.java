@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
 import com.shepherdjerred.capstone.logic.board.Board;
-import com.shepherdjerred.capstone.logic.board.BoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
@@ -30,7 +30,6 @@ public enum MovePawnTurnEnactor implements TurnEnactor {
   }
 
   // TODO check for victory
-  // TODO consider jumps
   private Match enactMovePawnTurn(MovePawnTurn turn, Match match) {
     var board = match.getBoard();
     var updatedCells = getUpdatedCells(turn, board);
