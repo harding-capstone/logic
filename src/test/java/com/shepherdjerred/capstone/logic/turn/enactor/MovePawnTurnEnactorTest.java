@@ -4,7 +4,7 @@ import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
-import com.shepherdjerred.capstone.logic.match.MatchState;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.initializer.MatchInitializer;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 public class MovePawnTurnEnactorTest {
 
-  private MatchState matchState;
+  private Match match;
   private MovePawnTurnEnactor turnEnactor = MovePawnTurnEnactor.INSTANCE;
 
   @Mock
@@ -38,7 +38,7 @@ public class MovePawnTurnEnactorTest {
         boardSettings,
         Player.ONE
     );
-    matchState = new MatchState(
+    match = new Match(
         matchSettings,
         defaultTurnValidatorFactory,
         defaultTurnEnactorFactory,
@@ -57,20 +57,20 @@ public class MovePawnTurnEnactorTest {
   public void enactTurn_ThrowsException_WhenDestinationIsNotPawnCell() {
     var turn = new MovePawnTurn(Player.ONE, new Coordinate(8, 0), new Coordinate(7, 0));
 
-    turnEnactor.enactTurn(turn, matchState);
+    turnEnactor.enactTurn(turn, match);
   }
 
   @Test(expected = CoordinateOutOfBoundsException.class)
   public void enactTurn_ThrowsException_WhenDestinationIsOutOfBounds() {
     var turn = new MovePawnTurn(Player.ONE, new Coordinate(8, 0), new Coordinate(8, -1));
 
-    turnEnactor.enactTurn(turn, matchState);
+    turnEnactor.enactTurn(turn, match);
   }
 
   @Test
   public void enactTurn_ThrowsException_WhenDestinationIsTooFarAway() {
     var turn = new MovePawnTurn(Player.ONE, new Coordinate(8, 0), new Coordinate(8, 4));
 
-    turnEnactor.enactTurn(turn, matchState);
+    turnEnactor.enactTurn(turn, match);
   }
 }

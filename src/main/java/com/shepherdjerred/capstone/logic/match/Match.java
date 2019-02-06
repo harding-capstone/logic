@@ -2,8 +2,7 @@ package com.shepherdjerred.capstone.logic.match;
 
 import com.google.common.collect.ImmutableMap;
 import com.shepherdjerred.capstone.logic.Player;
-import com.shepherdjerred.capstone.logic.board.BoardState;
-import com.shepherdjerred.capstone.logic.board.layout.initializer.DefaultBoardLayoutCreator;
+import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.match.initializer.MatchInitializer;
@@ -22,24 +21,24 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class MatchState {
+public final class Match {
 
-  private final BoardState boardState;
+  private final Board board;
   private final MatchSettings matchSettings;
   private final TurnValidatorFactory turnValidatorFactory;
   private final TurnEnactorFactory turnEnactorFactory;
   private final Player currentPlayerTurn;
+  // TODO don't use immutablemap
   private final ImmutableMap<Player, Integer> playerWalls;
   private final MatchStatus status;
 
-  public MatchState(
+  public Match(
       MatchSettings matchSettings,
       TurnValidatorFactory TurnValidatorFactory,
       TurnEnactorFactory turnEnactorFactory,
       MatchInitializer matchInitializer
   ) {
-    this.boardState = new BoardState(DefaultBoardLayoutCreator.INSTANCE,
-        matchSettings.getBoardSettings());
+    this.board = new Board(matchSettings);
     this.matchSettings = matchSettings;
     this.turnValidatorFactory = TurnValidatorFactory;
     this.turnEnactorFactory = turnEnactorFactory;
@@ -52,8 +51,8 @@ public final class MatchState {
     return playerWalls.get(player);
   }
 
-  public MatchState doTurn(Turn turn) {
-    if (currentPlayerTurn == turn.getCauser()) {
+  public Match doTurn(Turn turn) {
+    if (currentPlayerTurn != turn.getCauser()) {
       throw new InvalidTurnException(turn);
     }
     var turnValidator = turnValidatorFactory.getValidator(turn);
@@ -61,7 +60,7 @@ public final class MatchState {
     return doTurnUnchecked(turn);
   }
 
-  private MatchState doTurnUnchecked(Turn turn) {
+  private Match doTurnUnchecked(Turn turn) {
     var turnEnactor = turnEnactorFactory.getEnactor(turn);
     return turnEnactor.enactTurn(turn, this);
   }

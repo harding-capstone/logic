@@ -3,7 +3,7 @@ package com.shepherdjerred.capstone.logic.turn.enactor;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.shepherdjerred.capstone.logic.Player;
-import com.shepherdjerred.capstone.logic.match.MatchState;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
@@ -11,46 +11,46 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
   INSTANCE;
 
   /**
-   * Takes the steps to transform a given boardState state by the parameters in a turn
+   * Takes the steps to transform a given board state by the parameters in a turn
    *
-   * @param turn The turn to use when transforming the boardState
-   * @param matchState The initial matchState state
-   * @return The initial matchState state transformed by the turn
+   * @param turn The turn to use when transforming the board
+   * @param match The initial match state
+   * @return The initial match state transformed by the turn
    */
   @Override
-  public MatchState enactTurn(Turn turn, MatchState matchState) {
+  public Match enactTurn(Turn turn, Match match) {
     if (turn instanceof PlaceWallTurn) {
-      return enactPlaceWallTurn((PlaceWallTurn) turn, matchState);
+      return enactPlaceWallTurn((PlaceWallTurn) turn, match);
     } else {
       throw new IllegalArgumentException("Turn is not a PlaceWallTurn " + turn);
     }
   }
 
-  private MatchState enactPlaceWallTurn(PlaceWallTurn turn, MatchState matchState) {
-    var board = matchState.getBoardState();
+  private Match enactPlaceWallTurn(PlaceWallTurn turn, Match match) {
+    var board = match.getBoard();
     var newBoard = board.setWallPiece(turn.getCauser(),
         turn.getFirstCoordinate(),
         turn.getSecondCoordinate());
-    var updatedWalls = updatePlayerWalls(turn, matchState);
-    return MatchState.builder()
-        .boardState(newBoard)
-        .matchSettings(matchState.getMatchSettings())
-        .turnEnactorFactory(matchState.getTurnEnactorFactory())
-        .turnValidatorFactory(matchState.getTurnValidatorFactory())
-        .currentPlayerTurn(matchState.getNextPlayer())
+    var updatedWalls = updatePlayerWalls(turn, match);
+    return Match.builder()
+        .board(newBoard)
+        .matchSettings(match.getMatchSettings())
+        .turnEnactorFactory(match.getTurnEnactorFactory())
+        .turnValidatorFactory(match.getTurnValidatorFactory())
+        .currentPlayerTurn(match.getNextPlayer())
         .playerWalls(updatedWalls)
         .build();
   }
 
   // TODO this could be done better
-  private ImmutableMap<Player, Integer> updatePlayerWalls(PlaceWallTurn turn, MatchState matchState) {
+  private ImmutableMap<Player, Integer> updatePlayerWalls(PlaceWallTurn turn, Match match) {
     var target = turn.getCauser();
-    var oldWallValue = matchState.getRemainingWallCount(target);
+    var oldWallValue = match.getRemainingWallCount(target);
     var updatedPlayerWalls = ImmutableMap.<Player, Integer>builder()
         .put(turn.getCauser(), oldWallValue - 1).build();
     return ImmutableMap.<Player, Integer>builder()
         .putAll(updatedPlayerWalls)
-        .putAll(Maps.difference(matchState.getPlayerWalls(), updatedPlayerWalls).entriesOnlyOnLeft())
+        .putAll(Maps.difference(match.getPlayerWalls(), updatedPlayerWalls).entriesOnlyOnLeft())
         .build();
   }
 }

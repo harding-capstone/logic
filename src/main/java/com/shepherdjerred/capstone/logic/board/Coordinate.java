@@ -15,7 +15,8 @@ public final class Coordinate {
   private final int y;
 
   public static boolean areCoordinatesDiagonal(Coordinate left, Coordinate right) {
-    return left.x == right.x || left.x == right.y;
+    return left.x != right.x
+        && left.y != right.y;
   }
 
   // https://www.purplemath.com/modules/midpoint.htm
