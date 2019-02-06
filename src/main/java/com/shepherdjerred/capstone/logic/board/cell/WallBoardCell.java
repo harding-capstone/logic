@@ -12,13 +12,14 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class WallCell implements BoardCell {
+public final class WallBoardCell implements BoardCell {
+
   private final Piece piece;
 
   @Override
   public BoardCell setPiece(Piece piece) {
     if (piece instanceof WallPiece || piece == NullPiece.INSTANCE) {
-      return new WallCell(piece);
+      return new WallBoardCell(piece);
     } else {
       throw new IllegalArgumentException(piece.toString());
     }

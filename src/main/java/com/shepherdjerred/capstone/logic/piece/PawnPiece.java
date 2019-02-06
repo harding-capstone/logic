@@ -11,5 +11,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 public final class PawnPiece implements Piece {
+
   private final Player owner;
 }

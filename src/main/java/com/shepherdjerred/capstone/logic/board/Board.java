@@ -3,8 +3,8 @@ package com.shepherdjerred.capstone.logic.board;
 import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.BoardSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.board.cell.BoardCell;
-import com.shepherdjerred.capstone.logic.board.cell.PawnCell;
-import com.shepherdjerred.capstone.logic.board.cell.WallCell;
+import com.shepherdjerred.capstone.logic.board.cell.PawnBoardCell;
+import com.shepherdjerred.capstone.logic.board.cell.WallBoardCell;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.initializer.BoardInitializer;
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public final class Board {
 
   public boolean hasPiece(Coordinate coordinate) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     var x = coordinate.getX();
     var y = coordinate.getY();
@@ -78,32 +78,32 @@ public final class Board {
 
   public boolean isPieceEmpty(Coordinate coordinate) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     return !hasPiece(coordinate);
   }
 
   public boolean isWallCell(Coordinate coordinate) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     var x = coordinate.getX();
     var y = coordinate.getY();
-    return boardCells[x][y] instanceof WallCell;
+    return boardCells[x][y] instanceof WallBoardCell;
   }
 
   public boolean isPawnCell(Coordinate coordinate) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     var x = coordinate.getX();
     var y = coordinate.getY();
-    return boardCells[x][y] instanceof PawnCell;
+    return boardCells[x][y] instanceof PawnBoardCell;
   }
 
   public boolean hasPawnPiece(Coordinate coordinate) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     return hasPiece(coordinate) && isPawnCell(coordinate);
   }
@@ -141,7 +141,7 @@ public final class Board {
    */
   private void updateCell(Coordinate coordinate, BoardCell cell) {
     if (!isCoordinateValid(coordinate)) {
-      throw new CoordinateOutOfBoundsException();
+      throw new CoordinateOutOfBoundsException(coordinate);
     }
     var oldCell = getCell(coordinate);
     if (isBoardCellReplacementValid(oldCell, cell)) {
@@ -215,7 +215,7 @@ public final class Board {
       }
     }
   }
-  
+
   /**
    * Finds the location of pawns when updating the board
    *

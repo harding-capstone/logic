@@ -51,7 +51,7 @@ public final class Match {
     return playerWalls.get(player);
   }
 
-  public Match doTurn(Turn turn) throws InvalidTurnException {
+  public Match doTurn(Turn turn) {
     if (currentPlayerTurn == turn.getCauser()) {
       throw new InvalidTurnException(
           "Out of order. Current turn: " + currentPlayerTurn + " Actual: " + turn.getCauser());
