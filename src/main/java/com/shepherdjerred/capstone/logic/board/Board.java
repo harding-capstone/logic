@@ -108,7 +108,7 @@ public final class Board {
     if (boardLayout.isCoordinateInvalid(c2)) {
       throw new CoordinateOutOfBoundsException(c2);
     }
-    if (!boardLayout.isWallCell(c1) || !boardLayout.isWallCell(c2) || !isEmpty(c1) || isEmpty(c2)) {
+    if (!boardLayout.isWallCell(c1) || !boardLayout.isWallCell(c2) || !isEmpty(c1) || !isEmpty(c2)) {
       throw new InvalidBoardTransformationException();
     }
 
@@ -135,7 +135,6 @@ public final class Board {
    * Checks if a piece exists at a Coordinate
    */
   public boolean hasPiece(Coordinate coordinate) {
-    System.out.println(pieces);
     return pieces.containsKey(coordinate);
   }
 

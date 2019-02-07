@@ -25,9 +25,9 @@ public interface MovePawnTurnValidationRules extends
       var coordinateBetween = Coordinate.getMidpoint(turn.getSource(), turn.getDestination());
       System.out.println(coordinateBetween);
       if (match.getBoard().hasPiece(coordinateBetween)) {
-        return new TurnValidationResult(false);
-      } else {
         return new TurnValidationResult(true, ErrorMessage.WALL_IS_BLOCKING);
+      } else {
+        return new TurnValidationResult(false);
       }
     };
   }
