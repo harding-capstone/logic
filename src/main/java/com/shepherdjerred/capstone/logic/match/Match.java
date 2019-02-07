@@ -1,9 +1,11 @@
 package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
+import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException;
+import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
@@ -79,9 +81,42 @@ public final class Match {
         newWallPool, matchStatus, turnEnactorFactory, turnValidator);
   }
 
+  // TODO extract this
   private MatchStatus updateMatchStatus(Turn turn, Board newBoard) {
     // TODO check for stalemate
     // TODO check for victory
+    var player = turn.getCauser();
+    if (turn instanceof MovePawnTurn) {
+      var boardSettings = newBoard.getBoardSettings();
+      var gridSize = boardSettings.getGridSize();
+      var movePawnTurn = (MovePawnTurn) turn;
+      var destination = movePawnTurn.getDestination();
+
+      switch (player) {
+        case ONE:
+          if (destination.getY() == gridSize - 1) {
+            return new MatchStatus(Player.ONE, Status.VICTORY);
+          }
+          break;
+        case TWO:
+          if (destination.getY() == 0) {
+            return new MatchStatus(Player.TWO, Status.VICTORY);
+          }
+          break;
+        case THREE:
+          if (destination.getX() == gridSize - 1) {
+            return new MatchStatus(Player.THREE, Status.VICTORY);
+          }
+          break;
+        case FOUR:
+          if (destination.getX() == 0) {
+            return new MatchStatus(Player.FOUR, Status.VICTORY);
+          }
+          break;
+        default:
+          throw new InvalidPlayerException(player);
+      }
+    }
     return matchStatus;
   }
 

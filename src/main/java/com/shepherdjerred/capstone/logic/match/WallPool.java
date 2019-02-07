@@ -1,21 +1,14 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.player.Player;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
-@Getter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class MatchStatus {
-
-  private final Player victor;
-  private final Status status;
-
-  enum Status {
-    IN_PROGRESS, STALEMATE, VICTORY
-  }
+public class WallPool {
+  public final Map<Player, Integer> playerWalls;
 }

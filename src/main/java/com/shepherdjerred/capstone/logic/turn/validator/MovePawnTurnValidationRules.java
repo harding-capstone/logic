@@ -90,6 +90,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
 
   static MovePawnTurnValidationRules isMoveCardinal() {
     return (turn, match) -> {
+      // TODO allow diagonal for certain jumps
       var source = turn.getSource();
       var destination = turn.getDestination();
       if (Coordinate.areCoordinatesCardinal(source, destination)) {

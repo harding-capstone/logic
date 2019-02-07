@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.turn;
 
-import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,6 +14,11 @@ import lombok.ToString;
 public class MovePawnTurn implements Turn {
 
   private final Player causer;
+  private final MoveType moveType;
   private final Coordinate source;
   private final Coordinate destination;
+
+  public enum MoveType {
+    NORMAL, JUMP_STRAIGHT, JUMP_DIAGONAL
+  }
 }

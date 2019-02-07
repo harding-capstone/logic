@@ -2,7 +2,6 @@ module com.shepherdjererd.capstone.logic {
   requires static lombok;
   requires com.google.common;
 
-  exports com.shepherdjerred.capstone.logic;
   exports com.shepherdjerred.capstone.logic.board;
   exports com.shepherdjerred.capstone.logic.board.exception;
   exports com.shepherdjerred.capstone.logic.board.layout;

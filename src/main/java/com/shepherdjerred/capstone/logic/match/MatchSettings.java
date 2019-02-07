@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
@@ -56,6 +56,10 @@ public final class Board {
     this.pawnLocations = pawnLocations;
   }
 
+  public BoardSettings getBoardSettings() {
+    return boardLayout.getBoardSettings();
+  }
+
   /**
    * Gets the location of the player's pawn
    *
@@ -108,7 +112,8 @@ public final class Board {
     if (boardLayout.isCoordinateInvalid(c2)) {
       throw new CoordinateOutOfBoundsException(c2);
     }
-    if (!boardLayout.isWallBoardCell(c1) || !boardLayout.isWallBoardCell(c2) || !isEmpty(c1) || !isEmpty(c2)) {
+    if (!boardLayout.isWallBoardCell(c1) || !boardLayout.isWallBoardCell(c2) || !isEmpty(c1)
+        || !isEmpty(c2)) {
       throw new InvalidBoardTransformationException();
     }
 

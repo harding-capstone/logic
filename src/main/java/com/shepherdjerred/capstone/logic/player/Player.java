@@ -1,4 +1,4 @@
-package com.shepherdjerred.capstone.logic;
+package com.shepherdjerred.capstone.logic.player;
 
 public enum Player {
   ONE, TWO, THREE, FOUR, NULL;

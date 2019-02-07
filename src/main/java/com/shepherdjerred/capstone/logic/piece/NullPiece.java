@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.piece;
 
-import com.shepherdjerred.capstone.logic.Player;
+import com.shepherdjerred.capstone.logic.player.Player;
 import lombok.ToString;
 
 /**
