@@ -18,8 +18,8 @@ public final class Coordinate {
    * Checks if two Coordinates are diagonal to each other
    */
   public static boolean areCoordinatesDiagonal(Coordinate left, Coordinate right) {
-    return left.x != right.x
-        && left.y != right.y;
+    return !(left.x != right.x
+        || left.y != right.y);
   }
 
   /**

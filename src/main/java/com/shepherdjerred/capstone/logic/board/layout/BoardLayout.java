@@ -5,7 +5,6 @@ import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 /**
  * Represents the Quoridor board layout. In a standard 9x9 game of Quoridor, the boardCells array
@@ -14,7 +13,7 @@ import lombok.ToString;
  * represent areas in the array where no element exists on the Quoridor board. These BoardCells
  * should be ignored.
  */
-@ToString
+//@ToString
 @EqualsAndHashCode
 public final class BoardLayout {
 

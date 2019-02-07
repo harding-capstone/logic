@@ -36,7 +36,7 @@ public enum MatchFormatter {
   }
 
   public char coordinateToChar(Board board, Coordinate coordinate) {
-    var cell = board.getBoardCell(coordinate).toChar();
+    var cell = board.getCell(coordinate).toChar();
     var piece = board.getPiece(coordinate);
     return piece == NullPiece.INSTANCE ? cell : piece.toChar();
   }

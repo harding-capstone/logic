@@ -7,8 +7,8 @@ public enum JumpPawnTurnValidator implements TurnValidator {
   INSTANCE;
 
   @Override
-  public boolean isTurnValid(Turn turn, Match match) {
+  public TurnValidationResult isTurnValid(Turn turn, Match match) {
     // TODO
-    return true;
+    return new TurnValidationResult(false);
   }
 }
