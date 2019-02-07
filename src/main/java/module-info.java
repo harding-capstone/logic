@@ -6,6 +6,8 @@ module com.shepherdjererd.capstone.logic {
   exports com.shepherdjerred.capstone.logic.board.exception;
   exports com.shepherdjerred.capstone.logic.board.layout;
   exports com.shepherdjerred.capstone.logic.piece;
+  exports com.shepherdjerred.capstone.logic.player;
+  exports com.shepherdjerred.capstone.logic.player.exception;
   exports com.shepherdjerred.capstone.logic.match;
   exports com.shepherdjerred.capstone.logic.turn;
   exports com.shepherdjerred.capstone.logic.turn.validator;
