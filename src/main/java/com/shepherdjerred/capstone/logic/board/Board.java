@@ -27,19 +27,12 @@ public final class Board {
   private final Map<Coordinate, Piece> pieces;
   private final Map<Player, Coordinate> pawnLocations;
 
-  /**
-   * Creates a new BoardPieces object intended for use in a new game. Pawns will be placed in the
-   * standard positions.
-   *
-   * @param boardSettings The BoardSettings to use when creating the board.
-   * @param playerCount The number of players on the board. Used to create initial pawns.
-   */
-  public Board(BoardSettings boardSettings, PlayerCount playerCount) {
-    this.boardLayout = new BoardLayout(boardSettings);
-    this.playerCount = playerCount;
-    this.pieces = new HashMap<>();
-    this.pawnLocations = new HashMap<>();
-    initializePiecesAndPawnLocations();
+  public static Board createNewBoard(BoardLayout boardLayout,
+      BoardSettings boardSettings,
+      PlayerCount playerCount) {
+    Map<Player, Coordinate> pawnLocations = initializePawnLocations(boardSettings, playerCount);
+    Map<Coordinate, Piece> pieces = initializePieces(pawnLocations);
+    return new Board(boardLayout, playerCount, pieces, pawnLocations);
   }
 
   /**
@@ -167,8 +160,9 @@ public final class Board {
   /**
    * Initialize pawn pieces for the players
    */
-  private void initializePiecesAndPawnLocations() {
-    var gridSize = boardLayout.getBoardSettings().getGridSize();
+  private static Map<Player, Coordinate> initializePawnLocations(BoardSettings boardSettings,
+      PlayerCount playerCount) {
+    var gridSize = boardSettings.getGridSize();
 
     Map<Player, Coordinate> pawns = new HashMap<>();
 
@@ -180,27 +174,31 @@ public final class Board {
       pawns.put(Player.FOUR, getStartingPawnCoordinateForPlayerFour(gridSize));
     }
 
-    pawns.forEach((player, coordinate) -> pieces.put(coordinate, new PawnPiece(player)));
-
-    pawnLocations.putAll(pawns);
+    return pawns;
   }
 
-  private Coordinate getStartingPawnCoordinateForPlayerOne(int gridSize) {
+  private static Map<Coordinate, Piece> initializePieces(Map<Player, Coordinate> pawnLocations) {
+    Map<Coordinate, Piece> pieces = new HashMap<>();
+    pawnLocations.forEach((player, coordinate) -> pieces.put(coordinate, new PawnPiece(player)));
+    return pieces;
+  }
+
+  private static Coordinate getStartingPawnCoordinateForPlayerOne(int gridSize) {
     var midpoint = gridSize / 2;
     return new Coordinate(midpoint, 0);
   }
 
-  private Coordinate getStartingPawnCoordinateForPlayerTwo(int gridSize) {
+  private static Coordinate getStartingPawnCoordinateForPlayerTwo(int gridSize) {
     var midpoint = gridSize / 2;
     return new Coordinate(midpoint, gridSize - 1);
   }
 
-  private Coordinate getStartingPawnCoordinateForPlayerThree(int gridSize) {
+  private static Coordinate getStartingPawnCoordinateForPlayerThree(int gridSize) {
     var midpoint = gridSize / 2;
     return new Coordinate(0, midpoint);
   }
 
-  private Coordinate getStartingPawnCoordinateForPlayerFour(int gridSize) {
+  private static Coordinate getStartingPawnCoordinateForPlayerFour(int gridSize) {
     var midpoint = gridSize / 2;
     return new Coordinate(gridSize - 1, midpoint);
   }

@@ -26,7 +26,7 @@ public class MyTest {
         PlayerCount.TWO,
         Player.ONE);
 
-    var initialMatchState = new Match(matchSettings,
+    var initialMatchState = Match.startNewMatch(matchSettings,
         TurnEnactorFactory.INSTANCE,
         TurnValidator.INSTANCE);
 

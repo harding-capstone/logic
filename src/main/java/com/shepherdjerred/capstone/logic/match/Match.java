@@ -1,5 +1,6 @@
 package com.shepherdjerred.capstone.logic.match;
 
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
@@ -35,15 +36,21 @@ public final class Match {
   private final TurnEnactorFactory turnEnactorFactory;
   private final TurnValidator turnValidator;
 
-  public Match(MatchSettings matchSettings,
+  public static Match startNewMatch(MatchSettings matchSettings,
       TurnEnactorFactory turnEnactorFactory, TurnValidator turnValidator) {
-    this.board = new Board(matchSettings.getBoardSettings(), matchSettings.getPlayerCount());
-    this.matchSettings = matchSettings;
-    this.activePlayer = matchSettings.getStartingPlayer();
-    this.wallPool = initializePlayerWalls(matchSettings);
-    this.matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
-    this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidator = turnValidator;
+    var boardSettings = matchSettings.getBoardSettings();
+    var boardLayout = BoardLayout.fromBoardSettings(boardSettings);
+    var board = Board.createNewBoard(boardLayout, boardSettings, matchSettings.getPlayerCount());
+    var startingPlayer = matchSettings.getStartingPlayer();
+    var wallPool = initializePlayerWalls(matchSettings);
+    var matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
+    return new Match(board,
+        matchSettings,
+        startingPlayer,
+        wallPool,
+        matchStatus,
+        turnEnactorFactory,
+        turnValidator);
   }
 
   private Match(Board board,
@@ -177,7 +184,7 @@ public final class Match {
   /**
    * Creates a Map with the initial wall count set for each player
    */
-  private Map<Player, Integer> initializePlayerWalls(MatchSettings matchSettings) {
+  private static Map<Player, Integer> initializePlayerWalls(MatchSettings matchSettings) {
     int wallsPerPlayer = matchSettings.getWallsPerPlayer();
     if (matchSettings.getPlayerCount() == PlayerCount.TWO) {
       return initializeWallsForTwoPlayers(wallsPerPlayer);
@@ -188,14 +195,14 @@ public final class Match {
     }
   }
 
-  private Map<Player, Integer> initializeWallsForTwoPlayers(int wallsPerPlayer) {
+  private static Map<Player, Integer> initializeWallsForTwoPlayers(int wallsPerPlayer) {
     HashMap<Player, Integer> playerWallMap = new HashMap<>();
     playerWallMap.put(Player.ONE, wallsPerPlayer);
     playerWallMap.put(Player.TWO, wallsPerPlayer);
     return playerWallMap;
   }
 
-  private Map<Player, Integer> initializeWallsForFourPlayers(
+  private static Map<Player, Integer> initializeWallsForFourPlayers(
       int wallsPerPlayer) {
     HashMap<Player, Integer> playerWallMap = new HashMap<>();
     playerWallMap.put(Player.ONE, wallsPerPlayer);

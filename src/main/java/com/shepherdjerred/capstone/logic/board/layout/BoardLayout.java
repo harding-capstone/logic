@@ -21,15 +21,21 @@ public final class BoardLayout {
   private final BoardSettings boardSettings;
   private final BoardCell[][] boardCells;
 
+
+  public static BoardLayout fromBoardSettings(BoardSettings boardSettings) {
+    var boardCells = createBoardCells(boardSettings);
+    return new BoardLayout(boardSettings, boardCells);
+  }
+
   /**
    * Constructor for a new BoardLayout. This constructor will create a BoardLayout based on the
    * BoardSettings object it receives.
    *
    * @param boardSettings Settings to use when creating the BoardLayout
    */
-  public BoardLayout(BoardSettings boardSettings) {
+  private BoardLayout(BoardSettings boardSettings, BoardCell[][] boardCells) {
     this.boardSettings = boardSettings;
-    boardCells = createBoardCells(boardSettings);
+    this.boardCells = boardCells;
   }
 
   /**
@@ -85,7 +91,7 @@ public final class BoardLayout {
    * @param boardSettings Settings to use when creating the board
    * @return A matrix of BoardCell based on the board settings
    */
-  private BoardCell[][] createBoardCells(BoardSettings boardSettings) {
+  private static BoardCell[][] createBoardCells(BoardSettings boardSettings) {
     var gridSize = boardSettings.getGridSize();
     var boardCells = new BoardCell[gridSize][gridSize];
 
@@ -104,7 +110,7 @@ public final class BoardLayout {
    * @param coordinate The Coordinate at which that the BoardCell will exist
    * @return The BoardCell to should use
    */
-  private BoardCell createBoardCell(Coordinate coordinate) {
+  private static BoardCell createBoardCell(Coordinate coordinate) {
     if (shouldBeNullCell(coordinate)) {
       return BoardCell.NULL;
     } else if (shouldBePawnCell(coordinate)) {
@@ -122,7 +128,7 @@ public final class BoardLayout {
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be Null, or false otherwise
    */
-  private boolean shouldBeNullCell(Coordinate coordinate) {
+  private static boolean shouldBeNullCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
@@ -136,7 +142,7 @@ public final class BoardLayout {
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be a Pawn BoardCell, or false otherwise
    */
-  private boolean shouldBePawnCell(Coordinate coordinate) {
+  private static boolean shouldBePawnCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
@@ -150,7 +156,7 @@ public final class BoardLayout {
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be a Wall BoardCell, or false otherwise
    */
-  private boolean shouldBeWallCell(Coordinate coordinate) {
+  private static boolean shouldBeWallCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
