@@ -5,11 +5,12 @@ import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 
-public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePawnTurn> {
+// TODO having rules for both moves and jumps in here is weird, might want to extract
+public interface MovePawnTurnValidationRule extends TurnValidationRules<MovePawnTurn> {
 
-  static MovePawnTurnValidationRules isMoveOneSpaceAway() {
+  static MovePawnTurnValidationRule isSpaceOneCellAway() {
     return (turn, match) -> {
-      // TODO allow for jumps
+      // We check if the distance equals two because wall cells count in the calculation
       if (Coordinate.calculateManhattanDistance(turn.getSource(), turn.getDestination()) == 2) {
         return new TurnValidationResult(false);
       } else {
@@ -18,7 +19,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isWallBlocking() {
+  static MovePawnTurnValidationRule isWallBlocking() {
     return (turn, match) -> {
       var coordinateBetween = Coordinate.getMidpoint(turn.getSource(), turn.getDestination());
       System.out.println(coordinateBetween);
@@ -30,7 +31,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isSourceCellTypePawn() {
+  static MovePawnTurnValidationRule isSourceCellTypePawn() {
     return (turn, match) -> {
       var source = turn.getSource();
       if (match.getBoard().isPawnBoardCell(source)) {
@@ -41,7 +42,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isDestinationCellTypePawn() {
+  static MovePawnTurnValidationRule isDestinationCellTypePawn() {
     return (turn, match) -> {
       var destination = turn.getDestination();
       if (match.getBoard().isPawnBoardCell(destination)) {
@@ -52,7 +53,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isDestinationPieceEmpty() {
+  static MovePawnTurnValidationRule isDestinationPieceEmpty() {
     return (turn, match) -> {
       var destination = turn.getDestination();
       if (match.getBoard().isEmpty(destination)) {
@@ -63,7 +64,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isSourcePiecePawn() {
+  static MovePawnTurnValidationRule isSourcePiecePawn() {
     return (turn, match) -> {
       var source = turn.getSource();
       if (match.getBoard().getPiece(source) instanceof PawnPiece) {
@@ -74,7 +75,7 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isPieceOwnedByPlayer() {
+  static MovePawnTurnValidationRule isPieceOwnedByPlayer() {
     return (turn, match) -> {
       var source = turn.getSource();
       var mover = turn.getCauser();
@@ -88,9 +89,8 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static MovePawnTurnValidationRules isMoveCardinal() {
+  static MovePawnTurnValidationRule isMoveCardinal() {
     return (turn, match) -> {
-      // TODO allow diagonal for certain jumps
       var source = turn.getSource();
       var destination = turn.getDestination();
       if (Coordinate.areCoordinatesCardinal(source, destination)) {
@@ -101,11 +101,30 @@ public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePaw
     };
   }
 
-  static TurnValidationRules<MovePawnTurn> all() {
+  static TurnValidationRules<MovePawnTurn> jumpDiagonal() {
+    // TODO
+    return isDestinationCellTypePawn()
+        .and(isDestinationPieceEmpty())
+        .and(isPieceOwnedByPlayer())
+        .and(isSourceCellTypePawn())
+        .and(isSourcePiecePawn());
+  }
+
+  static TurnValidationRules<MovePawnTurn> jumpStraight() {
+    // TODO
     return isDestinationCellTypePawn()
         .and(isDestinationPieceEmpty())
         .and(isMoveCardinal())
-        .and(isMoveOneSpaceAway())
+        .and(isPieceOwnedByPlayer())
+        .and(isSourceCellTypePawn())
+        .and(isSourcePiecePawn());
+  }
+
+  static TurnValidationRules<MovePawnTurn> normal() {
+    return isDestinationCellTypePawn()
+        .and(isDestinationPieceEmpty())
+        .and(isMoveCardinal())
+        .and(isSpaceOneCellAway())
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
         .and(isWallBlocking())

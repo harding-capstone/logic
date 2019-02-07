@@ -36,6 +36,8 @@ public final class Match {
   private final MatchStatus matchStatus;
   private final TurnEnactorFactory turnEnactorFactory;
   private final TurnValidator turnValidator;
+  @Getter
+  private final MatchHistory matchHistory;
 
   // TODO extract this maybe?
   public static Match startNewMatch(MatchSettings matchSettings,
@@ -47,13 +49,15 @@ public final class Match {
     var wallPool = WallPool.createWallPool(matchSettings.getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
+    var matchHistory = new MatchHistory();
     return new Match(board,
         matchSettings,
         startingPlayer,
         wallPool,
         matchStatus,
         turnEnactorFactory,
-        turnValidator);
+        turnValidator,
+        matchHistory);
   }
 
   private Match(Board board,
@@ -62,7 +66,8 @@ public final class Match {
       WallPool wallPool,
       MatchStatus matchStatus,
       TurnEnactorFactory turnEnactorFactory,
-      TurnValidator turnValidator) {
+      TurnValidator turnValidator,
+      MatchHistory matchHistory) {
     this.board = board;
     this.matchSettings = matchSettings;
     this.activePlayer = activePlayer;
@@ -70,6 +75,7 @@ public final class Match {
     this.matchStatus = matchStatus;
     this.turnEnactorFactory = turnEnactorFactory;
     this.turnValidator = turnValidator;
+    this.matchHistory = matchHistory;
   }
 
   public Match doTurn(Turn turn) {
@@ -90,8 +96,9 @@ public final class Match {
     if (turn instanceof PlaceWallTurn) {
       newWallPool = wallPool.takeWall(turn.getCauser());
     }
+    var newHistory = matchHistory.push(this);
     return new Match(newBoard, matchSettings, getNextActivePlayer(),
-        newWallPool, newMatchStatus, turnEnactorFactory, turnValidator);
+        newWallPool, newMatchStatus, turnEnactorFactory, turnValidator, newHistory);
   }
 
   // TODO extract this

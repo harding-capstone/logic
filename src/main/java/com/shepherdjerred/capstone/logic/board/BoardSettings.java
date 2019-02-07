@@ -17,7 +17,7 @@ public final class BoardSettings {
     this.gridSize = boardSize * 2 - 1;
 
     if (boardSize % 2 != 1) {
-      throw new IllegalArgumentException("Board size must be odd");
+      throw new IllegalArgumentException("Board getSize must be odd");
     }
   }
 }
