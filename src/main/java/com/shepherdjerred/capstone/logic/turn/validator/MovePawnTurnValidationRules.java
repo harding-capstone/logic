@@ -1,17 +1,15 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
-import java.util.function.BiFunction;
 
-public interface MovePawnTurnValidationRules extends
-    BiFunction<MovePawnTurn, Match, TurnValidationResult> {
+public interface MovePawnTurnValidationRules extends TurnValidationRules<MovePawnTurn> {
 
   static MovePawnTurnValidationRules isMoveOneSpaceAway() {
     return (turn, match) -> {
+      // TODO allow for jumps
       if (Coordinate.calculateManhattanDistance(turn.getSource(), turn.getDestination()) == 2) {
         return new TurnValidationResult(false);
       } else {
@@ -35,7 +33,7 @@ public interface MovePawnTurnValidationRules extends
   static MovePawnTurnValidationRules isSourceCellTypePawn() {
     return (turn, match) -> {
       var source = turn.getSource();
-      if (match.getBoard().isPawnCell(source)) {
+      if (match.getBoard().isPawnBoardCell(source)) {
         return new TurnValidationResult(false);
       } else {
         return new TurnValidationResult(true, ErrorMessage.SOURCE_CELL_TYPE_NOT_PAWN);
@@ -46,7 +44,7 @@ public interface MovePawnTurnValidationRules extends
   static MovePawnTurnValidationRules isDestinationCellTypePawn() {
     return (turn, match) -> {
       var destination = turn.getDestination();
-      if (match.getBoard().isPawnCell(destination)) {
+      if (match.getBoard().isPawnBoardCell(destination)) {
         return new TurnValidationResult(false);
       } else {
         return new TurnValidationResult(true, ErrorMessage.DESTINATION_CELL_TYPE_NOT_PAWN);
@@ -94,20 +92,15 @@ public interface MovePawnTurnValidationRules extends
     return (turn, match) -> {
       var source = turn.getSource();
       var destination = turn.getDestination();
-      if (Coordinate.areCoordinatesDiagonal(source, destination)) {
-        return new TurnValidationResult(true, ErrorMessage.MOVE_IS_DIAGONAL);
-      } else {
+      if (Coordinate.areCoordinatesCardinal(source, destination)) {
         return new TurnValidationResult(false);
+      } else {
+        return new TurnValidationResult(true, ErrorMessage.MOVE_IS_DIAGONAL);
       }
     };
   }
 
-  default MovePawnTurnValidationRules and(MovePawnTurnValidationRules other) {
-    return (turn, match) -> TurnValidationResult.combine(this.apply(turn, match),
-        other.apply(turn, match));
-  }
-
-  static MovePawnTurnValidationRules all() {
+  static TurnValidationRules<MovePawnTurn> all() {
     return isDestinationCellTypePawn()
         .and(isDestinationPieceEmpty())
         .and(isMoveCardinal())

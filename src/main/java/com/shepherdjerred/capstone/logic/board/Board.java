@@ -77,7 +77,7 @@ public final class Board {
     if (boardLayout.isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
-    if (!boardLayout.isPawnCell(destination) && !isEmpty(destination)) {
+    if (!boardLayout.isPawnBoardCell(destination) && !isEmpty(destination)) {
       throw new InvalidBoardTransformationException();
     }
 
@@ -108,7 +108,7 @@ public final class Board {
     if (boardLayout.isCoordinateInvalid(c2)) {
       throw new CoordinateOutOfBoundsException(c2);
     }
-    if (!boardLayout.isWallCell(c1) || !boardLayout.isWallCell(c2) || !isEmpty(c1) || !isEmpty(c2)) {
+    if (!boardLayout.isWallBoardCell(c1) || !boardLayout.isWallBoardCell(c2) || !isEmpty(c1) || !isEmpty(c2)) {
       throw new InvalidBoardTransformationException();
     }
 
@@ -119,16 +119,16 @@ public final class Board {
     return new Board(boardLayout, playerCount, newPiecesMap, pawnLocations);
   }
 
-  public BoardCell getCell(Coordinate coordinate) {
-    return boardLayout.getCell(coordinate);
+  public BoardCell getBoardCell(Coordinate coordinate) {
+    return boardLayout.getBoardCell(coordinate);
   }
 
-  public boolean isPawnCell(Coordinate coordinate) {
-    return boardLayout.isPawnCell(coordinate);
+  public boolean isPawnBoardCell(Coordinate coordinate) {
+    return boardLayout.isPawnBoardCell(coordinate);
   }
 
-  public boolean isWallCell(Coordinate coordinate) {
-    return boardLayout.isWallCell(coordinate);
+  public boolean isWallBoardCell(Coordinate coordinate) {
+    return boardLayout.isWallBoardCell(coordinate);
   }
 
   /**

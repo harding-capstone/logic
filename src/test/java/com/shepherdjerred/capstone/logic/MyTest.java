@@ -3,13 +3,13 @@ package com.shepherdjerred.capstone.logic;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
 import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
-import com.shepherdjerred.capstone.logic.turn.enactor.DefaultTurnEnactorFactory;
-import com.shepherdjerred.capstone.logic.turn.validator.DefaultTurnValidatorFactory;
+import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -23,8 +23,8 @@ public class MyTest {
 
     var matchState = new Match(
         matchSettings,
-        DefaultTurnEnactorFactory.INSTANCE,
-        DefaultTurnValidatorFactory.INSTANCE
+        TurnEnactorFactory.INSTANCE,
+        TurnValidator.INSTANCE
     );
 
     var turn1 = new MovePawnTurn(Player.ONE, new Coordinate(8, 0), new Coordinate(8, 2));

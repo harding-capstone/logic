@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class MovePawnTurn implements Turn {
+public class MovePawnTurn implements Turn {
 
   private final Player causer;
   private final Coordinate source;

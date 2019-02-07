@@ -1,11 +1,19 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
+import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
+import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public interface TurnEnactorFactory {
+public enum TurnEnactorFactory {
+  INSTANCE;
 
-  /**
-   * Creates the proper TurnEnactor for a given turn
-   */
-  TurnEnactor getEnactor(Turn turn);
+  public TurnEnactor getEnactor(Turn turn) {
+    if (turn instanceof MovePawnTurn) {
+      return MovePawnTurnEnactor.INSTANCE;
+    } else if (turn instanceof PlaceWallTurn) {
+      return PlaceWallTurnEnactor.INSTANCE;
+    } else {
+      throw new IllegalStateException("Unknown turn " + turn);
+    }
+  }
 }

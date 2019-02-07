@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -27,63 +27,77 @@ public final class Match {
   private final MatchSettings matchSettings;
   @Getter
   private final Player activePlayer;
-  private final Map<Player, Integer> remainingPlayerWalls;
+  private final Map<Player, Integer> wallPool;
   @Getter
   private final MatchStatus matchStatus;
   private final TurnEnactorFactory turnEnactorFactory;
-  private final TurnValidatorFactory turnValidatorFactory;
+  private final TurnValidator turnValidator;
 
   public Match(MatchSettings matchSettings,
-      TurnEnactorFactory turnEnactorFactory,
-      TurnValidatorFactory turnValidatorFactory) {
+      TurnEnactorFactory turnEnactorFactory, TurnValidator turnValidator) {
     this.board = new Board(matchSettings.getBoardSettings(), matchSettings.getPlayerCount());
     this.matchSettings = matchSettings;
     this.activePlayer = matchSettings.getStartingPlayer();
-    this.remainingPlayerWalls = initializePlayerWalls(matchSettings);
+    this.wallPool = initializePlayerWalls(matchSettings);
     this.matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
     this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidatorFactory = turnValidatorFactory;
+    this.turnValidator = turnValidator;
   }
 
   private Match(Board board,
       MatchSettings matchSettings,
       Player activePlayer,
-      Map<Player, Integer> remainingPlayerWalls,
+      Map<Player, Integer> wallPool,
       MatchStatus matchStatus,
       TurnEnactorFactory turnEnactorFactory,
-      TurnValidatorFactory turnValidatorFactory) {
+      TurnValidator turnValidator) {
     this.board = board;
     this.matchSettings = matchSettings;
     this.activePlayer = activePlayer;
-    this.remainingPlayerWalls = remainingPlayerWalls;
+    this.wallPool = wallPool;
     this.matchStatus = matchStatus;
     this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidatorFactory = turnValidatorFactory;
+    this.turnValidator = turnValidator;
   }
 
   public Match doTurn(Turn turn) {
-    var validator = turnValidatorFactory.getValidator(turn);
-    var validatorResult = validator.isTurnValid(turn, this);
-    if (validatorResult.isHasFailed()) {
+    var validatorResult = turnValidator.isTurnValid(turn, this);
+    if (validatorResult.isError()) {
       throw new InvalidTurnException(turn, validatorResult);
     } else {
       return doTurnUnchecked(turn);
     }
   }
 
+  // TODO extract this
   private Match doTurnUnchecked(Turn turn) {
     var enactor = turnEnactorFactory.getEnactor(turn);
     var newBoard = enactor.enactTurn(turn, board);
+    var newWallPool = decrementPlayerWalls(turn.getCauser());
+    var newMatchStatus = updateMatchStatus(turn, newBoard);
+    return new Match(newBoard, matchSettings, getNextActivePlayer(),
+        newWallPool, matchStatus, turnEnactorFactory, turnValidator);
+  }
+
+  private MatchStatus updateMatchStatus(Turn turn, Board newBoard) {
+    // TODO check for stalemate
     // TODO check for victory
-    // TODO decrement walls
-    return new Match(newBoard, matchSettings, getNextActivePlayer(), remainingPlayerWalls, matchStatus, turnEnactorFactory, turnValidatorFactory);
+    return matchStatus;
+  }
+
+  // TODO extract this
+  private Map<Player, Integer> decrementPlayerWalls(Player player) {
+    Map<Player, Integer> newRemainingPlayerWalls = new HashMap<>(wallPool);
+    var oldValue = newRemainingPlayerWalls.get(player);
+    newRemainingPlayerWalls.put(player, oldValue - 1);
+    return newRemainingPlayerWalls;
   }
 
   /**
    * Get the number of walls a player has left
    */
-  public int getRemainingWallCount(Player player) {
-    return remainingPlayerWalls.get(player);
+  public int getRemainingWalls(Player player) {
+    return wallPool.get(player);
   }
 
   /**

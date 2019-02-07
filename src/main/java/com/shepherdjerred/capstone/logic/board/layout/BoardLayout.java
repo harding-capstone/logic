@@ -38,19 +38,19 @@ public final class BoardLayout {
    * @param coordinate Coordinate of the BoardCell to get
    * @return The BoardCell at the Coordinate
    */
-  public BoardCell getCell(Coordinate coordinate) {
+  public BoardCell getBoardCell(Coordinate coordinate) {
     if (isCoordinateInvalid(coordinate)) {
       throw new CoordinateOutOfBoundsException(coordinate);
     }
     return boardCells[coordinate.getX()][coordinate.getY()];
   }
 
-  public boolean isPawnCell(Coordinate coordinate) {
-    return getCell(coordinate) == BoardCell.PAWN;
+  public boolean isPawnBoardCell(Coordinate coordinate) {
+    return getBoardCell(coordinate) == BoardCell.PAWN;
   }
 
-  public boolean isWallCell(Coordinate coordinate) {
-    return getCell(coordinate) == BoardCell.WALL;
+  public boolean isWallBoardCell(Coordinate coordinate) {
+    return getBoardCell(coordinate) == BoardCell.WALL;
   }
 
   /**

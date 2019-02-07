@@ -11,22 +11,22 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class TurnValidationResult {
 
-  private final boolean hasFailed;
+  private final boolean isError;
   private final List<ErrorMessage> errors;
 
-  public TurnValidationResult(boolean hasFailed) {
-    this.hasFailed = hasFailed;
+  public TurnValidationResult(boolean isError) {
+    this.isError = isError;
     this.errors = new ArrayList<>();
   }
 
-  public TurnValidationResult(boolean hasFailed, ErrorMessage error) {
-    this.hasFailed = hasFailed;
+  public TurnValidationResult(boolean isError, ErrorMessage error) {
+    this.isError = isError;
     this.errors = new ArrayList<>();
     errors.add(error);
   }
 
-  public TurnValidationResult(boolean hasFailed, List<ErrorMessage> errors) {
-    this.hasFailed = hasFailed;
+  public TurnValidationResult(boolean isError, List<ErrorMessage> errors) {
+    this.isError = isError;
     this.errors = errors;
   }
 
@@ -34,7 +34,7 @@ public final class TurnValidationResult {
     List<ErrorMessage> errors = new ArrayList<>();
     errors.addAll(l.getErrors());
     errors.addAll(r.getErrors());
-    return new TurnValidationResult(l.hasFailed || r.hasFailed, errors);
+    return new TurnValidationResult(l.isError || r.isError, errors);
   }
 
   public enum ErrorMessage {

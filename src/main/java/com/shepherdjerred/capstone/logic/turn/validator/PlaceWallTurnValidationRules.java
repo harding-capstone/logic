@@ -1,12 +1,9 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
-import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
-import java.util.function.BiFunction;
 
-public interface PlaceWallTurnValidationRules extends
-    BiFunction<PlaceWallTurn, Match, TurnValidationResult> {
+public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceWallTurn> {
 
   static PlaceWallTurnValidationRules isWallCell() {
     return (turn, match) -> {
@@ -14,8 +11,8 @@ public interface PlaceWallTurnValidationRules extends
       var firstCoordinate = turn.getFirstCoordinate();
       var secondCoordinate = turn.getSecondCoordinate();
 
-      if (board.isWallCell(firstCoordinate)
-          && board.isWallCell(secondCoordinate)) {
+      if (board.isWallBoardCell(firstCoordinate)
+          && board.isWallBoardCell(secondCoordinate)) {
         return new TurnValidationResult(false);
       } else {
         return new TurnValidationResult(true, ErrorMessage.NOT_WALL_CELL);
@@ -41,7 +38,7 @@ public interface PlaceWallTurnValidationRules extends
   static PlaceWallTurnValidationRules doesPlayerHaveWallsToPlace() {
     return (turn, match) -> {
       var player = turn.getCauser();
-      if (match.getRemainingWallCount(player) > 0) {
+      if (match.getRemainingWalls(player) > 0) {
         return new TurnValidationResult(false);
       } else {
         return new TurnValidationResult(true, ErrorMessage.NO_WALLS_TO_PLACE);
@@ -56,13 +53,7 @@ public interface PlaceWallTurnValidationRules extends
     };
   }
 
-
-  default PlaceWallTurnValidationRules and(PlaceWallTurnValidationRules other) {
-    return (turn, match) -> TurnValidationResult.combine(this.apply(turn, match),
-        other.apply(turn, match));
-  }
-
-  static PlaceWallTurnValidationRules all() {
+  static TurnValidationRules<PlaceWallTurn> all() {
     return isWallCell()
         .and(areCoordinatesEmpty())
         .and(doesPlayerHaveWallsToPlace())
