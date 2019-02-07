@@ -38,7 +38,7 @@ public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceW
   static PlaceWallTurnValidationRules doesPlayerHaveWallsToPlace() {
     return (turn, match) -> {
       var player = turn.getCauser();
-      if (match.getRemainingWalls(player) > 0) {
+      if (match.getWallsLeft(player) > 0) {
         return new TurnValidationResult(false);
       } else {
         return new TurnValidationResult(true, ErrorMessage.NO_WALLS_TO_PLACE);

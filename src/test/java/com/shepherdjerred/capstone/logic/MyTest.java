@@ -41,10 +41,15 @@ public class MyTest {
     var turn3 = new PlaceWallTurn(Player.ONE,
         new Coordinate(8, 13),
         new Coordinate(6, 13));
+    var turn4 = new MovePawnTurn(Player.TWO,
+        MoveType.NORMAL,
+        new Coordinate(8, 14),
+        new Coordinate(8, 12));
 
     var matchStateAfterTurn1 = initialMatchState.doTurn(turn1);
     var matchStateAfterTurn2 = matchStateAfterTurn1.doTurn(turn2);
     var matchStateAfterTurn3 = matchStateAfterTurn2.doTurn(turn3);
+//    var matchStateAfterTurn4 = matchStateAfterTurn3.doTurn(turn4);
 
     var matchFormatter = MatchFormatter.INSTANCE;
 
@@ -53,6 +58,7 @@ public class MyTest {
     matchStates.add(matchStateAfterTurn1);
     matchStates.add(matchStateAfterTurn2);
     matchStates.add(matchStateAfterTurn3);
+//    matchStates.add(matchStateAfterTurn4);
 
     System.out.println(matchFormatter.matchesToString(matchStates));
   }

@@ -1,14 +1,45 @@
 package com.shepherdjerred.capstone.logic.match;
 
+import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.Player;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
-public class WallPool {
+public final class WallPool {
+
   public final Map<Player, Integer> playerWalls;
+
+  public static WallPool createWallPool(PlayerCount playerCount, int numberOfWalls) {
+    Map<Player, Integer> walls = new HashMap<>();
+    Set<Player> players = new HashSet<>();
+    players.add(Player.ONE);
+    players.add(Player.TWO);
+    if (playerCount == PlayerCount.FOUR) {
+      players.add(Player.THREE);
+      players.add(Player.FOUR);
+    }
+    players.forEach(player -> walls.put(player, numberOfWalls));
+    return new WallPool(walls);
+  }
+
+  private WallPool(Map<Player, Integer> playerWalls) {
+    this.playerWalls = playerWalls;
+  }
+
+  public int getWallsLeft(Player player) {
+    return playerWalls.get(player);
+  }
+
+  public WallPool takeWall(Player player) {
+    Map<Player, Integer> newWallCounts = new HashMap<>(playerWalls);
+    var currentWallsLeft = getWallsLeft(player) - 1;
+    newWallCounts.put(player, currentWallsLeft);
+    return new WallPool(newWallCounts);
+  }
 }

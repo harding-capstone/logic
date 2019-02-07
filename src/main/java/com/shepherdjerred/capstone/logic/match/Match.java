@@ -7,6 +7,7 @@ import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
+import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
@@ -30,19 +31,21 @@ public final class Match {
   private final MatchSettings matchSettings;
   @Getter
   private final Player activePlayer;
-  private final Map<Player, Integer> wallPool;
+  private final WallPool wallPool;
   @Getter
   private final MatchStatus matchStatus;
   private final TurnEnactorFactory turnEnactorFactory;
   private final TurnValidator turnValidator;
 
+  // TODO extract this maybe?
   public static Match startNewMatch(MatchSettings matchSettings,
       TurnEnactorFactory turnEnactorFactory, TurnValidator turnValidator) {
     var boardSettings = matchSettings.getBoardSettings();
     var boardLayout = BoardLayout.fromBoardSettings(boardSettings);
     var board = Board.createNewBoard(boardLayout, boardSettings, matchSettings.getPlayerCount());
     var startingPlayer = matchSettings.getStartingPlayer();
-    var wallPool = initializePlayerWalls(matchSettings);
+    var wallPool = WallPool.createWallPool(matchSettings.getPlayerCount(),
+        matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
     return new Match(board,
         matchSettings,
@@ -56,7 +59,7 @@ public final class Match {
   private Match(Board board,
       MatchSettings matchSettings,
       Player activePlayer,
-      Map<Player, Integer> wallPool,
+      WallPool wallPool,
       MatchStatus matchStatus,
       TurnEnactorFactory turnEnactorFactory,
       TurnValidator turnValidator) {
@@ -82,16 +85,18 @@ public final class Match {
   private Match doTurnUnchecked(Turn turn) {
     var enactor = turnEnactorFactory.getEnactor(turn);
     var newBoard = enactor.enactTurn(turn, board);
-    var newWallPool = decrementPlayerWalls(turn.getCauser());
     var newMatchStatus = updateMatchStatus(turn, newBoard);
+    var newWallPool = wallPool;
+    if (turn instanceof PlaceWallTurn) {
+      newWallPool = wallPool.takeWall(turn.getCauser());
+    }
     return new Match(newBoard, matchSettings, getNextActivePlayer(),
-        newWallPool, matchStatus, turnEnactorFactory, turnValidator);
+        newWallPool, newMatchStatus, turnEnactorFactory, turnValidator);
   }
 
   // TODO extract this
   private MatchStatus updateMatchStatus(Turn turn, Board newBoard) {
     // TODO check for stalemate
-    // TODO check for victory
     var player = turn.getCauser();
     if (turn instanceof MovePawnTurn) {
       var boardSettings = newBoard.getBoardSettings();
@@ -127,19 +132,11 @@ public final class Match {
     return matchStatus;
   }
 
-  // TODO extract this
-  private Map<Player, Integer> decrementPlayerWalls(Player player) {
-    Map<Player, Integer> newRemainingPlayerWalls = new HashMap<>(wallPool);
-    var oldValue = newRemainingPlayerWalls.get(player);
-    newRemainingPlayerWalls.put(player, oldValue - 1);
-    return newRemainingPlayerWalls;
-  }
-
   /**
    * Get the number of walls a player has left
    */
-  public int getRemainingWalls(Player player) {
-    return wallPool.get(player);
+  public int getWallsLeft(Player player) {
+    return wallPool.getWallsLeft(player);
   }
 
   /**
