@@ -28,18 +28,10 @@ public enum PlaceWallTurnEnactor implements TurnEnactor {
 
   private Match enactPlaceWallTurn(PlaceWallTurn turn, Match match) {
     var board = match.getBoard();
-    var newBoard = board.setWallPiece(turn.getCauser(),
+    var newBoard = board.placeWall(turn.getCauser(),
         turn.getFirstCoordinate(),
         turn.getSecondCoordinate());
     var updatedWalls = updatePlayerWalls(turn, match);
-    return Match.builder()
-        .board(newBoard)
-        .matchSettings(match.getMatchSettings())
-        .turnEnactorFactory(match.getTurnEnactorFactory())
-        .turnValidatorFactory(match.getTurnValidatorFactory())
-        .currentPlayerTurn(match.getNextPlayer())
-        .playerWalls(updatedWalls)
-        .build();
   }
 
   // TODO this could be done better
