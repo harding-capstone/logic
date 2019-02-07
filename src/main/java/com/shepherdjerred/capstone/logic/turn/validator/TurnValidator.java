@@ -5,5 +5,5 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 
 public interface TurnValidator {
 
-  boolean isTurnValid(Turn turn, Match match);
+  TurnValidationResult isTurnValid(Turn turn, Match match);
 }

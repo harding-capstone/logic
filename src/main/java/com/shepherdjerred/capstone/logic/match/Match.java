@@ -7,7 +7,6 @@ import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
-import com.shepherdjerred.capstone.logic.turn.exception.TurnOutOfOrderException;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +38,11 @@ public final class Match {
       TurnValidatorFactory turnValidatorFactory) {
     this.board = new Board(matchSettings.getBoardSettings(), matchSettings.getPlayerCount());
     this.matchSettings = matchSettings;
-    this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidatorFactory = turnValidatorFactory;
     this.activePlayer = matchSettings.getStartingPlayer();
     this.remainingPlayerWalls = initializePlayerWalls(matchSettings);
     this.matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
+    this.turnEnactorFactory = turnEnactorFactory;
+    this.turnValidatorFactory = turnValidatorFactory;
   }
 
   private Match(Board board,
@@ -55,27 +54,29 @@ public final class Match {
       TurnValidatorFactory turnValidatorFactory) {
     this.board = board;
     this.matchSettings = matchSettings;
-    this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidatorFactory = turnValidatorFactory;
     this.activePlayer = activePlayer;
     this.remainingPlayerWalls = remainingPlayerWalls;
     this.matchStatus = matchStatus;
+    this.turnEnactorFactory = turnEnactorFactory;
+    this.turnValidatorFactory = turnValidatorFactory;
   }
 
-  /**
-   * Do a turn
-   */
   public Match doTurn(Turn turn) {
-    if (activePlayer != turn.getCauser()) {
-      throw new TurnOutOfOrderException(turn);
-    }
-    var turnValidator = turnValidatorFactory.getValidator(turn);
-    if (turnValidator.isTurnValid(turn, this)) {
-      var turnEnactor = turnEnactorFactory.getEnactor(turn);
-      return turnEnactor.enactTurn(turn, this);
+    var validator = turnValidatorFactory.getValidator(turn);
+    var validatorResult = validator.isTurnValid(turn, this);
+    if (validatorResult.isHasFailed()) {
+      throw new InvalidTurnException(turn, validatorResult);
     } else {
-      throw new InvalidTurnException(turn);
+      return doTurnUnchecked(turn);
     }
+  }
+
+  private Match doTurnUnchecked(Turn turn) {
+    var enactor = turnEnactorFactory.getEnactor(turn);
+    var newBoard = enactor.enactTurn(turn, board);
+    // TODO check for victory
+    // TODO decrement walls
+    return new Match(newBoard, matchSettings, getNextActivePlayer(), remainingPlayerWalls, matchStatus, turnEnactorFactory, turnValidatorFactory);
   }
 
   /**

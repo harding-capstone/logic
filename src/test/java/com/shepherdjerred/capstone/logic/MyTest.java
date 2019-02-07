@@ -6,7 +6,6 @@ import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.match.initializer.DefaultMatchInitializer;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.enactor.DefaultTurnEnactorFactory;
@@ -20,13 +19,12 @@ public class MyTest {
   @Test
   public void myTest() {
     var boardSettings = new BoardSettings(9);
-    var matchSettings = new MatchSettings(PlayerCount.TWO, 10, boardSettings, Player.ONE);
+    var matchSettings = new MatchSettings(10, boardSettings, PlayerCount.TWO, Player.ONE);
 
     var matchState = new Match(
         matchSettings,
-        DefaultTurnValidatorFactory.INSTANCE,
         DefaultTurnEnactorFactory.INSTANCE,
-        DefaultMatchInitializer.INSTANCE
+        DefaultTurnValidatorFactory.INSTANCE
     );
 
     var turn1 = new MovePawnTurn(Player.ONE, new Coordinate(8, 0), new Coordinate(8, 2));

@@ -3,6 +3,7 @@ package com.shepherdjerred.capstone.logic.board;
 import com.shepherdjerred.capstone.logic.Player;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
+import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
@@ -118,6 +119,10 @@ public final class Board {
     return new Board(boardLayout, playerCount, newPiecesMap, pawnLocations);
   }
 
+  public BoardCell getCell(Coordinate coordinate) {
+    return boardLayout.getCell(coordinate);
+  }
+
   public boolean isPawnCell(Coordinate coordinate) {
     return boardLayout.isPawnCell(coordinate);
   }
@@ -130,6 +135,7 @@ public final class Board {
    * Checks if a piece exists at a Coordinate
    */
   public boolean hasPiece(Coordinate coordinate) {
+    System.out.println(pieces);
     return pieces.containsKey(coordinate);
   }
 
