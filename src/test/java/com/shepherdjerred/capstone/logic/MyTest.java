@@ -2,15 +2,17 @@ package com.shepherdjerred.capstone.logic;
 
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.match.MatchFormatter;
+import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.match.initializer.DefaultMatchInitializer;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.enactor.DefaultTurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.validator.DefaultTurnValidatorFactory;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 
 public class MyTest {
@@ -37,9 +39,12 @@ public class MyTest {
 
     var matchFormatter = MatchFormatter.INSTANCE;
 
-    System.out.println(matchFormatter.matchToString(matchState));
-    System.out.println(matchFormatter.matchToString(match1));
-    System.out.println(matchFormatter.matchToString(match2));
-    System.out.println(matchFormatter.matchToString(match3));
+    List<Match> matchStates = new ArrayList<>();
+    matchStates.add(matchState);
+    matchStates.add(match1);
+    matchStates.add(match2);
+    matchStates.add(match3);
+
+    System.out.println(matchFormatter.matchesToString(matchStates));
   }
 }

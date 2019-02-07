@@ -7,6 +7,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Represents the Quoridor board layout. In a standard 9x9 game of Quoridor, the boardCells array
+ * will be 17 * 17. The boardCells array stores both the pawn spaces and grooves where walls are
+ * placed. Along with the wall and pawn spaces in the boardCells array, there are Null cells which
+ * represent areas in the array where no element exists on the Quoridor board. These BoardCells
+ * should be ignored.
+ */
 @ToString
 @EqualsAndHashCode
 public final class BoardLayout {
@@ -16,9 +23,10 @@ public final class BoardLayout {
   private final BoardCell[][] boardCells;
 
   /**
-   * Constructor for a new board
+   * Constructor for a new BoardLayout. This constructor will create a BoardLayout based on the
+   * BoardSettings object it receives.
    *
-   * @param boardSettings Settings for the board
+   * @param boardSettings Settings to use when creating the BoardLayout
    */
   public BoardLayout(BoardSettings boardSettings) {
     this.boardSettings = boardSettings;
@@ -38,10 +46,30 @@ public final class BoardLayout {
     return boardCells[coordinate.getX()][coordinate.getY()];
   }
 
+  public boolean isPawnCell(Coordinate coordinate) {
+    return getCell(coordinate) == BoardCell.PAWN;
+  }
+
+  public boolean isWallCell(Coordinate coordinate) {
+    return getCell(coordinate) == BoardCell.WALL;
+  }
+
+  /**
+   * Checks if a Coordinate is invalid on this board
+   *
+   * @param coordinate The Coordinate to check
+   * @return True if the Coordinate is invalid, false otherwise
+   */
   public boolean isCoordinateInvalid(Coordinate coordinate) {
     return !isCoordinateValid(coordinate);
   }
 
+  /**
+   * Checks if a coordinate is valid on this board
+   *
+   * @param coordinate The Coordinate to check
+   * @return True if the Coordinate is valid, false otherwise
+   */
   public boolean isCoordinateValid(Coordinate coordinate) {
     var gridSize = boardSettings.getGridSize();
     var x = coordinate.getX();
@@ -53,17 +81,12 @@ public final class BoardLayout {
   }
 
   /**
-   * Creates a matrix of BoardCell
+   * Creates a matrix of BoardCells. Used for constructor initialization.
    *
    * @param boardSettings Settings to use when creating the board
    * @return A matrix of BoardCell based on the board settings
    */
   private BoardCell[][] createBoardCells(BoardSettings boardSettings) {
-
-    if (boardSettings.getBoardSize() % 2 != 1) {
-      throw new IllegalArgumentException("Board size must be an odd number");
-    }
-
     var gridSize = boardSettings.getGridSize();
     var boardCells = new BoardCell[gridSize][gridSize];
 
@@ -79,8 +102,8 @@ public final class BoardLayout {
   /**
    * Creates a single BoardCell
    *
-   * @param coordinate The coordinate at which that the boardcell will exist
-   * @return The BoardCell that should exist a the coordinate
+   * @param coordinate The Coordinate at which that the BoardCell will exist
+   * @return The BoardCell to should use
    */
   private BoardCell createBoardCell(Coordinate coordinate) {
     if (shouldBeNullCell(coordinate)) {
@@ -90,15 +113,15 @@ public final class BoardLayout {
     } else if (shouldBeWallCell(coordinate)) {
       return BoardCell.WALL;
     } else {
-      throw new IllegalStateException("Couldn't get board type for " + coordinate);
+      throw new IllegalStateException("Couldn't get BoardCell for " + coordinate);
     }
   }
 
   /**
-   * Checks if a boardcell should be null
+   * Checks if a BoardCell should be a Null BoardCell
    *
-   * @param coordinate The coordinate to check
-   * @return True if the boardcell should be null, or false otherwise
+   * @param coordinate The Coordinate to check
+   * @return True if the BoardCell should be Null, or false otherwise
    */
   private boolean shouldBeNullCell(Coordinate coordinate) {
     int x = coordinate.getX();
@@ -109,10 +132,10 @@ public final class BoardLayout {
   }
 
   /**
-   * Checks if a boardcell should be a pawn boardcell
+   * Checks if a BoardCell should be a Pawn BoardCell
    *
-   * @param coordinate The coordinate to check
-   * @return True if the boardcell should be a pawn boardcell, or false otherwise
+   * @param coordinate The Coordinate to check
+   * @return True if the BoardCell should be a Pawn BoardCell, or false otherwise
    */
   private boolean shouldBePawnCell(Coordinate coordinate) {
     int x = coordinate.getX();
@@ -123,10 +146,10 @@ public final class BoardLayout {
   }
 
   /**
-   * Checks if a boardcell should be a wall boardcell
+   * Checks if a BoardCell should be a wall BoardCell
    *
-   * @param coordinate The coordinate to check
-   * @return True if the boardcell should be a wall boardcell, or false otherwise
+   * @param coordinate The Coordinate to check
+   * @return True if the BoardCell should be a Wall BoardCell, or false otherwise
    */
   private boolean shouldBeWallCell(Coordinate coordinate) {
     int x = coordinate.getX();

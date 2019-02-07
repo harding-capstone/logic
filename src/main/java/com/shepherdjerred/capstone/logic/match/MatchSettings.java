@@ -11,15 +11,15 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class MatchSettings {
 
-  private final PlayerCount playerCount;
   private final int wallsPerPlayer;
   private final BoardSettings boardSettings;
+  private final PlayerCount playerCount;
   private final Player startingPlayer;
 
   public MatchSettings(
-      PlayerCount playerCount,
       int wallsPerPlayer,
       BoardSettings boardSettings,
+      PlayerCount playerCount,
       Player startingPlayer) {
 
     if (playerCount == PlayerCount.TWO) {

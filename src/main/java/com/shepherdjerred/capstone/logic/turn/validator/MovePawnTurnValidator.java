@@ -1,7 +1,6 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
@@ -41,12 +40,12 @@ public enum MovePawnTurnValidator implements TurnValidator {
 
   private boolean isSourceCellTypePawn(MovePawnTurn turn, Match match) {
     var source = turn.getSource();
-    return match.getBoard().getBoardCell(source) == BoardCell.PAWN;
+    return match.getBoard().isPawnCell(source);
   }
 
   private boolean isDestinationCellTypePawn(MovePawnTurn turn, Match match) {
     var destination = turn.getDestination();
-    return match.getBoard().getBoardCell(destination) == BoardCell.PAWN;
+    return match.getBoard().isPawnCell(destination);
   }
 
   private boolean isDestinationPieceEmpty(MovePawnTurn turn, Match match) {

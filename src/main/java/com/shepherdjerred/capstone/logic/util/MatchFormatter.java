@@ -1,11 +1,22 @@
-package com.shepherdjerred.capstone.logic.match;
+package com.shepherdjerred.capstone.logic.util;
 
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
+import java.util.List;
 
+/**
+ * Utility class for formatting a match state as a string
+ */
 public enum MatchFormatter {
   INSTANCE;
+
+  public String matchesToString(List<Match> states) {
+    var sb = new StringBuilder();
+    states.forEach(state -> sb.append(matchToString(state)).append("\n\n"));
+    return sb.toString();
+  }
 
   public String matchToString(Match match) {
     var gridSize = match.getMatchSettings().getBoardSettings().getGridSize();

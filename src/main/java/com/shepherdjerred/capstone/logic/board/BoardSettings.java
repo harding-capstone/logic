@@ -15,5 +15,9 @@ public final class BoardSettings {
   public BoardSettings(int boardSize) {
     this.boardSize = boardSize;
     this.gridSize = boardSize * 2 - 1;
+
+    if (boardSize % 2 != 1) {
+      throw new IllegalArgumentException("Board size must be odd");
+    }
   }
 }

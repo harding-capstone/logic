@@ -1,7 +1,12 @@
 package com.shepherdjerred.capstone.logic.piece;
 
 import com.shepherdjerred.capstone.logic.Player;
+import lombok.ToString;
 
+/**
+ * Represents an empty piece
+ */
+@ToString
 public enum NullPiece implements Piece {
   INSTANCE;
 
