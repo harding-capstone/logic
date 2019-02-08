@@ -18,7 +18,7 @@ public final class MatchFormatter {
   }
 
   public String matchToString(Match match) {
-    var gridSize = match.getMatchSettings().getBoardSettings().getGridSize();
+    var gridSize = match.getBoard().getBoardSettings().getGridSize();
 
     var sb = new StringBuilder();
     for (int y = gridSize - 1; y >= 0; y--) {

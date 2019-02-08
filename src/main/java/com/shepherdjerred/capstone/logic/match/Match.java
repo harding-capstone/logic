@@ -42,11 +42,6 @@ public final class Match {
   // Should wallPool and matchHistory be extracted?
   public static Match startNewMatch(MatchSettings matchSettings, Board board,
       TurnEnactorFactory turnEnactorFactory, TurnValidator turnValidator) {
-
-    if (!matchSettings.getBoardSettings().equals(board.getBoardSettings())) {
-      throw new IllegalArgumentException();
-    }
-
     var startingPlayer = matchSettings.getStartingPlayer();
     var wallPool = WallPool.createWallPool(matchSettings.getPlayerCount(),
         matchSettings.getWallsPerPlayer());

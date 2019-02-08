@@ -1,7 +1,6 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.player.Player;
-import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,13 +11,11 @@ import lombok.ToString;
 public final class MatchSettings {
 
   private final int wallsPerPlayer;
-  private final BoardSettings boardSettings;
   private final PlayerCount playerCount;
   private final Player startingPlayer;
 
   public MatchSettings(
       int wallsPerPlayer,
-      BoardSettings boardSettings,
       PlayerCount playerCount,
       Player startingPlayer) {
 
@@ -30,7 +27,6 @@ public final class MatchSettings {
 
     this.playerCount = playerCount;
     this.wallsPerPlayer = wallsPerPlayer;
-    this.boardSettings = boardSettings;
     this.startingPlayer = startingPlayer;
   }
 

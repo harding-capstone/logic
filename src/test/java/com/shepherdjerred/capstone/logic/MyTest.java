@@ -24,7 +24,6 @@ public class MyTest {
   public void myTest() {
     var boardSettings = new BoardSettings(9);
     var matchSettings = new MatchSettings(10,
-        boardSettings,
         PlayerCount.TWO,
         Player.ONE);
 

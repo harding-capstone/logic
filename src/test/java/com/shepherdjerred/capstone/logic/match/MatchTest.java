@@ -32,6 +32,7 @@ public class MatchTest {
   private Turn turn;
   private Match match;
   private MatchSettings matchSettings;
+  private BoardSettings boardSettings;
   @Mock
   private Board board;
   @Mock
@@ -49,9 +50,8 @@ public class MatchTest {
 
   // Be careful when changing, tests rely on these values
   private void setupObjects() {
-    var boardSettings = new BoardSettings(9);
-    when(board.getBoardSettings()).thenReturn(boardSettings);
-    matchSettings = new MatchSettings(10, boardSettings, PlayerCount.TWO, Player.ONE);
+    boardSettings = new BoardSettings(9);
+    matchSettings = new MatchSettings(10, PlayerCount.TWO, Player.ONE);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     turn = new MovePawnTurn(Player.ONE,
         MoveType.NORMAL,
@@ -63,6 +63,7 @@ public class MatchTest {
 
   // Be careful when changing, tests rely on these values
   private void setupMockBehavior() {
+    when(board.getBoardSettings()).thenReturn(boardSettings);
     when(turnValidator.isTurnValid(turn, match)).thenReturn(passingResult);
     when(turnEnactorFactory.getEnactor(turn)).thenReturn(turnEnactor);
     when(turnEnactor.enactTurn(turn, board)).thenReturn(board);
@@ -75,35 +76,35 @@ public class MatchTest {
 
   @Test
   public void getNextActivePlayer_ReturnsPlayerOneWhenPlayerTwoIsTheActiveInATwoPlayerGame() {
-    matchSettings = new MatchSettings(10, new BoardSettings(9), PlayerCount.TWO, Player.TWO);
+    matchSettings = new MatchSettings(10, PlayerCount.TWO, Player.TWO);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     assertEquals(Player.ONE, match.getNextActivePlayer());
   }
 
   @Test
   public void getNextActivePlayer_ReturnsPlayerTwoWhenPlayerOneIsTheActiveInAFourPlayerGame() {
-    matchSettings = new MatchSettings(10, new BoardSettings(9), PlayerCount.FOUR, Player.ONE);
+    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.ONE);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     assertEquals(Player.TWO, match.getNextActivePlayer());
   }
 
   @Test
   public void getNextActivePlayer_ReturnsPlayerThreeWhenPlayerTwoIsTheActiveInAFourPlayerGame() {
-    matchSettings = new MatchSettings(10, new BoardSettings(9), PlayerCount.FOUR, Player.TWO);
+    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.TWO);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     assertEquals(Player.THREE, match.getNextActivePlayer());
   }
 
   @Test
   public void getNextActivePlayer_ReturnsPlayerFourWhenPlayerThreeIsTheActiveInAFourPlayerGame() {
-    matchSettings = new MatchSettings(10, new BoardSettings(9), PlayerCount.FOUR, Player.THREE);
+    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.THREE);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     assertEquals(Player.FOUR, match.getNextActivePlayer());
   }
 
   @Test
   public void getNextActivePlayer_ReturnsPlayerOneWhenPlayerFourIsTheActiveInAFourPlayerGame() {
-    matchSettings = new MatchSettings(10, new BoardSettings(9), PlayerCount.FOUR, Player.FOUR);
+    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.FOUR);
     match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
     assertEquals(Player.ONE, match.getNextActivePlayer());
   }
