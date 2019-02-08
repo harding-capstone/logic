@@ -4,8 +4,7 @@ import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public enum MovePawnTurnEnactor implements TurnEnactor {
-  INSTANCE;
+public final class MovePawnTurnEnactor implements TurnEnactor {
 
   /**
    * Takes the steps to transform a given board state by the parameters in a turn

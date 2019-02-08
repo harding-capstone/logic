@@ -1,7 +1,9 @@
 package com.shepherdjerred.capstone.logic;
 
+import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
@@ -27,8 +29,11 @@ public class MyTest {
         Player.ONE);
 
     var initialMatchState = Match.startNewMatch(matchSettings,
-        TurnEnactorFactory.INSTANCE,
-        TurnValidator.INSTANCE);
+        Board.createNewBoard(BoardLayout.fromBoardSettings(boardSettings),
+            boardSettings,
+            matchSettings.getPlayerCount()),
+        new TurnEnactorFactory(),
+        new TurnValidator());
 
     var turn1 = new MovePawnTurn(Player.ONE,
         MoveType.NORMAL,
@@ -51,7 +56,7 @@ public class MyTest {
     var matchStateAfterTurn3 = matchStateAfterTurn2.doTurn(turn3);
 //    var matchStateAfterTurn4 = matchStateAfterTurn3.doTurn(turn4);
 
-    var matchFormatter = MatchFormatter.INSTANCE;
+    var matchFormatter = new MatchFormatter();
 
     List<Match> matchStates = new ArrayList<>();
     matchStates.add(initialMatchState);

@@ -6,8 +6,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public enum TurnValidator {
-  INSTANCE;
+public final class TurnValidator {
 
   public TurnValidationResult isTurnValid(Turn turn, Match match) {
     if (turn instanceof MovePawnTurn) {

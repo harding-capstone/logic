@@ -1,10 +1,9 @@
 package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
-import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
@@ -12,8 +11,6 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -39,17 +36,23 @@ public final class Match {
   @Getter
   private final MatchHistory matchHistory;
 
-  // TODO extract this maybe?
-  public static Match startNewMatch(MatchSettings matchSettings,
+  // TODO refactor
+  // This static factory might result in matches with their invariants violated
+  // Maybe there's a better way to do it?
+  // Should wallPool and matchHistory be extracted?
+  public static Match startNewMatch(MatchSettings matchSettings, Board board,
       TurnEnactorFactory turnEnactorFactory, TurnValidator turnValidator) {
-    var boardSettings = matchSettings.getBoardSettings();
-    var boardLayout = BoardLayout.fromBoardSettings(boardSettings);
-    var board = Board.createNewBoard(boardLayout, boardSettings, matchSettings.getPlayerCount());
+
+    if (!matchSettings.getBoardSettings().equals(board.getBoardSettings())) {
+      throw new IllegalArgumentException();
+    }
+
     var startingPlayer = matchSettings.getStartingPlayer();
     var wallPool = WallPool.createWallPool(matchSettings.getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
+
     return new Match(board,
         matchSettings,
         startingPlayer,
@@ -166,7 +169,7 @@ public final class Match {
       case TWO:
         return Player.ONE;
       default:
-        throw new IllegalStateException("Current player shouldn't exist " + activePlayer);
+        throw new InvalidPlayerException(activePlayer);
     }
   }
 
@@ -181,38 +184,7 @@ public final class Match {
       case FOUR:
         return Player.ONE;
       default:
-        throw new IllegalStateException("Current player shouldn't exist " + activePlayer);
+        throw new InvalidPlayerException(activePlayer);
     }
-  }
-
-  /**
-   * Creates a Map with the initial wall count set for each player
-   */
-  private static Map<Player, Integer> initializePlayerWalls(MatchSettings matchSettings) {
-    int wallsPerPlayer = matchSettings.getWallsPerPlayer();
-    if (matchSettings.getPlayerCount() == PlayerCount.TWO) {
-      return initializeWallsForTwoPlayers(wallsPerPlayer);
-    } else if (matchSettings.getPlayerCount() == PlayerCount.FOUR) {
-      return initializeWallsForFourPlayers(wallsPerPlayer);
-    } else {
-      throw new IllegalStateException("Unknown player count " + matchSettings.getPlayerCount());
-    }
-  }
-
-  private static Map<Player, Integer> initializeWallsForTwoPlayers(int wallsPerPlayer) {
-    HashMap<Player, Integer> playerWallMap = new HashMap<>();
-    playerWallMap.put(Player.ONE, wallsPerPlayer);
-    playerWallMap.put(Player.TWO, wallsPerPlayer);
-    return playerWallMap;
-  }
-
-  private static Map<Player, Integer> initializeWallsForFourPlayers(
-      int wallsPerPlayer) {
-    HashMap<Player, Integer> playerWallMap = new HashMap<>();
-    playerWallMap.put(Player.ONE, wallsPerPlayer);
-    playerWallMap.put(Player.TWO, wallsPerPlayer);
-    playerWallMap.put(Player.THREE, wallsPerPlayer);
-    playerWallMap.put(Player.FOUR, wallsPerPlayer);
-    return playerWallMap;
   }
 }

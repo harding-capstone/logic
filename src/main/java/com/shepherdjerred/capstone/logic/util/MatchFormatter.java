@@ -9,8 +9,7 @@ import java.util.List;
 /**
  * Utility class for formatting a match state as a string
  */
-public enum MatchFormatter {
-  INSTANCE;
+public final class MatchFormatter {
 
   public String matchesToString(List<Match> states) {
     var sb = new StringBuilder();

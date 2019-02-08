@@ -33,13 +33,21 @@ public final class WallPool {
   }
 
   public int getWallsLeft(Player player) {
-    return playerWalls.get(player);
+    if (playerWalls.containsKey(player)) {
+      return playerWalls.get(player);
+    } else {
+      throw new IllegalArgumentException(player.toString());
+    }
   }
 
   public WallPool takeWall(Player player) {
-    Map<Player, Integer> newWallCounts = new HashMap<>(playerWalls);
-    var currentWallsLeft = getWallsLeft(player) - 1;
-    newWallCounts.put(player, currentWallsLeft);
-    return new WallPool(newWallCounts);
+    if (playerWalls.containsKey(player)) {
+      Map<Player, Integer> newWallCounts = new HashMap<>(playerWalls);
+      var currentWallsLeft = getWallsLeft(player) - 1;
+      newWallCounts.put(player, currentWallsLeft);
+      return new WallPool(newWallCounts);
+    } else {
+      throw new IllegalArgumentException(player.toString());
+    }
   }
 }
