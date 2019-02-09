@@ -9,6 +9,7 @@ import com.shepherdjerred.capstone.logic.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+// TODO add a graph representation
 /**
  * Represents the positions that Pieces exist on the game board.
  */

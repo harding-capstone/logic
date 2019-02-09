@@ -12,5 +12,6 @@ module com.shepherdjererd.capstone.logic {
   exports com.shepherdjerred.capstone.logic.turn.validator;
   exports com.shepherdjerred.capstone.logic.turn.enactor;
   exports com.shepherdjerred.capstone.logic.turn.exception;
+  exports com.shepherdjerred.capstone.logic.turn.generator;
   exports com.shepherdjerred.capstone.logic.util;
 }
