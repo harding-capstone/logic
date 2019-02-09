@@ -26,8 +26,7 @@ public final class Board {
   /**
    * Private constructor used to update the object
    */
-  private Board(
-      BoardLayout boardLayout, PieceLocationTracker pieceLocationTracker) {
+  private Board(BoardLayout boardLayout, PieceLocationTracker pieceLocationTracker) {
     this.boardLayout = boardLayout;
     this.pieceLocationTracker = pieceLocationTracker;
   }
@@ -47,6 +46,8 @@ public final class Board {
   }
 
   // TODO better validation (return error messages)
+  // TODO extract validation
+
   /**
    * Moves a pawn
    *
@@ -67,6 +68,8 @@ public final class Board {
   }
 
   // TODO better validation (return error messages)
+  // TODO extract validation
+
   /**
    * Places a wall
    *
@@ -114,7 +117,7 @@ public final class Board {
    * Checks if a piece exists at a Coordinate
    */
   public boolean isEmpty(Coordinate coordinate) {
-    return !hasPiece(coordinate);
+    return pieceLocationTracker.isEmpty(coordinate);
   }
 
   /**
