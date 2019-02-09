@@ -36,6 +36,7 @@ public class MatchTurnEnactor {
     var newBoard = enactor.enactTurn(turn, board);
     var newMatchStatus = new MatchStatusUpdater().updateMatchStatus(turn, match);
 
+    // TODO I think this would be better to do in the turn specific handler, but I'm not sure how that can be done well
     var newWallPool = match.getPlayerWallBank();
     if (turn instanceof PlaceWallTurn) {
       newWallPool = newWallPool.takeWall(turn.getCauser());

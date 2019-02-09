@@ -6,7 +6,8 @@ import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public class MatchStatusUpdater {
+public final class MatchStatusUpdater {
+  // TODO Stalemate rule goes here (if we have one)
   public MatchStatus updateMatchStatus(Turn turn, Match match) {
     var player = turn.getCauser();
     if (turn instanceof MovePawnTurn) {
