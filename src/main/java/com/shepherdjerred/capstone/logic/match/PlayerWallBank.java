@@ -11,11 +11,11 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public final class WallPool {
+public final class PlayerWallBank {
 
   public final Map<Player, Integer> playerWalls;
 
-  public static WallPool createWallPool(PlayerCount playerCount, int numberOfWalls) {
+  public static PlayerWallBank createWallPool(PlayerCount playerCount, int numberOfWalls) {
     Map<Player, Integer> walls = new HashMap<>();
     Set<Player> players = new HashSet<>();
     players.add(Player.ONE);
@@ -25,10 +25,10 @@ public final class WallPool {
       players.add(Player.FOUR);
     }
     players.forEach(player -> walls.put(player, numberOfWalls));
-    return new WallPool(walls);
+    return new PlayerWallBank(walls);
   }
 
-  private WallPool(Map<Player, Integer> playerWalls) {
+  private PlayerWallBank(Map<Player, Integer> playerWalls) {
     this.playerWalls = playerWalls;
   }
 
@@ -40,12 +40,12 @@ public final class WallPool {
     }
   }
 
-  public WallPool takeWall(Player player) {
+  public PlayerWallBank takeWall(Player player) {
     if (playerWalls.containsKey(player)) {
       Map<Player, Integer> newWallCounts = new HashMap<>(playerWalls);
       var currentWallsLeft = getWallsLeft(player) - 1;
       newWallCounts.put(player, currentWallsLeft);
-      return new WallPool(newWallCounts);
+      return new PlayerWallBank(newWallCounts);
     } else {
       throw new IllegalArgumentException(player.toString());
     }

@@ -10,31 +10,29 @@ import lombok.ToString;
 /**
  * A match of Quoridor
  */
+@Getter
 @ToString
 @EqualsAndHashCode
 public final class Match {
 
-  @Getter
   private final Board board;
-  @Getter
   private final MatchSettings matchSettings;
-  @Getter
   private final Player activePlayer;
-  @Getter
-  private final WallPool wallPool;
-  @Getter
+  private final PlayerWallBank playerWallBank;
   private final MatchStatus matchStatus;
-  @Getter
   private final MatchHistory matchHistory;
 
   // TODO refactor
   // This static factory might result in matches with their invariants violated
-  //   * Player count might not match, which is very bad
   // Maybe there's a better way to do it?
-  // Should wallPool and matchHistory be extracted?
+  // Should playerWallBank and matchHistory be extracted?
   public static Match startNewMatch(MatchSettings matchSettings, Board board) {
+    if (matchSettings.getBoardSettings() != board.getBoardSettings()) {
+      throw new IllegalArgumentException("Board not compatible with match");
+    }
+
     var startingPlayer = matchSettings.getStartingPlayer();
-    var wallPool = WallPool.createWallPool(matchSettings.getPlayerCount(),
+    var wallPool = PlayerWallBank.createWallPool(matchSettings.getBoardSettings().getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(Player.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
@@ -50,13 +48,13 @@ public final class Match {
   public Match(Board board,
       MatchSettings matchSettings,
       Player activePlayer,
-      WallPool wallPool,
+      PlayerWallBank playerWallBank,
       MatchStatus matchStatus,
       MatchHistory matchHistory) {
     this.board = board;
     this.matchSettings = matchSettings;
     this.activePlayer = activePlayer;
-    this.wallPool = wallPool;
+    this.playerWallBank = playerWallBank;
     this.matchStatus = matchStatus;
     this.matchHistory = matchHistory;
   }
@@ -65,6 +63,6 @@ public final class Match {
    * Get the number of walls a player has left
    */
   public int getWallsLeft(Player player) {
-    return wallPool.getWallsLeft(player);
+    return playerWallBank.getWallsLeft(player);
   }
 }
