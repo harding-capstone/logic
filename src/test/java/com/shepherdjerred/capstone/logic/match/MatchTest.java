@@ -139,6 +139,7 @@ public class MatchTest {
 
   @Test
   public void doTurn_CallsEnactor_WhenTurnValidationSucceeds() {
-
+    match.doTurn(turn);
+    verify(turnEnactor, times(1)).enactTurn(turn, match.getBoard());
   }
 }

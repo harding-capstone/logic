@@ -15,7 +15,7 @@ public final class MatchStatus {
   private final Player victor;
   private final Status status;
 
-  enum Status {
+  public enum Status {
     IN_PROGRESS, STALEMATE, VICTORY
   }
 }
