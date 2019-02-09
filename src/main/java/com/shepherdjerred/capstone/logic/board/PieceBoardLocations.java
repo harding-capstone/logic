@@ -1,6 +1,5 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.shepherdjerred.capstone.logic.board.exception.PieceInitializer;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
@@ -12,23 +11,24 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public final class PieceLocationTracker {
+public final class PieceBoardLocations {
 
   private final Map<Coordinate, Piece> pieces;
   private final Map<Player, Coordinate> pawnLocations;
 
-  public PieceLocationTracker() {
+  public PieceBoardLocations() {
     pieces = new HashMap<>();
     pawnLocations = new HashMap<>();
   }
 
-  public static PieceLocationTracker initializePieceLocations(BoardSettings boardSettings) {
-    Map<Player, Coordinate> pawnLocations = PieceInitializer.initializePawnLocations(boardSettings);
-    Map<Coordinate, Piece> pieces = PieceInitializer.initializePieces(pawnLocations);
-    return new PieceLocationTracker(pieces, pawnLocations);
+  public static PieceBoardLocations initializePieceLocations(BoardSettings boardSettings,
+      PieceInitializer pieceInitializer) {
+    Map<Player, Coordinate> pawnLocations = pieceInitializer.initializePawnLocations(boardSettings);
+    Map<Coordinate, Piece> pieces = pieceInitializer.pawnLocationsToPieceLocations(pawnLocations);
+    return new PieceBoardLocations(pieces, pawnLocations);
   }
 
-  private PieceLocationTracker(Map<Coordinate, Piece> pieces,
+  public PieceBoardLocations(Map<Coordinate, Piece> pieces,
       Map<Player, Coordinate> pawnLocations) {
     this.pieces = pieces;
     this.pawnLocations = pawnLocations;
@@ -51,7 +51,7 @@ public final class PieceLocationTracker {
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
-  public PieceLocationTracker movePawn(Player player, Coordinate destination) {
+  public PieceBoardLocations movePawn(Player player, Coordinate destination) {
     var newPiecesMap = new HashMap<>(pieces);
     var newPawnLocations = new HashMap<>(pawnLocations);
     var originalPawnLocation = getPawnLocation(player);
@@ -61,7 +61,7 @@ public final class PieceLocationTracker {
     newPiecesMap.put(destination, originalPiece);
     newPawnLocations.put(player, destination);
 
-    return new PieceLocationTracker(newPiecesMap, newPawnLocations);
+    return new PieceBoardLocations(newPiecesMap, newPawnLocations);
   }
 
   /**
@@ -72,12 +72,12 @@ public final class PieceLocationTracker {
    * @param c2 Second coordinate of the wall
    * @return The BoardPieces after the move
    */
-  public PieceLocationTracker placeWall(Player player, Coordinate c1, Coordinate c2) {
+  public PieceBoardLocations placeWall(Player player, Coordinate c1, Coordinate c2) {
     var newPiecesMap = new HashMap<>(pieces);
     newPiecesMap.put(c1, new WallPiece(player));
     newPiecesMap.put(c2, new WallPiece(player));
 
-    return new PieceLocationTracker(newPiecesMap, pawnLocations);
+    return new PieceBoardLocations(newPiecesMap, pawnLocations);
   }
 
 

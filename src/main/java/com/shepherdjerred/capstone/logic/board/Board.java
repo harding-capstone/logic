@@ -9,27 +9,30 @@ import com.shepherdjerred.capstone.logic.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-// TODO add a graph representation
+
 /**
  * Represents the positions that Pieces exist on the game board.
  */
+// TODO add a graph representation
 @ToString
 @EqualsAndHashCode
 public final class Board {
 
   private final BoardLayout boardLayout;
-  private final PieceLocationTracker pieceLocationTracker;
+  private final PieceBoardLocations pieceBoardLocations;
 
-  public static Board createNewBoard(BoardLayout boardLayout, BoardSettings boardSettings) {
-    return new Board(boardLayout, PieceLocationTracker.initializePieceLocations(boardSettings));
+  public static Board createBoard(BoardLayout boardLayout,
+      PieceBoardLocations pieceBoardLocations) {
+    // TODO validate that boardLayout and pieceBoardLocations are compatible (grid size check)
+    return new Board(boardLayout, pieceBoardLocations);
   }
 
   /**
    * Private constructor used to update the object
    */
-  private Board(BoardLayout boardLayout, PieceLocationTracker pieceLocationTracker) {
+  private Board(BoardLayout boardLayout, PieceBoardLocations pieceBoardLocations) {
     this.boardLayout = boardLayout;
-    this.pieceLocationTracker = pieceLocationTracker;
+    this.pieceBoardLocations = pieceBoardLocations;
   }
 
   public BoardSettings getBoardSettings() {
@@ -43,11 +46,9 @@ public final class Board {
    * @return The coordinate of the player's pawn
    */
   public Coordinate getPawnLocation(Player player) {
-    return pieceLocationTracker.getPawnLocation(player);
+    return pieceBoardLocations.getPawnLocation(player);
   }
 
-  // TODO better validation (return error messages)
-  // TODO extract validation
 
   /**
    * Moves a pawn
@@ -56,6 +57,8 @@ public final class Board {
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
+  // TODO better validation (return error messages)
+  // TODO extract validation
   public Board movePawn(Player player, Coordinate destination) {
     if (boardLayout.isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
@@ -64,12 +67,10 @@ public final class Board {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPiecesLocationTracker = pieceLocationTracker.movePawn(player, destination);
+    var newPiecesLocationTracker = pieceBoardLocations.movePawn(player, destination);
     return new Board(boardLayout, newPiecesLocationTracker);
   }
 
-  // TODO better validation (return error messages)
-  // TODO extract validation
 
   /**
    * Places a wall
@@ -79,6 +80,8 @@ public final class Board {
    * @param c2 Second coordinate of the wall
    * @return The BoardPieces after the move
    */
+  // TODO better validation (return error messages)
+  // TODO extract validation
   public Board placeWall(Player player, Coordinate c1, Coordinate c2) {
     if (boardLayout.isCoordinateInvalid(c1)) {
       throw new CoordinateOutOfBoundsException(c1);
@@ -91,7 +94,7 @@ public final class Board {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPieceLocationTracker = pieceLocationTracker.placeWall(player, c1, c2);
+    var newPieceLocationTracker = pieceBoardLocations.placeWall(player, c1, c2);
     return new Board(boardLayout, newPieceLocationTracker);
   }
 
@@ -111,14 +114,14 @@ public final class Board {
    * Checks if a piece exists at a Coordinate
    */
   public boolean hasPiece(Coordinate coordinate) {
-    return pieceLocationTracker.hasPiece(coordinate);
+    return pieceBoardLocations.hasPiece(coordinate);
   }
 
   /**
    * Checks if a piece exists at a Coordinate
    */
   public boolean isEmpty(Coordinate coordinate) {
-    return pieceLocationTracker.isEmpty(coordinate);
+    return pieceBoardLocations.isEmpty(coordinate);
   }
 
   /**
@@ -128,6 +131,6 @@ public final class Board {
    * @return The Piece at the Coordinate, or a NullPiece if there is none
    */
   public Piece getPiece(Coordinate coordinate) {
-    return pieceLocationTracker.getPiece(coordinate);
+    return pieceBoardLocations.getPiece(coordinate);
   }
 }

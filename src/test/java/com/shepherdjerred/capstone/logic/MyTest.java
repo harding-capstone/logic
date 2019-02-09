@@ -3,18 +3,21 @@ package com.shepherdjerred.capstone.logic;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.PieceBoardLocations;
+import com.shepherdjerred.capstone.logic.board.PieceInitializer;
+import com.shepherdjerred.capstone.logic.board.layout.BoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.match.Match;
-import com.shepherdjerred.capstone.logic.player.Player;
-import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
-import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
-import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
+import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
+import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
+import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
+import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -23,16 +26,21 @@ public class MyTest {
 
   @Test
   public void myTest() {
+
     var enactor = new MatchTurnEnactor(new TurnEnactorFactory(), new TurnValidator());
 
     var boardSettings = new BoardSettings(9, PlayerCount.TWO);
-    var matchSettings = new MatchSettings(10,
-        Player.ONE,
-        boardSettings);
+    var matchSettings = new MatchSettings(10, Player.ONE, boardSettings);
 
-    var initialMatchState = Match.startNewMatch(matchSettings,
-        Board.createNewBoard(BoardLayout.fromBoardSettings(boardSettings),
-            boardSettings));
+    var boardCellsInitializer = new BoardCellsInitializer();
+    var boardLayout = BoardLayout.fromBoardSettings(boardCellsInitializer, boardSettings);
+
+    var pieceBoardLocationsInitializer = new PieceInitializer();
+    var pieceBoardLocations = PieceBoardLocations.initializePieceLocations(boardSettings,
+        pieceBoardLocationsInitializer);
+
+    var board = Board.createBoard(boardLayout, pieceBoardLocations);
+    var initialMatchState = Match.startNewMatch(matchSettings, board);
 
     var turn1 = new MovePawnTurn(Player.ONE,
         MoveType.NORMAL,
@@ -45,10 +53,10 @@ public class MyTest {
     var turn3 = new PlaceWallTurn(Player.ONE,
         new Coordinate(8, 13),
         new Coordinate(6, 13));
-    var turn4 = new MovePawnTurn(Player.TWO,
-        MoveType.NORMAL,
-        new Coordinate(8, 14),
-        new Coordinate(8, 12));
+//      var turn4 = new MovePawnTurn(Player.TWO,
+//          MoveType.NORMAL,
+//          new Coordinate(8, 14),
+//          new Coordinate(8, 12));
 
     var matchStateAfterTurn1 = enactor.enactTurn(turn1, initialMatchState);
     var matchStateAfterTurn2 = enactor.enactTurn(turn2, matchStateAfterTurn1);
