@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.piece;
 
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public final class PawnPiece implements Piece {
 
-  private final Player owner;
+  private final PlayerId owner;
 
   @Override
   public char toChar() {

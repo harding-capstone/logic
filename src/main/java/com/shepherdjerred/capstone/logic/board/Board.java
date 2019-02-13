@@ -1,52 +1,43 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.shepherdjerred.capstone.logic.player.Player;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
-import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.piece.NullPiece;
-import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
-import com.shepherdjerred.capstone.logic.piece.WallPiece;
-import java.util.HashMap;
-import java.util.Map;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
 
 /**
  * Represents the positions that Pieces exist on the game board.
  */
+// TODO add a graph representation
 @ToString
 @EqualsAndHashCode
 public final class Board {
 
   private final BoardLayout boardLayout;
-  private final PlayerCount playerCount;
-  private final Map<Coordinate, Piece> pieces;
-  private final Map<Player, Coordinate> pawnLocations;
+  private final BoardPieces boardPieces;
 
-  public static Board createNewBoard(BoardLayout boardLayout,
-      BoardSettings boardSettings,
-      PlayerCount playerCount) {
-    Map<Player, Coordinate> pawnLocations = initializePawnLocations(boardSettings, playerCount);
-    Map<Coordinate, Piece> pieces = initializePieces(pawnLocations);
-    return new Board(boardLayout, playerCount, pieces, pawnLocations);
+  // This works but could make us create an invalid match state.. but that is probably outside of the scope of the class
+  public static Board createBoard(BoardLayout boardLayout,
+      BoardPieces boardPieces) {
+    if (!boardLayout.getBoardSettings().equals(boardPieces.getBoardSettings())) {
+      throw new IllegalArgumentException(
+          "Board settings must match between layout and piece locations");
+    }
+
+    return new Board(boardLayout, boardPieces);
   }
 
   /**
-   * Private constructor used to update the object
+   * Private constructor used to update the object.
    */
-  private Board(
-      BoardLayout boardLayout,
-      PlayerCount playerCount,
-      Map<Coordinate, Piece> pieces,
-      Map<Player, Coordinate> pawnLocations) {
+  private Board(BoardLayout boardLayout, BoardPieces boardPieces) {
     this.boardLayout = boardLayout;
-    this.playerCount = playerCount;
-    this.pieces = pieces;
-    this.pawnLocations = pawnLocations;
+    this.boardPieces = boardPieces;
   }
 
   public BoardSettings getBoardSettings() {
@@ -54,23 +45,26 @@ public final class Board {
   }
 
   /**
-   * Gets the location of the player's pawn
+   * Gets the location of the playerId's pawn.
    *
-   * @param player The player to get the pawn Coordinates of
-   * @return The coordinate of the player's pawn
+   * @param playerId The playerId to get the pawn Coordinates of
+   * @return The coordinate of the playerId's pawn
    */
-  public Coordinate getPawnLocation(Player player) {
-    return pawnLocations.get(player);
+  public Coordinate getPawnLocation(PlayerId playerId) {
+    return boardPieces.getPawnLocation(playerId);
   }
 
+
   /**
-   * Moves a pawn
+   * Moves a pawn.
    *
-   * @param player The owner of the pawn to move
+   * @param playerId The owner of the pawn to move
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
-  public Board movePawn(Player player, Coordinate destination) {
+  // TODO better validation (return error messages)
+  // TODO extract validation
+  public Board movePawn(PlayerId playerId, Coordinate destination) {
     if (boardLayout.isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
@@ -78,27 +72,22 @@ public final class Board {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPiecesMap = new HashMap<>(pieces);
-    var newPawnLocations = new HashMap<>(pawnLocations);
-    var originalPawnLocation = getPawnLocation(player);
-    var originalPiece = pieces.get(originalPawnLocation);
-
-    newPiecesMap.remove(originalPawnLocation);
-    newPiecesMap.put(destination, originalPiece);
-    newPawnLocations.put(player, destination);
-
-    return new Board(boardLayout, playerCount, newPiecesMap, newPawnLocations);
+    var newPiecesLocationTracker = boardPieces.movePawn(playerId, destination);
+    return new Board(boardLayout, newPiecesLocationTracker);
   }
 
+
   /**
-   * Places a wall
+   * Places a wall.
    *
-   * @param player The owner of the wall to place
+   * @param playerId The owner of the wall to place
    * @param c1 First coordinate of the wall
    * @param c2 Second coordinate of the wall
    * @return The BoardPieces after the move
    */
-  public Board placeWall(Player player, Coordinate c1, Coordinate c2) {
+  // TODO better validation (return error messages)
+  // TODO extract validation
+  public Board placeWall(PlayerId playerId, Coordinate c1, Coordinate c2) {
     if (boardLayout.isCoordinateInvalid(c1)) {
       throw new CoordinateOutOfBoundsException(c1);
     }
@@ -110,11 +99,8 @@ public final class Board {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPiecesMap = new HashMap<>(pieces);
-    newPiecesMap.put(c1, new WallPiece(player));
-    newPiecesMap.put(c2, new WallPiece(player));
-
-    return new Board(boardLayout, playerCount, newPiecesMap, pawnLocations);
+    var newPieceLocationTracker = boardPieces.placeWall(playerId, c1, c2);
+    return new Board(boardLayout, newPieceLocationTracker);
   }
 
   public BoardCell getBoardCell(Coordinate coordinate) {
@@ -130,76 +116,26 @@ public final class Board {
   }
 
   /**
-   * Checks if a piece exists at a Coordinate
+   * Checks if a piece exists at a Coordinate.
    */
   public boolean hasPiece(Coordinate coordinate) {
-    return pieces.containsKey(coordinate);
+    return boardPieces.hasPiece(coordinate);
   }
 
   /**
-   * Checks if a piece exists at a Coordinate
+   * Checks if a piece exists at a Coordinate.
    */
   public boolean isEmpty(Coordinate coordinate) {
-    return !hasPiece(coordinate);
+    return boardPieces.isEmpty(coordinate);
   }
 
   /**
-   * Gets the piece at a Coordinate
+   * Gets the piece at a Coordinate.
    *
    * @param coordinate The Coordinate to get the Piece from
    * @return The Piece at the Coordinate, or a NullPiece if there is none
    */
   public Piece getPiece(Coordinate coordinate) {
-    if (hasPiece(coordinate)) {
-      return pieces.get(coordinate);
-    } else {
-      return NullPiece.INSTANCE;
-    }
-  }
-
-  /**
-   * Initialize pawn pieces for the players
-   */
-  private static Map<Player, Coordinate> initializePawnLocations(BoardSettings boardSettings,
-      PlayerCount playerCount) {
-    var gridSize = boardSettings.getGridSize();
-
-    Map<Player, Coordinate> pawns = new HashMap<>();
-
-    pawns.put(Player.ONE, getStartingPawnCoordinateForPlayerOne(gridSize));
-    pawns.put(Player.TWO, getStartingPawnCoordinateForPlayerTwo(gridSize));
-
-    if (playerCount == PlayerCount.FOUR) {
-      pawns.put(Player.THREE, getStartingPawnCoordinateForPlayerThree(gridSize));
-      pawns.put(Player.FOUR, getStartingPawnCoordinateForPlayerFour(gridSize));
-    }
-
-    return pawns;
-  }
-
-  private static Map<Coordinate, Piece> initializePieces(Map<Player, Coordinate> pawnLocations) {
-    Map<Coordinate, Piece> pieces = new HashMap<>();
-    pawnLocations.forEach((player, coordinate) -> pieces.put(coordinate, new PawnPiece(player)));
-    return pieces;
-  }
-
-  private static Coordinate getStartingPawnCoordinateForPlayerOne(int gridSize) {
-    var midpoint = gridSize / 2;
-    return new Coordinate(midpoint, 0);
-  }
-
-  private static Coordinate getStartingPawnCoordinateForPlayerTwo(int gridSize) {
-    var midpoint = gridSize / 2;
-    return new Coordinate(midpoint, gridSize - 1);
-  }
-
-  private static Coordinate getStartingPawnCoordinateForPlayerThree(int gridSize) {
-    var midpoint = gridSize / 2;
-    return new Coordinate(0, midpoint);
-  }
-
-  private static Coordinate getStartingPawnCoordinateForPlayerFour(int gridSize) {
-    var midpoint = gridSize / 2;
-    return new Coordinate(gridSize - 1, midpoint);
+    return boardPieces.getPiece(coordinate);
   }
 }

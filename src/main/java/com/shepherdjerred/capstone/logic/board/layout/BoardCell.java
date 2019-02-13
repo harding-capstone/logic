@@ -11,6 +11,14 @@ import lombok.ToString;
 public enum BoardCell {
   PAWN, WALL, NULL;
 
+  public boolean isPawnBoardCell() {
+    return this == PAWN;
+  }
+
+  public boolean isWallBoardCell() {
+    return this == WALL;
+  }
+
   public char toChar() {
     if (this == PAWN) {
       return '■';
