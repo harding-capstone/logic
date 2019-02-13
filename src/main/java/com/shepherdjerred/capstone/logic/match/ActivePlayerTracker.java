@@ -1,50 +1,47 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException;
 
 // TODO this can be improved
-public class ActivePlayerTracker {
+public final class ActivePlayerTracker {
   /**
    * Returns the player who comes after the active player
    */
-  public Player getNextActivePlayer(Match match) {
-    var activePlayer = match.getActivePlayer();
-    var playerCount = match.getMatchSettings().getBoardSettings().getPlayerCount();
-
+  public PlayerId getNextActivePlayer(PlayerId activePlayerId, PlayerCount playerCount) {
     if (playerCount == PlayerCount.TWO) {
-      return getNextActivePlayerForTwoPlayerMatch(activePlayer);
+      return getNextActivePlayerForTwoPlayerMatch(activePlayerId);
     } else if (playerCount == PlayerCount.FOUR) {
-      return getNextActivePlayerForFourPlayerMatch(activePlayer);
+      return getNextActivePlayerForFourPlayerMatch(activePlayerId);
     } else {
       throw new IllegalStateException("Unknown player count " + playerCount);
     }
   }
 
-  private Player getNextActivePlayerForTwoPlayerMatch(Player activePlayer) {
-    switch (activePlayer) {
+  private PlayerId getNextActivePlayerForTwoPlayerMatch(PlayerId activePlayerId) {
+    switch (activePlayerId) {
       case ONE:
-        return Player.TWO;
+        return PlayerId.TWO;
       case TWO:
-        return Player.ONE;
+        return PlayerId.ONE;
       default:
-        throw new InvalidPlayerException(activePlayer);
+        throw new InvalidPlayerException(activePlayerId);
     }
   }
 
-  private Player getNextActivePlayerForFourPlayerMatch(Player activePlayer) {
-    switch (activePlayer) {
+  private PlayerId getNextActivePlayerForFourPlayerMatch(PlayerId activePlayerId) {
+    switch (activePlayerId) {
       case ONE:
-        return Player.TWO;
+        return PlayerId.TWO;
       case TWO:
-        return Player.THREE;
+        return PlayerId.THREE;
       case THREE:
-        return Player.FOUR;
+        return PlayerId.FOUR;
       case FOUR:
-        return Player.ONE;
+        return PlayerId.ONE;
       default:
-        throw new InvalidPlayerException(activePlayer);
+        throw new InvalidPlayerException(activePlayerId);
     }
   }
 }

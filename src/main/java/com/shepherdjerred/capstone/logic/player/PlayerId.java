@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.player;
 
-public enum Player {
+public enum PlayerId {
   ONE, TWO, THREE, FOUR, NULL;
 
   public int toInt() {

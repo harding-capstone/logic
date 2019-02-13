@@ -1,10 +1,10 @@
 package com.shepherdjerred.capstone.logic.piece;
 
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 
 public interface Piece {
 
-  Player getOwner();
+  PlayerId getOwner();
 
   char toChar();
 }

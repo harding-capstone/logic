@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,21 +12,21 @@ import lombok.ToString;
 public final class MatchSettings {
 
   private final int wallsPerPlayer;
-  private final Player startingPlayer;
+  private final PlayerId startingPlayerId;
   private final BoardSettings boardSettings;
 
   public MatchSettings(int wallsPerPlayer,
-      Player startingPlayer,
+      PlayerId startingPlayerId,
       BoardSettings boardSettings) {
 
     if (boardSettings.getPlayerCount() == PlayerCount.TWO) {
-      if (startingPlayer.toInt() > boardSettings.getPlayerCount().toInt()) {
+      if (startingPlayerId.toInt() > boardSettings.getPlayerCount().toInt()) {
         throw new IllegalArgumentException("Starting player cannot be greater than player count");
       }
     }
 
     this.wallsPerPlayer = wallsPerPlayer;
-    this.startingPlayer = startingPlayer;
+    this.startingPlayerId = startingPlayerId;
     this.boardSettings = boardSettings;
   }
 

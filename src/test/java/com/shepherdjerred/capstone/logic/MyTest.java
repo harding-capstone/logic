@@ -3,14 +3,14 @@ package com.shepherdjerred.capstone.logic;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.board.PieceBoardLocations;
-import com.shepherdjerred.capstone.logic.board.PieceInitializer;
+import com.shepherdjerred.capstone.logic.board.BoardPieces;
+import com.shepherdjerred.capstone.logic.board.BoardPiecesInitializer;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
@@ -30,30 +30,30 @@ public class MyTest {
     var enactor = new MatchTurnEnactor(new TurnEnactorFactory(), new TurnValidator());
 
     var boardSettings = new BoardSettings(9, PlayerCount.TWO);
-    var matchSettings = new MatchSettings(10, Player.ONE, boardSettings);
+    var matchSettings = new MatchSettings(10, PlayerId.ONE, boardSettings);
 
     var boardCellsInitializer = new BoardCellsInitializer();
     var boardLayout = BoardLayout.fromBoardSettings(boardCellsInitializer, boardSettings);
 
-    var pieceBoardLocationsInitializer = new PieceInitializer();
-    var pieceBoardLocations = PieceBoardLocations.initializePieceLocations(boardSettings,
+    var pieceBoardLocationsInitializer = new BoardPiecesInitializer();
+    var pieceBoardLocations = BoardPieces.initializePieceLocations(boardSettings,
         pieceBoardLocationsInitializer);
 
     var board = Board.createBoard(boardLayout, pieceBoardLocations);
     var initialMatchState = Match.startNewMatch(matchSettings, board);
 
-    var turn1 = new MovePawnTurn(Player.ONE,
+    var turn1 = new MovePawnTurn(PlayerId.ONE,
         MoveType.NORMAL,
         new Coordinate(8, 0),
         new Coordinate(8, 2));
-    var turn2 = new MovePawnTurn(Player.TWO,
+    var turn2 = new MovePawnTurn(PlayerId.TWO,
         MoveType.NORMAL,
         new Coordinate(8, 16),
         new Coordinate(8, 14));
-    var turn3 = new PlaceWallTurn(Player.ONE,
+    var turn3 = new PlaceWallTurn(PlayerId.ONE,
         new Coordinate(8, 13),
         new Coordinate(6, 13));
-//      var turn4 = new MovePawnTurn(Player.TWO,
+//      var turn4 = new MovePawnTurn(PlayerId.TWO,
 //          MoveType.NORMAL,
 //          new Coordinate(8, 14),
 //          new Coordinate(8, 12));

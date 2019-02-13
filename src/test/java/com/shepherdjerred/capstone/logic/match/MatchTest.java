@@ -9,7 +9,7 @@
 //import com.shepherdjerred.capstone.logic.board.BoardSettings;
 //import com.shepherdjerred.capstone.logic.board.Coordinate;
 //import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-//import com.shepherdjerred.capstone.logic.player.Player;
+//import com.shepherdjerred.capstone.logic.player.PlayerId;
 //import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 //import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 //import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -51,9 +51,9 @@
 //  // Be careful when changing, tests rely on these values
 //  private void setupObjects() {
 //    boardSettings = new BoardSettings(9);
-//    matchSettings = new MatchSettings(10, PlayerCount.TWO, Player.ONE);
+//    matchSettings = new MatchSettings(10, PlayerCount.TWO, PlayerId.ONE);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    turn = new MovePawnTurn(Player.ONE,
+//    turn = new MovePawnTurn(PlayerId.ONE,
 //        MoveType.NORMAL,
 //        new Coordinate(8, 0),
 //        new Coordinate(9, 2));
@@ -71,47 +71,47 @@
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerTwoWhenPlayerOneIsActiveInATwoPlayerGame() {
-//    assertEquals(Player.TWO, match.getNextActivePlayer());
+//    assertEquals(PlayerId.TWO, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerOneWhenPlayerTwoIsTheActiveInATwoPlayerGame() {
-//    matchSettings = new MatchSettings(10, PlayerCount.TWO, Player.TWO);
+//    matchSettings = new MatchSettings(10, PlayerCount.TWO, PlayerId.TWO);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    assertEquals(Player.ONE, match.getNextActivePlayer());
+//    assertEquals(PlayerId.ONE, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerTwoWhenPlayerOneIsTheActiveInAFourPlayerGame() {
-//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.ONE);
+//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, PlayerId.ONE);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    assertEquals(Player.TWO, match.getNextActivePlayer());
+//    assertEquals(PlayerId.TWO, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerThreeWhenPlayerTwoIsTheActiveInAFourPlayerGame() {
-//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.TWO);
+//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, PlayerId.TWO);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    assertEquals(Player.THREE, match.getNextActivePlayer());
+//    assertEquals(PlayerId.THREE, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerFourWhenPlayerThreeIsTheActiveInAFourPlayerGame() {
-//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.THREE);
+//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, PlayerId.THREE);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    assertEquals(Player.FOUR, match.getNextActivePlayer());
+//    assertEquals(PlayerId.FOUR, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getNextActivePlayer_ReturnsPlayerOneWhenPlayerFourIsTheActiveInAFourPlayerGame() {
-//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, Player.FOUR);
+//    matchSettings = new MatchSettings(10, PlayerCount.FOUR, PlayerId.FOUR);
 //    match = Match.startNewMatch(matchSettings, board, turnEnactorFactory, turnValidator);
-//    assertEquals(Player.ONE, match.getNextActivePlayer());
+//    assertEquals(PlayerId.ONE, match.getNextActivePlayer());
 //  }
 //
 //  @Test
 //  public void getWalls_ReturnsTheNumberOfWallsAPlayerHas() {
-//    assertEquals(10, match.getWallsLeft(Player.ONE));
+//    assertEquals(10, match.getWallsLeft(PlayerId.ONE));
 //  }
 //
 //  @Test

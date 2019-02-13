@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.piece;
 
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.ToString;
 
 /**
@@ -11,8 +11,8 @@ public enum NullPiece implements Piece {
   INSTANCE;
 
   @Override
-  public Player getOwner() {
-    return Player.NULL;
+  public PlayerId getOwner() {
+    return PlayerId.NULL;
   }
 
   @Override

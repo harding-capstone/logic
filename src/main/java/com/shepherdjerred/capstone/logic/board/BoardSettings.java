@@ -20,7 +20,7 @@ public final class BoardSettings {
     this.playerCount = playerCount;
 
     if (boardSize % 2 != 1) {
-      throw new IllegalArgumentException("Board gridSize must be odd");
+      throw new IllegalArgumentException("Board size must be odd");
     }
   }
 }

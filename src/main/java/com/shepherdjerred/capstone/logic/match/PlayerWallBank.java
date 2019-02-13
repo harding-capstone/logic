@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.Player;
+import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,41 +13,41 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class PlayerWallBank {
 
-  public final Map<Player, Integer> playerWalls;
+  public final Map<PlayerId, Integer> playerWalls;
 
   public static PlayerWallBank createWallPool(PlayerCount playerCount, int numberOfWalls) {
-    Map<Player, Integer> walls = new HashMap<>();
-    Set<Player> players = new HashSet<>();
-    players.add(Player.ONE);
-    players.add(Player.TWO);
+    Map<PlayerId, Integer> walls = new HashMap<>();
+    Set<PlayerId> playerIds = new HashSet<>();
+    playerIds.add(PlayerId.ONE);
+    playerIds.add(PlayerId.TWO);
     if (playerCount == PlayerCount.FOUR) {
-      players.add(Player.THREE);
-      players.add(Player.FOUR);
+      playerIds.add(PlayerId.THREE);
+      playerIds.add(PlayerId.FOUR);
     }
-    players.forEach(player -> walls.put(player, numberOfWalls));
+    playerIds.forEach(player -> walls.put(player, numberOfWalls));
     return new PlayerWallBank(walls);
   }
 
-  private PlayerWallBank(Map<Player, Integer> playerWalls) {
+  private PlayerWallBank(Map<PlayerId, Integer> playerWalls) {
     this.playerWalls = playerWalls;
   }
 
-  public int getWallsLeft(Player player) {
-    if (playerWalls.containsKey(player)) {
-      return playerWalls.get(player);
+  public int getWallsLeft(PlayerId playerId) {
+    if (playerWalls.containsKey(playerId)) {
+      return playerWalls.get(playerId);
     } else {
-      throw new IllegalArgumentException(player.toString());
+      throw new IllegalArgumentException(playerId.toString());
     }
   }
 
-  public PlayerWallBank takeWall(Player player) {
-    if (playerWalls.containsKey(player)) {
-      Map<Player, Integer> newWallCounts = new HashMap<>(playerWalls);
-      var currentWallsLeft = getWallsLeft(player) - 1;
-      newWallCounts.put(player, currentWallsLeft);
+  public PlayerWallBank takeWall(PlayerId playerId) {
+    if (playerWalls.containsKey(playerId)) {
+      Map<PlayerId, Integer> newWallCounts = new HashMap<>(playerWalls);
+      var currentWallsLeft = getWallsLeft(playerId) - 1;
+      newWallCounts.put(playerId, currentWallsLeft);
       return new PlayerWallBank(newWallCounts);
     } else {
-      throw new IllegalArgumentException(player.toString());
+      throw new IllegalArgumentException(playerId.toString());
     }
   }
 }
