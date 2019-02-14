@@ -34,7 +34,7 @@ public final class MatchSettings {
   public enum PlayerCount {
     TWO, FOUR;
 
-    int toInt() {
+    public int toInt() {
       switch (this) {
         case TWO:
           return 2;

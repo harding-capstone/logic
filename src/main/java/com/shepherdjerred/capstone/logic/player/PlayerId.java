@@ -6,4 +6,8 @@ public enum PlayerId {
   public int toInt() {
     return this.ordinal() + 1;
   }
+
+  public static PlayerId fromInt(int i) {
+    return PlayerId.values()[i - 1];
+  }
 }
