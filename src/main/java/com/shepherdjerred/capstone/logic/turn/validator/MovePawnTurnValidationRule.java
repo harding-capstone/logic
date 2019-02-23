@@ -6,7 +6,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 
 // TODO having rules for both moves and jumps in here is kinda weird, might want to extract?
-public interface MovePawnTurnValidationRule extends TurnValidationRules<MovePawnTurn> {
+public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnTurn> {
 
   static MovePawnTurnValidationRule isSpaceOneCellAway() {
     return (turn, match) -> {
@@ -100,7 +100,7 @@ public interface MovePawnTurnValidationRule extends TurnValidationRules<MovePawn
     };
   }
 
-  static TurnValidationRules<MovePawnTurn> jumpDiagonal() {
+  static TurnValidationRule<MovePawnTurn> jumpDiagonal() {
     // TODO Check if a diagonal jump is allowed (is there a wall behind the pawn we're jumping?
     // TODO Check if a wall is blocking the diagonal jump
     // TODO Check that the distance of the jump is valid
@@ -112,7 +112,7 @@ public interface MovePawnTurnValidationRule extends TurnValidationRules<MovePawn
         .and(isSourcePiecePawn());
   }
 
-  static TurnValidationRules<MovePawnTurn> jumpStraight() {
+  static TurnValidationRule<MovePawnTurn> jumpStraight() {
     // TODO Check that there is a pawn inbetween src and dest
     // TODO Check that there isn't a wall behind the pawn
     // TODO Check that the distance == 2
@@ -124,7 +124,7 @@ public interface MovePawnTurnValidationRule extends TurnValidationRules<MovePawn
         .and(isSourcePiecePawn());
   }
 
-  static TurnValidationRules<MovePawnTurn> normal() {
+  static TurnValidationRule<MovePawnTurn> normal() {
     return isDestinationCellTypePawn()
         .and(isDestinationPieceEmpty())
         .and(isMoveCardinal())

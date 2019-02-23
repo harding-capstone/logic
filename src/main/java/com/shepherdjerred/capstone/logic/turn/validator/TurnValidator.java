@@ -22,7 +22,7 @@ public final class TurnValidator {
         throw new IllegalArgumentException("Unknown move type " + turn);
       }
     } else if (turn instanceof PlaceWallTurn) {
-      return PlaceWallTurnValidationRules.all().apply((PlaceWallTurn) turn, match);
+      return PlaceWallTurnValidationRule.all().apply((PlaceWallTurn) turn, match);
     } else {
       throw new IllegalArgumentException("Unknown turn type " + turn);
     }

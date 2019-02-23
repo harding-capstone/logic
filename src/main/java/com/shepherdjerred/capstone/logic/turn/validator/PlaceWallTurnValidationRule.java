@@ -3,9 +3,9 @@ package com.shepherdjerred.capstone.logic.turn.validator;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 
-public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceWallTurn> {
+public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWallTurn> {
 
-  static PlaceWallTurnValidationRules isWallCell() {
+  static PlaceWallTurnValidationRule isWallCell() {
     return (turn, match) -> {
       var board = match.getBoard();
       var firstCoordinate = turn.getFirstCoordinate();
@@ -20,7 +20,7 @@ public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceW
     };
   }
 
-  static PlaceWallTurnValidationRules areCoordinatesEmpty() {
+  static PlaceWallTurnValidationRule areCoordinatesEmpty() {
     return (turn, match) -> {
       var board = match.getBoard();
       var firstCoordinate = turn.getFirstCoordinate();
@@ -35,7 +35,7 @@ public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceW
     };
   }
 
-  static PlaceWallTurnValidationRules doesPlayerHaveWallsToPlace() {
+  static PlaceWallTurnValidationRule doesPlayerHaveWallsToPlace() {
     return (turn, match) -> {
       var player = turn.getCauser();
       if (match.getWallsLeft(player) > 0) {
@@ -46,14 +46,14 @@ public interface PlaceWallTurnValidationRules extends TurnValidationRules<PlaceW
     };
   }
 
-  static PlaceWallTurnValidationRules willWallBlockPawns() {
+  static PlaceWallTurnValidationRule willWallBlockPawns() {
     return (turn, match) -> {
       // TODO
       return new TurnValidationResult(false);
     };
   }
 
-  static TurnValidationRules<PlaceWallTurn> all() {
+  static TurnValidationRule<PlaceWallTurn> all() {
     return isWallCell()
         .and(areCoordinatesEmpty())
         .and(doesPlayerHaveWallsToPlace())

@@ -27,7 +27,7 @@ public class TurnGenerator {
     return turns;
   }
 
-  // TODO ignore moves that won't help us at all (i.e. placing walls with both coordinates in a different set than the pawns)
+  // TODO ignore moves that won't help us at normal (i.e. placing walls with both coordinates in a different set than the pawns)
   private Set<Turn> generatePlaceWallTurns(Match match) {
     Set<Turn> turns = new HashSet<>();
 
