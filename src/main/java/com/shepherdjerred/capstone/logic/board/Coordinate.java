@@ -14,6 +14,42 @@ public final class Coordinate {
   private final int x;
   private final int y;
 
+  public Coordinate fromOffset(int xOffset, int yOffset) {
+    return new Coordinate(x + xOffset, y + yOffset);
+  }
+
+  public Coordinate toLeft() {
+    return new Coordinate(x - 1, y);
+  }
+
+  public Coordinate toRight() {
+    return new Coordinate(x + 1, y);
+  }
+
+  public Coordinate above() {
+    return new Coordinate(x, y + 1);
+  }
+
+  public Coordinate below() {
+    return new Coordinate(x, y - 1);
+  }
+
+  public Coordinate toLeft(int i) {
+    return new Coordinate(x - i, y);
+  }
+
+  public Coordinate toRight(int i) {
+    return new Coordinate(x + i, y);
+  }
+
+  public Coordinate above(int i) {
+    return new Coordinate(x, y + i);
+  }
+
+  public Coordinate below(int i) {
+    return new Coordinate(x, y - i);
+  }
+
   /**
    * Checks if two Coordinates are diagonal to each other
    */

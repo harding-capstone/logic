@@ -115,6 +115,14 @@ public final class Board {
     return boardLayout.isWallBoardCell(coordinate);
   }
 
+  public boolean isCoordinateValid(Coordinate coordinate) {
+    return boardLayout.isCoordinateValid(coordinate);
+  }
+
+  public boolean isCoordinateInvalid(Coordinate coordinate) {
+    return boardLayout.isCoordinateInvalid(coordinate);
+  }
+
   /**
    * Checks if a piece exists at a Coordinate.
    */

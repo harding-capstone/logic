@@ -25,7 +25,7 @@ public enum BoardCell {
     } else if (this == WALL) {
       return ' ';
     } else if (this == NULL) {
-      return ' ';
+      return 'X';
     } else {
       throw new IllegalStateException("Unknown BoardCell " + this);
     }

@@ -5,17 +5,34 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.Err
 
 public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWallTurn> {
 
+  static PlaceWallTurnValidationRule areCoordinatesValid() {
+    return (turn, match) -> {
+      var board = match.getBoard();
+      if (board.isCoordinateInvalid(turn.getFirstCoordinate())
+          || board.isCoordinateInvalid(turn.getSecondCoordinate())) {
+        return new TurnValidationResult(ErrorMessage.COORDINATE_INVALID);
+      } else {
+        return new TurnValidationResult();
+      }
+    };
+  }
+
   static PlaceWallTurnValidationRule isWallCell() {
     return (turn, match) -> {
       var board = match.getBoard();
       var firstCoordinate = turn.getFirstCoordinate();
       var secondCoordinate = turn.getSecondCoordinate();
 
+      if (board.isCoordinateInvalid(firstCoordinate)
+          || board.isCoordinateInvalid(secondCoordinate)) {
+        return new TurnValidationResult(true);
+      }
+
       if (board.isWallBoardCell(firstCoordinate)
           && board.isWallBoardCell(secondCoordinate)) {
-        return new TurnValidationResult(false);
+        return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(true, ErrorMessage.NOT_WALL_CELL);
+        return new TurnValidationResult(ErrorMessage.NOT_WALL_CELL);
       }
     };
   }
@@ -28,9 +45,9 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
 
       if (board.isEmpty(firstCoordinate)
           && board.isEmpty(secondCoordinate)) {
-        return new TurnValidationResult(false);
+        return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(true, ErrorMessage.DESTINATION_NOT_EMPTY);
+        return new TurnValidationResult(ErrorMessage.DESTINATION_NOT_EMPTY);
       }
     };
   }
@@ -39,22 +56,23 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
     return (turn, match) -> {
       var player = turn.getCauser();
       if (match.getWallsLeft(player) > 0) {
-        return new TurnValidationResult(false);
+        return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(true, ErrorMessage.NO_WALLS_TO_PLACE);
+        return new TurnValidationResult(ErrorMessage.NO_WALLS_TO_PLACE);
       }
     };
   }
 
+  // TODO
   static PlaceWallTurnValidationRule willWallBlockPawns() {
     return (turn, match) -> {
-      // TODO
-      return new TurnValidationResult(false);
+      return new TurnValidationResult();
     };
   }
 
   static TurnValidationRule<PlaceWallTurn> all() {
-    return isWallCell()
+    return areCoordinatesValid()
+        .and(isWallCell())
         .and(areCoordinatesEmpty())
         .and(doesPlayerHaveWallsToPlace())
         .and(willWallBlockPawns());

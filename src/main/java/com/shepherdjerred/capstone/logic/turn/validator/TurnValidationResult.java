@@ -14,18 +14,28 @@ public final class TurnValidationResult {
   private final boolean isError;
   private final List<ErrorMessage> errors;
 
-  public TurnValidationResult(boolean isError) {
-    this.isError = isError;
+  public TurnValidationResult() {
+    this.isError = false;
     this.errors = new ArrayList<>();
   }
 
-  public TurnValidationResult(boolean isError, ErrorMessage error) {
-    this.isError = isError;
+  public TurnValidationResult(boolean isError) {
+    this.isError = true;
+    this.errors = new ArrayList<>();
+  }
+
+  public TurnValidationResult(ErrorMessage error) {
+    this.isError = true;
     this.errors = new ArrayList<>();
     errors.add(error);
   }
 
-  public TurnValidationResult(boolean isError, List<ErrorMessage> errors) {
+  public TurnValidationResult(List<ErrorMessage> errors) {
+    this.isError = true;
+    this.errors = errors;
+  }
+
+  private TurnValidationResult(boolean isError, List<ErrorMessage> errors) {
     this.isError = isError;
     this.errors = errors;
   }
@@ -48,6 +58,9 @@ public final class TurnValidationResult {
     WALL_IS_BLOCKING,
     MOVE_TOO_FAR,
     NO_WALLS_TO_PLACE,
-    NOT_WALL_CELL
+    NOT_WALL_CELL,
+    SOURCE_COORDINATE_INVALID,
+    DESTINATION_COORDINATE_INVALID,
+    COORDINATE_INVALID
   }
 }

@@ -16,6 +16,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
+import com.shepherdjerred.capstone.logic.turn.generator.TurnGenerator;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
 import com.shepherdjerred.capstone.logic.util.MatchFormatter;
 import java.util.ArrayList;
@@ -73,5 +74,11 @@ public class MyTest {
 //    matchStates.add(matchStateAfterTurn4);
 
     System.out.println(matchFormatter.matchesToString(matchStates));
+
+    var generator = new TurnGenerator();
+    System.out.println(generator.generateInvalidTurns(initialMatchState));
+    System.out.println(generator.generateInvalidTurns(matchStateAfterTurn1));
+    System.out.println(generator.generateInvalidTurns(matchStateAfterTurn2));
+    System.out.println(generator.generateInvalidTurns(matchStateAfterTurn3));
   }
 }

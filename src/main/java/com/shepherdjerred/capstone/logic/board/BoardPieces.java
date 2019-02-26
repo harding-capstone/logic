@@ -22,8 +22,10 @@ public final class BoardPieces {
 
   public static BoardPieces initializePieceLocations(BoardSettings boardSettings,
       BoardPiecesInitializer boardPiecesInitializer) {
-    Map<PlayerId, Coordinate> pawnLocations = boardPiecesInitializer.initializePawnLocations(boardSettings);
-    Map<Coordinate, Piece> pieces = boardPiecesInitializer.pawnLocationsToPieceLocations(pawnLocations);
+    Map<PlayerId, Coordinate> pawnLocations = boardPiecesInitializer.initializePawnLocations(
+        boardSettings);
+    Map<Coordinate, Piece> pieces = boardPiecesInitializer.pawnLocationsToPieceLocations(
+        pawnLocations);
     return new BoardPieces(pieces, pawnLocations, boardSettings);
   }
 
@@ -86,7 +88,11 @@ public final class BoardPieces {
    * Checks if a piece exists at a Coordinate.
    */
   public boolean hasPiece(Coordinate coordinate) {
-    return pieces.containsKey(coordinate);
+    if (pieces.containsKey(coordinate)) {
+      return pieces.get(coordinate) != NullPiece.INSTANCE;
+    } else {
+      return false;
+    }
   }
 
   /**
