@@ -1,5 +1,6 @@
-module com.shepherdjererd.capstone.logic {
+module com.shepherdjerred.capstone.logic {
   requires static lombok;
+  requires gson;
 
   exports com.shepherdjerred.capstone.logic.board;
   exports com.shepherdjerred.capstone.logic.board.exception;
@@ -14,4 +15,5 @@ module com.shepherdjererd.capstone.logic {
   exports com.shepherdjerred.capstone.logic.turn.exception;
   exports com.shepherdjerred.capstone.logic.turn.generator;
   exports com.shepherdjerred.capstone.logic.util;
+  exports com.shepherdjerred.capstone.logic.serialization;
 }

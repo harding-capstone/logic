@@ -29,7 +29,7 @@ public final class BoardPieces {
     return new BoardPieces(pieces, pawnLocations, boardSettings);
   }
 
-  private BoardPieces(Map<Coordinate, Piece> pieces,
+  public BoardPieces(Map<Coordinate, Piece> pieces,
       Map<PlayerId, Coordinate> pawnLocations,
       BoardSettings boardSettings) {
     this.pieces = pieces;

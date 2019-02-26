@@ -6,6 +6,7 @@ import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException
 
 // TODO this can be improved
 public final class ActivePlayerTracker {
+
   /**
    * Returns the player who comes after the active player
    */

@@ -47,6 +47,9 @@ public class MyTest {
         MoveType.NORMAL,
         new Coordinate(8, 0),
         new Coordinate(8, 2));
+
+    var matchStateAfterTurn1 = enactor.enactTurn(turn1, initialMatchState);
+
     var turn2 = new MovePawnTurn(PlayerId.TWO,
         MoveType.NORMAL,
         new Coordinate(8, 16),
@@ -59,7 +62,6 @@ public class MyTest {
 //          new Coordinate(8, 14),
 //          new Coordinate(8, 12));
 
-    var matchStateAfterTurn1 = enactor.enactTurn(turn1, initialMatchState);
     var matchStateAfterTurn2 = enactor.enactTurn(turn2, matchStateAfterTurn1);
     var matchStateAfterTurn3 = enactor.enactTurn(turn3, matchStateAfterTurn2);
 //    var matchStateAfterTurn4 = matchStateAfterTurn3.doTurn(turn4);

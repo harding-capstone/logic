@@ -47,7 +47,7 @@ public final class Match {
         matchHistory);
   }
 
-  // I don't like this constructor being public, but it's the only way we can split up logic for turns
+  // I don't like this constructor being public (ideally would be private), but it's the only way we can split up logic for turns
   public Match(Board board,
       MatchSettings matchSettings,
       PlayerId activePlayerId,
