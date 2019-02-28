@@ -137,6 +137,10 @@ public final class Board {
     return boardPieces.isEmpty(coordinate);
   }
 
+  public boolean hasWall(Coordinate coordinate) {
+    return isWallBoardCell(coordinate) && boardPieces.hasPiece(coordinate);
+  }
+
   /**
    * Gets the piece at a Coordinate.
    *
