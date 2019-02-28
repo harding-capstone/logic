@@ -75,9 +75,10 @@ public final class BoardPieces {
    * @param c2 Second coordinate of the wall
    * @return The BoardPieces after the move
    */
-  public BoardPieces placeWall(PlayerId playerId, Coordinate c1, Coordinate c2) {
+  public BoardPieces placeWall(PlayerId playerId, Coordinate c1, Coordinate vertex, Coordinate c2) {
     var newPiecesMap = new HashMap<>(pieces);
     newPiecesMap.put(c1, new WallPiece(playerId));
+    newPiecesMap.put(vertex, new WallPiece(playerId));
     newPiecesMap.put(c2, new WallPiece(playerId));
 
     return new BoardPieces(newPiecesMap, pawnLocations, boardSettings);

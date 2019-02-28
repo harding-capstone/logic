@@ -56,7 +56,12 @@ public class MyTest {
         new Coordinate(8, 14));
     var turn3 = new PlaceWallTurn(PlayerId.ONE,
         new Coordinate(8, 13),
+        new Coordinate(7, 13),
         new Coordinate(6, 13));
+//    var turn4 = new PlaceWallTurn(PlayerId.TWO,
+//        new Coordinate(7, 14),
+//        new Coordinate(7, 13),
+//        new Coordinate(7, 12));
 //      var turn4 = new MovePawnTurn(PlayerId.TWO,
 //          MoveType.NORMAL,
 //          new Coordinate(8, 14),
@@ -65,6 +70,8 @@ public class MyTest {
     var matchStateAfterTurn2 = enactor.enactTurn(turn2, matchStateAfterTurn1);
     var matchStateAfterTurn3 = enactor.enactTurn(turn3, matchStateAfterTurn2);
 //    var matchStateAfterTurn4 = matchStateAfterTurn3.doTurn(turn4);
+
+//    System.out.println(new TurnValidator().isTurnValid(turn4, matchStateAfterTurn3));
 
     var matchFormatter = new MatchFormatter();
 

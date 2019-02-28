@@ -160,15 +160,18 @@ public class TurnGenerator {
         // Vertical walls
         if (x % 2 != 0 && y % 2 == 0) {
           var c1 = new Coordinate(x, y);
+          var v = new Coordinate(x, y + 1);
           var c2 = new Coordinate(x, y + 2);
-          var turn = new PlaceWallTurn(player, c1, c2);
+          var turn = new PlaceWallTurn(player, c1, v, c2);
           turns.add(turn);
         }
         // Horizontal walls
         if (x % 2 == 0 && y % 2 != 0) {
           var c1 = new Coordinate(x, y);
+          var v = new Coordinate(x + 1, y);
           var c2 = new Coordinate(x + 2, y);
-          var turn = new PlaceWallTurn(player, c1, c2);
+
+          var turn = new PlaceWallTurn(player, c1, v, c2);
           turns.add(turn);
         }
       }

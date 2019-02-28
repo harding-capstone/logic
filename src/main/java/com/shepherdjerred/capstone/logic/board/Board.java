@@ -87,19 +87,22 @@ public final class Board {
    */
   // TODO better validation (return error messages)
   // TODO extract validation
-  public Board placeWall(PlayerId playerId, Coordinate c1, Coordinate c2) {
+  public Board placeWall(PlayerId playerId, Coordinate c1, Coordinate vertex, Coordinate c2) {
     if (boardLayout.isCoordinateInvalid(c1)) {
       throw new CoordinateOutOfBoundsException(c1);
     }
     if (boardLayout.isCoordinateInvalid(c2)) {
       throw new CoordinateOutOfBoundsException(c2);
     }
+    if (boardLayout.isCoordinateInvalid(vertex)) {
+      throw new CoordinateOutOfBoundsException(vertex);
+    }
     if (!boardLayout.isWallBoardCell(c1) || !boardLayout.isWallBoardCell(c2) || !isEmpty(c1)
         || !isEmpty(c2)) {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPieceLocationTracker = boardPieces.placeWall(playerId, c1, c2);
+    var newPieceLocationTracker = boardPieces.placeWall(playerId, c1, vertex, c2);
     return new Board(boardLayout, newPieceLocationTracker);
   }
 
@@ -113,6 +116,10 @@ public final class Board {
 
   public boolean isWallBoardCell(Coordinate coordinate) {
     return boardLayout.isWallBoardCell(coordinate);
+  }
+
+  public boolean isVertexBoardCell(Coordinate coordinate) {
+    return boardLayout.isVertexBoardCell(coordinate);
   }
 
   public boolean isCoordinateValid(Coordinate coordinate) {
@@ -138,7 +145,8 @@ public final class Board {
   }
 
   public boolean hasWall(Coordinate coordinate) {
-    return isWallBoardCell(coordinate) && boardPieces.hasPiece(coordinate);
+    return isWallBoardCell(coordinate) || isVertexBoardCell(coordinate) && boardPieces.hasPiece(
+        coordinate);
   }
 
   /**

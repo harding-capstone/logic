@@ -8,6 +8,16 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.Err
 // TODO having rules for both moves and jumps in here is kinda weird, might want to extract?
 public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnTurn> {
 
+  static MovePawnTurnValidationRule isSourceDifferentFromDest() {
+    return (turn, match) -> {
+      if (turn.getSource().equals(turn.getDestination())) {
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_UNIQUE);
+      } else {
+        return new TurnValidationResult();
+      }
+    };
+  }
+
   static MovePawnTurnValidationRule isSourceCoordinateValid() {
     return (turn, match) -> {
       var board = match.getBoard();
@@ -148,7 +158,8 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
         .and(isDestinationPieceEmpty())
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
-        .and(isSourcePiecePawn());
+        .and(isSourcePiecePawn())
+        .and(isSourceDifferentFromDest());
   }
 
   static TurnValidationRule<MovePawnTurn> jumpStraight() {
@@ -162,7 +173,8 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
         .and(isMoveCardinal())
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
-        .and(isSourcePiecePawn());
+        .and(isSourcePiecePawn())
+        .and(isSourceDifferentFromDest());
   }
 
   static TurnValidationRule<MovePawnTurn> normal() {
@@ -175,6 +187,7 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
         .and(isWallBlocking())
-        .and(isSourcePiecePawn());
+        .and(isSourcePiecePawn())
+        .and(isSourceDifferentFromDest());
   }
 }

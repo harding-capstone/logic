@@ -5,6 +5,8 @@ import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
+import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,6 +25,7 @@ public final class Match {
   private final PlayerWallBank playerWallBank;
   private final MatchStatus matchStatus;
   private final MatchHistory matchHistory;
+  private final MatchTurnEnactor matchTurnEnactor;
 
   // TODO refactor
   // This static factory might result in matches with their invariants violated
@@ -38,13 +41,15 @@ public final class Match {
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(PlayerId.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
+    var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(), new TurnValidator());
 
     return new Match(board,
         matchSettings,
         startingPlayer,
         wallPool,
         matchStatus,
-        matchHistory);
+        matchHistory,
+        matchTurnEnactor);
   }
 
   // I don't like this constructor being public (ideally would be private), but it's the only way we can split up logic for turns
@@ -53,17 +58,19 @@ public final class Match {
       PlayerId activePlayerId,
       PlayerWallBank playerWallBank,
       MatchStatus matchStatus,
-      MatchHistory matchHistory) {
+      MatchHistory matchHistory,
+      MatchTurnEnactor matchTurnEnactor) {
     this.board = board;
     this.matchSettings = matchSettings;
     this.activePlayerId = activePlayerId;
     this.playerWallBank = playerWallBank;
     this.matchStatus = matchStatus;
     this.matchHistory = matchHistory;
+    this.matchTurnEnactor = matchTurnEnactor;
   }
 
-  public Match doTurn(Turn turn, MatchTurnEnactor enactor) {
-    return enactor.enactTurn(turn, this);
+  public Match doTurn(Turn turn) {
+    return matchTurnEnactor.enactTurn(turn, this);
   }
 
   /**
