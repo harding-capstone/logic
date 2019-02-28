@@ -9,6 +9,12 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 public final class TurnValidator {
 
   public TurnValidationResult isTurnValid(Turn turn, Match match) {
+    var genericValidationStatus = TurnValidationRule.all().apply(turn, match);
+    if (genericValidationStatus.isError()) {
+      return genericValidationStatus;
+
+    }
+
     if (turn instanceof MovePawnTurn) {
       var movePawnTurn = (MovePawnTurn) turn;
       var turnType = movePawnTurn.getMoveType();

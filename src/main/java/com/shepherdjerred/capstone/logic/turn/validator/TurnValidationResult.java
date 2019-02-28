@@ -49,6 +49,8 @@ public final class TurnValidationResult {
 
   public enum ErrorMessage {
     NULL,
+    NOT_CAUSERS_TURN,
+    GAME_ALREADY_OVER,
     MOVE_IS_DIAGONAL,
     NOT_OWNER_OF_PIECE,
     PIECE_NOT_PAWN,
