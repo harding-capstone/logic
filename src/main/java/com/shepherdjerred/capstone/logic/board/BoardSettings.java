@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.board;
 
 import com.google.common.base.Preconditions;
-import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
+import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,7 +16,7 @@ public class BoardSettings {
   private final PlayerCount playerCount;
 
   public BoardSettings(int boardSize, PlayerCount playerCount) {
-    Preconditions.checkArgument(boardSize % 2 != 1);
+    Preconditions.checkArgument(boardSize % 2 == 1);
     this.boardSize = boardSize;
     this.gridSize = boardSize * 2 - 1;
     this.playerCount = playerCount;

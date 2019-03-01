@@ -4,9 +4,10 @@ import java.util.Stack;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+// TODO store turns
 @ToString
 @EqualsAndHashCode
-public final class MatchHistory {
+public class MatchHistory {
   private final Stack<Match> matchHistory;
 
   public MatchHistory() {

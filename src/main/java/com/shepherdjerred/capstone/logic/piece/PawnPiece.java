@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class PawnPiece implements Piece {
+public class PawnPiece implements Piece {
 
   private final PlayerId owner;
 

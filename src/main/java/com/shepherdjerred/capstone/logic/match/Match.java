@@ -1,6 +1,7 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -14,10 +15,11 @@ import lombok.ToString;
 /**
  * A match of Quoridor.
  */
+// TODO this could still be cleaned up more
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class Match {
+public class Match {
 
   private final Board board;
   private final MatchSettings matchSettings;
@@ -27,22 +29,22 @@ public final class Match {
   private final MatchHistory matchHistory;
   private final MatchTurnEnactor matchTurnEnactor;
 
-  public static Match from(MatchSettings matchSettings) {
-    var board = Board.from(matchSettings.getBoardSettings());
+  public static Match from(MatchSettings matchSettings, BoardSettings boardSettings) {
+    var board = Board.from(boardSettings);
     return from(matchSettings, board);
   }
 
   // TODO board validation
   public static Match from(MatchSettings matchSettings, Board board) {
     var startingPlayer = matchSettings.getStartingPlayerId();
-    var wallPool = PlayerWallBank.from(matchSettings.getBoardSettings().getPlayerCount(),
+    var wallPool = PlayerWallBank.from(matchSettings.getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(PlayerId.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
     var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(),
         new TurnValidator(),
         new MatchStatusUpdater(),
-        new ActivePlayerTracker());
+        new ActivePlayerTracker(matchSettings.getPlayerCount()));
 
     return new Match(board,
         matchSettings,

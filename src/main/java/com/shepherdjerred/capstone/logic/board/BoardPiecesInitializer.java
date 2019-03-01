@@ -1,8 +1,8 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
+import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
 import java.util.Map;

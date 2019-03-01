@@ -1,6 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.generator;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
@@ -162,7 +163,9 @@ public class TurnGenerator {
           var c1 = new Coordinate(x, y);
           var v = new Coordinate(x, y + 1);
           var c2 = new Coordinate(x, y + 2);
-          var turn = new PlaceWallTurn(player, c1, v, c2);
+
+          var wallLocation = new WallPieceLocation(c1, v, c2);
+          var turn = new PlaceWallTurn(player, wallLocation);
           turns.add(turn);
         }
         // Horizontal walls
@@ -171,7 +174,8 @@ public class TurnGenerator {
           var v = new Coordinate(x + 1, y);
           var c2 = new Coordinate(x + 2, y);
 
-          var turn = new PlaceWallTurn(player, c1, v, c2);
+          var wallLocation = new WallPieceLocation(c1, v, c2);
+          var turn = new PlaceWallTurn(player, wallLocation);
           turns.add(turn);
         }
       }

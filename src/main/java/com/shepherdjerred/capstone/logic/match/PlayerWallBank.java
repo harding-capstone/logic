@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
+import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public final class PlayerWallBank {
+public class PlayerWallBank {
 
   public final Map<PlayerId, Integer> playerWalls;
 

@@ -1,5 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
+import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,19 +10,22 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class WallPieceLocation {
 
-  private final Coordinate c1;
+  private final Coordinate firstCoordinate;
   private final Coordinate vertex;
-  private final Coordinate c2;
+  private final Coordinate secondCoordinate;
 
 
-  public WallPieceLocation(Coordinate c1,
+  public WallPieceLocation(Coordinate firstCoordinate,
       Coordinate vertex,
-      Coordinate c2) {
-    this.c1 = c1;
+      Coordinate secondCoordinate) {
+    Preconditions.checkNotNull(firstCoordinate);
+    Preconditions.checkNotNull(vertex);
+    Preconditions.checkNotNull(secondCoordinate);
+    this.firstCoordinate = firstCoordinate;
     this.vertex = vertex;
-    this.c2 = c2;
-    if (!isInvalid()) {
-      throw new IllegalStateException();
+    this.secondCoordinate = secondCoordinate;
+    if (isInvalid()) {
+      throw new IllegalArgumentException();
     }
   }
 
@@ -30,11 +34,11 @@ public class WallPieceLocation {
   }
 
   private boolean areCoordinatesAdjacentToVertex() {
-    return c1.isAdjacent(vertex) && c2.isAdjacent(vertex);
+    return firstCoordinate.isAdjacent(vertex) && secondCoordinate.isAdjacent(vertex);
   }
 
   private boolean areCoordinatesInStraightLine() {
-    return (c1.getX() == vertex.getX() && c2.getX() == vertex.getX())
-        || (c1.getY() == vertex.getY() && c2.getY() == vertex.getY());
+    return (firstCoordinate.getX() == vertex.getX() && secondCoordinate.getX() == vertex.getX())
+        || (firstCoordinate.getY() == vertex.getY() && secondCoordinate.getY() == vertex.getY());
   }
 }

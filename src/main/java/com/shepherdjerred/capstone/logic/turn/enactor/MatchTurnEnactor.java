@@ -45,10 +45,9 @@ public class MatchTurnEnactor {
 
     var matchSettings = match.getMatchSettings();
 
-    var newActivePlayerTracker = activePlayerTracker.getNextActivePlayer(match.getActivePlayerId(),
-        matchSettings.getBoardSettings().getPlayerCount());
+    var nextActivePlayer = activePlayerTracker.nextActivePlayer(match.getActivePlayerId());
 
-    return new Match(newBoard, matchSettings, newActivePlayerTracker,
+    return new Match(newBoard, matchSettings, nextActivePlayer,
         newWallPool, newMatchStatus, newHistory, match.getMatchTurnEnactor());
   }
 }

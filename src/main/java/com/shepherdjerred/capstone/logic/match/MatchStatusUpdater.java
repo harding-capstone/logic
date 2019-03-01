@@ -6,7 +6,7 @@ import com.shepherdjerred.capstone.logic.player.exception.InvalidPlayerException
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public final class MatchStatusUpdater {
+public class MatchStatusUpdater {
 
   public MatchStatus updateMatchStatus(Turn turn, Match match) {
     var player = turn.getCauser();

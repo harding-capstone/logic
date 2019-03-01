@@ -1,11 +1,10 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.google.common.base.Preconditions;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
-import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.AccessLevel;
@@ -18,6 +17,7 @@ import lombok.ToString;
 /**
  * Composes BoardLayout and BoardPieces to represent a Quoridor Board.
  */
+// TODO this is a hybrid data structure/object. should be refactored.
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -65,10 +65,10 @@ public class Board {
   // TODO better validation (return error messages?)
   // TODO extract validation
   public Board movePawn(PlayerId playerId, Coordinate destination) {
-    if (boardLayout.isCoordinateInvalid(destination)) {
+    if (isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
-    if (!boardLayout.isPawn(destination) || !isEmpty(destination)) {
+    if (!isPawnBoardCell(destination) || !isEmpty(destination)) {
       throw new InvalidBoardTransformationException();
     }
 
@@ -82,13 +82,19 @@ public class Board {
   // TODO better validation (return error messages?)
   // TODO extract validation
   public Board placeWall(PlayerId playerId, WallPieceLocation location) {
-    var c1 = location.getC1();
+    var c1 = location.getFirstCoordinate();
     var vertex = location.getVertex();
-    var c2 = location.getC2();
+    var c2 = location.getSecondCoordinate();
 
-    Preconditions.checkArgument(isCoordinateValid(c1));
-    Preconditions.checkArgument(isCoordinateValid(vertex));
-    Preconditions.checkArgument(isCoordinateValid(c2));
+    if (isCoordinateInvalid(c1)) {
+      throw new CoordinateOutOfBoundsException(c1);
+    }
+    if (isCoordinateInvalid(vertex)) {
+      throw new CoordinateOutOfBoundsException(vertex);
+    }
+    if (isCoordinateInvalid(c2)) {
+      throw new CoordinateOutOfBoundsException(c2);
+    }
 
     if (!boardLayout.isWall(c1)
         || !boardLayout.isWallVertex(vertex)

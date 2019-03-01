@@ -10,12 +10,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class MatchStatus {
+public class MatchStatus {
 
   private final PlayerId victor;
   private final Status status;
 
   public enum Status {
-    IN_PROGRESS, STALEMATE, VICTORY
+    IN_PROGRESS, VICTORY
   }
 }
