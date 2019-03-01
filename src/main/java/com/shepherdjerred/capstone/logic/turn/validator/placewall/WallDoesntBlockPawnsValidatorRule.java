@@ -27,7 +27,7 @@ public class WallDoesntBlockPawnsValidatorRule implements ValidatorRule<PlaceWal
       var player = match.getBoard().getPiece(pawnLocation).getOwner();
       var goals = playerGoals.getGoalCoordinatesForPlayer(player, gridSize);
       var doesPathExist = boardSearch.hasPathToAnyDestination(board, pawnLocation, goals);
-      log.info("No path for pawn " + pawnLocation);
+      log.debug("No path to goal for pawn at " + pawnLocation);
       return doesPathExist;
     });
 

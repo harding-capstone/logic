@@ -5,7 +5,9 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
+import lombok.ToString;
 
+@ToString
 public class SourcePieceIsOwnedByCauserValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override

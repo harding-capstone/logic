@@ -25,6 +25,10 @@ public class BoardAStarSearchNode extends AStarSearchNode {
   public List<TreeNode> getChildNodes() {
     return board.getAdjacentPawnSpaces(location)
         .stream()
+        .filter(coordinate -> {
+          var midpoint = Coordinate.calculateMidpoint(location, coordinate);
+          return board.hasWall(midpoint);
+        })
         .map(space -> new BoardAStarSearchNode(cost + 1, board, space, goals))
         .collect(Collectors.toList());
   }
@@ -41,7 +45,7 @@ public class BoardAStarSearchNode extends AStarSearchNode {
 
   @Override
   public int getEstimatedCostToSolution() {
-    return getDistanceToNearestGoal(location, goals);
+    return getDistanceToNearestGoal(location, goals) + 1;
   }
 
   @Override
