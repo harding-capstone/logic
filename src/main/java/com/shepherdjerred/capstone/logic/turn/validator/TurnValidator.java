@@ -23,17 +23,17 @@ import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourcePieceOwne
 import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceSameAsActualLocationValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.movepawn.WallBetweenSourceAndDestinationValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.PlayerHasWallsLeftToPlaceValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallDoesntBlockPawnsValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreFreeValidationRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreValid;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreWallBoardCellsValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreFreeValidationRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationVertexIsFreeValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationVertexIsVertexBoardCellValidatorRule;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.extern.log4j.Log4j2;
 
 // TODO there's probably a better way to apply these rules
+@Log4j2
 public class TurnValidator {
 
   private final Set<ValidatorRule<Turn>> matchRules;
@@ -74,10 +74,9 @@ public class TurnValidator {
       throw new UnsupportedOperationException();
     }
 
-    var results = rules.stream().map(rule -> isTurnValid(turn, match)).collect(Collectors.toSet());
     var result = new TurnValidationResult();
-    for (TurnValidationResult r : results) {
-      result = TurnValidationResult.combine(result, r);
+    for (ValidatorRule rule : rules) {
+      result = TurnValidationResult.combine(result, rule.validate(match, turn));
     }
     return result;
   }
@@ -92,7 +91,7 @@ public class TurnValidator {
   private Set<ValidatorRule<PlaceWallTurn>> createPlaceWallTurnRules() {
     Set<ValidatorRule<PlaceWallTurn>> rules = new HashSet<>();
     rules.add(new PlayerHasWallsLeftToPlaceValidatorRule());
-    rules.add(new WallDoesntBlockPawnsValidatorRule());
+//    rules.add(new WallDoesntBlockPawnsValidatorRule());
     rules.add(new WallPieceLocationCoordinatesAreFreeValidationRule());
     rules.add(new WallPieceLocationCoordinatesAreValid());
     rules.add(new WallPieceLocationCoordinatesAreWallBoardCellsValidatorRule());

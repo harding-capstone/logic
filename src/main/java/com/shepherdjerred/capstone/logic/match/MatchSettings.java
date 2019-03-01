@@ -19,7 +19,7 @@ public class MatchSettings {
   public MatchSettings(int wallsPerPlayer,
       PlayerId startingPlayerId,
       PlayerCount playerCount) {
-    Preconditions.checkArgument(startingPlayerId.toInt() > playerCount.toInt());
+    Preconditions.checkArgument(startingPlayerId.toInt() <= playerCount.toInt());
     this.wallsPerPlayer = wallsPerPlayer;
     this.startingPlayerId = startingPlayerId;
     this.playerCount = playerCount;

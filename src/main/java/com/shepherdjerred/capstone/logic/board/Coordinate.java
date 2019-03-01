@@ -1,6 +1,5 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,8 +13,8 @@ public class Coordinate {
   private final int y;
 
   public Coordinate(int x, int y) {
-    Preconditions.checkArgument(x >= 0);
-    Preconditions.checkArgument(y >= 0);
+//    Preconditions.checkArgument(x >= 0);
+//    Preconditions.checkArgument(y >= 0);
     this.x = x;
     this.y = y;
   }

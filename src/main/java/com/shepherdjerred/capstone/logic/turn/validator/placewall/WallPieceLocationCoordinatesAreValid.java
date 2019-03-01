@@ -7,8 +7,9 @@ import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
 public class WallPieceLocationCoordinatesAreValid implements ValidatorRule<PlaceWallTurn> {
 
+  // TODO
   @Override
   public TurnValidationResult validate(Match match, PlaceWallTurn turn) {
-    return null;
+    return new TurnValidationResult();
   }
 }
