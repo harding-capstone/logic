@@ -15,5 +15,6 @@ public final class PlaceWallTurn implements Turn {
 
   private final PlayerId causer;
   private final Coordinate firstCoordinate;
+  private final Coordinate vertex;
   private final Coordinate secondCoordinate;
 }

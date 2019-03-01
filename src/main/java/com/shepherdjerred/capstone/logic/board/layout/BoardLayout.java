@@ -67,6 +67,10 @@ public final class BoardLayout {
     return getBoardCell(coordinate).isWallBoardCell();
   }
 
+  public boolean isVertexBoardCell(Coordinate coordinate) {
+    return getBoardCell(coordinate).isVertexBoardCell();
+  }
+
   /**
    * Checks if a Coordinate is invalid on this board
    *

@@ -49,6 +49,8 @@ public final class TurnValidationResult {
 
   public enum ErrorMessage {
     NULL,
+    NOT_CAUSERS_TURN,
+    GAME_ALREADY_OVER,
     MOVE_IS_DIAGONAL,
     NOT_OWNER_OF_PIECE,
     PIECE_NOT_PAWN,
@@ -66,6 +68,11 @@ public final class TurnValidationResult {
     DIAGONAL_MOVE_NOT_ALLOWED,
     MOVE_IS_NOT_A_JUMP,
     JUMP_NOT_ALLOWED,
-    WALL_BLOCKS_PATH
+    WALL_BLOCKS_PATH,
+    VERTEX_TAKEN,
+    COORDINATES_NOT_ADJACENT_TO_VERTEX,
+    COORDIANTES_NOT_STRAIGHT,
+    VERTEX_NOT_ON_VERTEX_CELL,
+    COORDINATES_NOT_UNIQUE
   }
 }

@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 @ToString
 public enum BoardCell {
-  PAWN, WALL, NULL;
+  PAWN, WALL, VERTEX;
 
   public boolean isPawnBoardCell() {
     return this == PAWN;
@@ -19,13 +19,17 @@ public enum BoardCell {
     return this == WALL;
   }
 
+  public boolean isVertexBoardCell() {
+    return this == VERTEX;
+  }
+
   public char toChar() {
     if (this == PAWN) {
       return '■';
     } else if (this == WALL) {
       return ' ';
-    } else if (this == NULL) {
-      return 'X';
+    } else if (this == VERTEX) {
+      return ' ';
     } else {
       throw new IllegalStateException("Unknown BoardCell " + this);
     }

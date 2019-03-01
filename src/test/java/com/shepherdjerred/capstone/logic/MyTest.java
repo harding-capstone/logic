@@ -112,6 +112,7 @@ public class MyTest {
   public void diagonalMoveTestValid(Match matchState, MatchTurnEnactor enactor) {
     var playerTwoPlaceWall = new PlaceWallTurn(PlayerId.TWO,
         new Coordinate(8, 11),
+        new Coordinate(7, 11),
         new Coordinate(6, 11));
 
     var matchStateAfterTurn2 = enactor.enactTurn(playerTwoPlaceWall, matchState);
@@ -127,36 +128,42 @@ public class MyTest {
   public void wallsBlockPath(Match matchState, MatchTurnEnactor enactor) {
     var playerTwoPlaceWall = new PlaceWallTurn(PlayerId.TWO,
         new Coordinate(0, 11),
+        new Coordinate(1, 11),
         new Coordinate(2, 11));
 
     var matchStateAfterTurn2 = enactor.enactTurn(playerTwoPlaceWall, matchState);
 
     var playerOnePlaceWall = new PlaceWallTurn(PlayerId.ONE,
         new Coordinate(4, 11),
+        new Coordinate(5, 11),
         new Coordinate(6, 11));
 
     matchStateAfterTurn2 = enactor.enactTurn(playerOnePlaceWall, matchStateAfterTurn2);
 
     playerTwoPlaceWall = new PlaceWallTurn(PlayerId.TWO,
         new Coordinate(8, 11),
+        new Coordinate(9, 11),
         new Coordinate(10, 11));
 
     matchStateAfterTurn2 = enactor.enactTurn(playerTwoPlaceWall, matchStateAfterTurn2);
 
     playerOnePlaceWall = new PlaceWallTurn(PlayerId.ONE,
         new Coordinate(12, 11),
+        new Coordinate(13, 11),
         new Coordinate(14, 11));
 
     matchStateAfterTurn2 = enactor.enactTurn(playerOnePlaceWall, matchStateAfterTurn2);
 
     playerTwoPlaceWall = new PlaceWallTurn(PlayerId.TWO,
         new Coordinate(15, 10),
+        new Coordinate(15, 11),
         new Coordinate(15, 12));
 
     matchStateAfterTurn2 = enactor.enactTurn(playerTwoPlaceWall, matchStateAfterTurn2);
 
     playerOnePlaceWall = new PlaceWallTurn(PlayerId.ONE,
         new Coordinate(14, 13),
+        new Coordinate(15, 13),
         new Coordinate(16, 13));
 
     try {

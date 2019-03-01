@@ -34,8 +34,8 @@ public final class BoardCellsInitializer {
    * @return The BoardCell to should use
    */
   private BoardCell createBoardCell(Coordinate coordinate) {
-    if (shouldBeNullCell(coordinate)) {
-      return BoardCell.NULL;
+    if (shouldBeVertexCell(coordinate)) {
+      return BoardCell.VERTEX;
     } else if (shouldBePawnCell(coordinate)) {
       return BoardCell.PAWN;
     } else if (shouldBeWallCell(coordinate)) {
@@ -46,12 +46,12 @@ public final class BoardCellsInitializer {
   }
 
   /**
-   * Checks if a BoardCell should be a Null BoardCell
+   * Checks if a BoardCell should be a Vertex BoardCell
    *
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be Null, or false otherwise
    */
-  private boolean shouldBeNullCell(Coordinate coordinate) {
+  private boolean shouldBeVertexCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 

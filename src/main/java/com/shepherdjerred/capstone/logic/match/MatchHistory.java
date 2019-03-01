@@ -24,7 +24,7 @@ public final class MatchHistory {
     return new MatchHistory(newMatchHistory);
   }
 
-  public Match pop(Match match) {
+  public Match pop() {
     return matchHistory.pop();
   }
 

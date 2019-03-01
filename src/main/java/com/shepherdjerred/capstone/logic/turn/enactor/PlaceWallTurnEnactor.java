@@ -23,6 +23,9 @@ public final class PlaceWallTurnEnactor implements TurnEnactor {
   }
 
   private Board enactPlaceWallTurn(PlaceWallTurn turn, Board board) {
-    return board.placeWall(turn.getCauser(), turn.getFirstCoordinate(), turn.getSecondCoordinate());
+    return board.placeWall(turn.getCauser(),
+        turn.getFirstCoordinate(),
+        turn.getVertex(),
+        turn.getSecondCoordinate());
   }
 }

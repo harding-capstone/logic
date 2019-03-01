@@ -5,6 +5,7 @@ import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.Coordinate.Direction;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import java.util.LinkedList;
@@ -12,11 +13,72 @@ import java.util.List;
 
 public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWallTurn> {
 
+  static PlaceWallTurnValidationRule areCoordinatesUnique() {
+    return (turn, match) -> {
+      var c1 = turn.getFirstCoordinate();
+      var vertex = turn.getVertex();
+      var c2 = turn.getSecondCoordinate();
+
+      if (c1.equals(c2) || c1.equals(vertex) || c2.equals(vertex)) {
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_UNIQUE);
+      } else {
+        return new TurnValidationResult();
+      }
+    };
+  }
+
+  static PlaceWallTurnValidationRule isVertexFree() {
+    return (turn, match) -> {
+      var vertex = turn.getVertex();
+      var board = match.getBoard();
+      if (board.hasWall(vertex)) {
+        return new TurnValidationResult(ErrorMessage.VERTEX_TAKEN);
+      } else {
+        return new TurnValidationResult();
+      }
+    };
+  }
+
+  static PlaceWallTurnValidationRule areCoordinatesAdjacentToVertex() {
+    return (turn, match) -> {
+      var c1 = turn.getFirstCoordinate();
+      var vertex = turn.getVertex();
+      var c2 = turn.getSecondCoordinate();
+
+      var distC1 = Coordinate.calculateManhattanDistance(c1, vertex);
+      var distC2 = Coordinate.calculateManhattanDistance(c2, vertex);
+
+      if (distC1 == 1 && distC2 == 1) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_ADJACENT_TO_VERTEX);
+      }
+    };
+  }
+
+  static PlaceWallTurnValidationRule areCoordinatesStraight() {
+    return (turn, match) -> {
+      var c1 = turn.getFirstCoordinate();
+      var vertex = turn.getVertex();
+      var c2 = turn.getSecondCoordinate();
+
+      var isC1Card = Coordinate.areCoordinatesCardinal(c1, vertex);
+      var isC2Card = Coordinate.areCoordinatesCardinal(c2, vertex);
+
+      if (isC1Card && isC2Card) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.COORDIANTES_NOT_STRAIGHT);
+      }
+    };
+  }
+
   static PlaceWallTurnValidationRule areCoordinatesValid() {
     return (turn, match) -> {
       var board = match.getBoard();
       if (board.isCoordinateInvalid(turn.getFirstCoordinate())
-          || board.isCoordinateInvalid(turn.getSecondCoordinate())) {
+          || board.isCoordinateInvalid(turn.getSecondCoordinate())
+          || board.isCoordinateInvalid(turn.getVertex())) {
         return new TurnValidationResult(ErrorMessage.COORDINATE_INVALID);
       } else {
         return new TurnValidationResult();
@@ -24,7 +86,19 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
     };
   }
 
-  static PlaceWallTurnValidationRule isWallCell() {
+  static PlaceWallTurnValidationRule vertexCoordinateIsVertexCell() {
+    return (turn, match) -> {
+      var vertex = turn.getVertex();
+      var board = match.getBoard();
+      if (board.isVertexBoardCell(vertex)) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.VERTEX_NOT_ON_VERTEX_CELL);
+      }
+    };
+  }
+
+  static PlaceWallTurnValidationRule coordinatesAreWallCells() {
     return (turn, match) -> {
       var board = match.getBoard();
       var firstCoordinate = turn.getFirstCoordinate();
@@ -139,9 +213,14 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
 
   static TurnValidationRule<PlaceWallTurn> all() {
     return areCoordinatesValid()
-        .and(isWallCell())
+        .and(coordinatesAreWallCells())
         .and(areCoordinatesEmpty())
         .and(doesPlayerHaveWallsToPlace())
-        .and(willWallBlockPawns());
+        .and(willWallBlockPawns())
+        .and(vertexCoordinateIsVertexCell())
+        .and(areCoordinatesStraight())
+        .and(areCoordinatesAdjacentToVertex())
+        .and(isVertexFree())
+        .and(areCoordinatesUnique());
   }
 }

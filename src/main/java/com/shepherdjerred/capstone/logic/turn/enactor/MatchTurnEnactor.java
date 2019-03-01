@@ -51,6 +51,6 @@ public class MatchTurnEnactor {
         matchSettings.getBoardSettings().getPlayerCount());
 
     return new Match(newBoard, matchSettings, newActivePlayerTracker,
-        newWallPool, newMatchStatus, newHistory);
+        newWallPool, newMatchStatus, newHistory, match.getMatchTurnEnactor());
   }
 }
