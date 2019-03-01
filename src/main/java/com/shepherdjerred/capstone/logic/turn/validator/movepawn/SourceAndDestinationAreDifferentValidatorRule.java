@@ -6,7 +6,7 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class SourceAndDestinationDifferentValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class SourceAndDestinationAreDifferentValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {

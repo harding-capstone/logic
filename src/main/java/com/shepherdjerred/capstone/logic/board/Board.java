@@ -1,5 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
+import com.google.common.base.Preconditions;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
@@ -7,6 +8,8 @@ import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -53,6 +56,40 @@ public class Board {
    */
   public Coordinate getPawnLocation(PlayerId playerId) {
     return boardPieces.getPawnLocation(playerId);
+  }
+
+  public Set<Coordinate> getPawnLocations() {
+    return boardPieces.getPawnLocations();
+  }
+
+  public Set<Coordinate> getWallLocations() {
+    return boardPieces.getWallLocations();
+  }
+
+  public Set<Coordinate> getAdjacentPawnSpaces(Coordinate coordinate) {
+    Preconditions.checkArgument(isPawnBoardCell(coordinate));
+    Set<Coordinate> spaces = new HashSet<>();
+    var gridSize = boardSettings.getGridSize();
+    int x = coordinate.getX();
+    int y = coordinate.getY();
+
+    if (x > 0) {
+      spaces.add(coordinate.toLeft(2));
+    }
+
+    if (x < gridSize - 1) {
+      spaces.add(coordinate.toRight(2));
+    }
+
+    if (y > 0) {
+      spaces.add(coordinate.below(2));
+    }
+
+    if (y < gridSize - 1) {
+      spaces.add(coordinate.above(2));
+    }
+
+    return spaces;
   }
 
   /**

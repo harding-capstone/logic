@@ -6,20 +6,18 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class DestinationBoardCellTypePawnValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class SourcePieceIsOwnedByCauserValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
-    var destination = turn.getDestination();
+    var source = turn.getSource();
+    var mover = turn.getCauser();
+    var sourcePieceOwner = match.getBoard().getPiece(source).getOwner();
 
-    if (match.getBoard().isCoordinateInvalid(destination)) {
-      return new TurnValidationResult(true);
-    }
-
-    if (match.getBoard().isPawnBoardCell(destination)) {
+    if (mover == sourcePieceOwner) {
       return new TurnValidationResult();
     } else {
-      return new TurnValidationResult(ErrorMessage.DESTINATION_CELL_TYPE_NOT_PAWN);
+      return new TurnValidationResult(ErrorMessage.SOURCE_PIECE_NOT_OWNED_BY_PLAYER);
     }
   }
 }

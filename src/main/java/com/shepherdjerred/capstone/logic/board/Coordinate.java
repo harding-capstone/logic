@@ -1,5 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
+import com.shepherdjerred.capstone.logic.util.Direction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -71,8 +72,7 @@ public class Coordinate {
   }
 
   /**
-   * Gets the midpoint between two Coordinates.
-   * https://www.purplemath.com/modules/midpoint.htm
+   * Gets the midpoint between two Coordinates. https://www.purplemath.com/modules/midpoint.htm
    */
   public static Coordinate calculateMidpoint(Coordinate left, Coordinate right) {
     if (areCoordinatesDiagonal(left, right)) {
@@ -84,8 +84,7 @@ public class Coordinate {
   }
 
   /**
-   * Calculates the manhattan distance between two Coordinates.
-   * https://math.stackexchange.com/questions/139600/how-do-i-calculate-euclidean-and-manhattan-distance-by-hand
+   * Calculates the manhattan distance between two Coordinates. https://math.stackexchange.com/questions/139600/how-do-i-calculate-euclidean-and-manhattan-distance-by-hand
    */
   public static int calculateManhattanDistance(Coordinate left, Coordinate right) {
     return Math.abs(left.x - right.x) + Math.abs(left.y - right.y);
@@ -94,22 +93,17 @@ public class Coordinate {
   /**
    * Allows directional coordinate checking.
    */
-  public Coordinate adjacent(Direction direction, int i) {
+  public Coordinate fromDirection(Direction direction, int i) {
     if (direction == Direction.ABOVE) {
       return above(i);
     } else if (direction == Direction.BELOW) {
       return below(i);
     } else if (direction == Direction.RIGHT) {
       return toRight(i);
-    } else {
+    } else if (direction == Direction.LEFT) {
       return toLeft(i);
+    } else {
+      throw new UnsupportedOperationException();
     }
-  }
-
-  public enum Direction {
-    ABOVE,
-    BELOW,
-    RIGHT,
-    LEFT
   }
 }

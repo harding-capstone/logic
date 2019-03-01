@@ -6,15 +6,15 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class DestinationPieceEmptyValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class SourceBoardCellTypeIsPawnValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
-    var destination = turn.getDestination();
-    if (match.getBoard().isEmpty(destination)) {
+    var source = turn.getSource();
+    if (match.getBoard().isPawnBoardCell(source)) {
       return new TurnValidationResult();
     } else {
-      return new TurnValidationResult(ErrorMessage.DESTINATION_NOT_EMPTY);
+      return new TurnValidationResult(ErrorMessage.SOURCE_CELL_TYPE_NOT_PAWN);
     }
   }
 }

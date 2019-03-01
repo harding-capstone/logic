@@ -1,20 +1,22 @@
 package com.shepherdjerred.capstone.logic.turn.validator.movepawn;
 
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class DestinationCoordinateValidValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class MoveIsCardinalValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
-    var board = match.getBoard();
-    if (board.isCoordinateInvalid(turn.getDestination())) {
-      return new TurnValidationResult(ErrorMessage.DESTINATION_COORDINATE_INVALID);
-    } else {
+    var source = turn.getSource();
+    var destination = turn.getDestination();
+    if (Coordinate.areCoordinatesCardinal(source, destination)) {
       return new TurnValidationResult();
+    } else {
+      return new TurnValidationResult(ErrorMessage.MOVE_NOT_CARDINAL);
     }
   }
 }

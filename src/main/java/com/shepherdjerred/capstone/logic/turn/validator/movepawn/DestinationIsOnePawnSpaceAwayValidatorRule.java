@@ -7,17 +7,17 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class DestinationTwoPawnSpacesAwayValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class DestinationIsOnePawnSpaceAwayValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
     var dist = Coordinate.calculateManhattanDistance(turn.getSource(), turn.getDestination());
 
-    // We check if the distance equals four because wall cells count in the calculation
-    if (dist == 4) {
+    // We check if the distance equals two because wall cells count in the calculation
+    if (dist == 2) {
       return new TurnValidationResult();
     } else {
-      return new TurnValidationResult(ErrorMessage.MOVE_NOT_TWO_SPACES_AWAY);
+      return new TurnValidationResult(ErrorMessage.MOVE_NOT_ONE_SPACE_AWAY);
     }
   }
 }

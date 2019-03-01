@@ -7,21 +7,21 @@ import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.validator.match.MatchStatusValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.match.PlayerTurnValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationBoardCellTypePawnValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationCoordinateValidValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationOnePawnSpaceAwayValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationPieceEmptyValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationTwoPawnSpacesAwayValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.MoveCardinalValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.MoveDiagonalValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.PieceBetweenSourceAndDestinationValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceAndDestinationDifferentValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceBoardCellTypePawnValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceCoordinateValidValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourcePieceIsPawnValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourcePieceOwnedByPlayerValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceSameAsActualLocationValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.movepawn.WallBetweenSourceAndDestinationValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationBoardCellTypeIsPawnValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationCoordinateIsValidValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationIsOnePawnSpaceAwayValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationPieceIsEmptyValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.DestinationIsTwoPawnSpacesAwayValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.MoveIsCardinalValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.MoveIsDiagonalValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.PieceIsBetweenSourceAndDestinationValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceAndDestinationAreDifferentValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceBoardCellTypeIsPawnValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourceCoordinateIsValidValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourcePieceTypeIsPawnValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.SourcePieceIsOwnedByCauserValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.TurnSourceIsSameAsActualLocationValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.movepawn.WallBetweenIsNotSourceAndDestinationValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.PlayerHasWallsLeftToPlaceValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreFreeValidationRule;
 import com.shepherdjerred.capstone.logic.turn.validator.placewall.WallPieceLocationCoordinatesAreValid;
@@ -74,11 +74,9 @@ public class TurnValidator {
       throw new UnsupportedOperationException();
     }
 
-    var result = new TurnValidationResult();
-    for (ValidatorRule rule : rules) {
-      result = TurnValidationResult.combine(result, rule.validate(match, turn));
-    }
-    return result;
+    return rules.stream()
+        .map(rule -> rule.validate(match, turn))
+        .collect(new TurnValidationResultCollector());
   }
 
   private Set<ValidatorRule<Turn>> createMatchTurnRules() {
@@ -102,32 +100,32 @@ public class TurnValidator {
 
   private Set<ValidatorRule<MovePawnTurn>> createMovePawnTurnRules() {
     Set<ValidatorRule<MovePawnTurn>> rules = new HashSet<>();
-    rules.add(new DestinationBoardCellTypePawnValidatorRule());
-    rules.add(new DestinationCoordinateValidValidatorRule());
-    rules.add(new DestinationPieceEmptyValidatorRule());
-    rules.add(new SourceAndDestinationDifferentValidatorRule());
-    rules.add(new SourceBoardCellTypePawnValidatorRule());
-    rules.add(new SourceCoordinateValidValidatorRule());
-    rules.add(new SourcePieceIsPawnValidatorRule());
-    rules.add(new SourcePieceOwnedByPlayerValidatorRule());
-    rules.add(new SourceSameAsActualLocationValidatorRule());
+    rules.add(new DestinationBoardCellTypeIsPawnValidatorRule());
+    rules.add(new DestinationCoordinateIsValidValidatorRule());
+    rules.add(new DestinationPieceIsEmptyValidatorRule());
+    rules.add(new SourceAndDestinationAreDifferentValidatorRule());
+    rules.add(new SourceBoardCellTypeIsPawnValidatorRule());
+    rules.add(new SourceCoordinateIsValidValidatorRule());
+    rules.add(new SourcePieceTypeIsPawnValidatorRule());
+    rules.add(new SourcePieceIsOwnedByCauserValidatorRule());
+    rules.add(new TurnSourceIsSameAsActualLocationValidatorRule());
     return rules;
   }
 
   private Set<ValidatorRule<MovePawnTurn>> createNormalMovePawnTurnRules() {
     Set<ValidatorRule<MovePawnTurn>> rules = new HashSet<>();
-    rules.add(new DestinationOnePawnSpaceAwayValidatorRule());
-    rules.add(new MoveCardinalValidatorRule());
-    rules.add(new WallBetweenSourceAndDestinationValidatorRule());
+    rules.add(new DestinationIsOnePawnSpaceAwayValidatorRule());
+    rules.add(new MoveIsCardinalValidatorRule());
+    rules.add(new WallBetweenIsNotSourceAndDestinationValidatorRule());
     return rules;
   }
 
   // TODO check for walls
   private Set<ValidatorRule<MovePawnTurn>> createStraightJumpMovePawnTurnRules() {
     Set<ValidatorRule<MovePawnTurn>> rules = new HashSet<>();
-    rules.add(new DestinationTwoPawnSpacesAwayValidatorRule());
-    rules.add(new MoveCardinalValidatorRule());
-    rules.add(new PieceBetweenSourceAndDestinationValidatorRule());
+    rules.add(new DestinationIsTwoPawnSpacesAwayValidatorRule());
+    rules.add(new MoveIsCardinalValidatorRule());
+    rules.add(new PieceIsBetweenSourceAndDestinationValidatorRule());
     return rules;
   }
 
@@ -135,8 +133,8 @@ public class TurnValidator {
   // TODO check for pawn
   private Set<ValidatorRule<MovePawnTurn>> createDiagonalJumpMovePawnTurnRules() {
     Set<ValidatorRule<MovePawnTurn>> rules = new HashSet<>();
-    rules.add(new DestinationTwoPawnSpacesAwayValidatorRule());
-    rules.add(new MoveDiagonalValidatorRule());
+    rules.add(new DestinationIsTwoPawnSpacesAwayValidatorRule());
+    rules.add(new MoveIsDiagonalValidatorRule());
     return rules;
   }
 }

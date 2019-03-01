@@ -89,5 +89,9 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.github.bentorfs</groupId>
+      <artifactId>ai-algorithms</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -7,16 +7,18 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class MoveDiagonalValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class PieceIsBetweenSourceAndDestinationValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
     var source = turn.getSource();
     var destination = turn.getDestination();
-    if (Coordinate.areCoordinatesDiagonal(source, destination)) {
+    var midpoint = Coordinate.calculateMidpoint(source, destination);
+
+    if (match.getBoard().isEmpty(midpoint)) {
       return new TurnValidationResult();
     } else {
-      return new TurnValidationResult(ErrorMessage.MOVE_NOT_DIAGONAL);
+      return new TurnValidationResult(ErrorMessage.PIECE_NOT_BETWEEN_SOURCE_AND_DESTINATION);
     }
   }
 }

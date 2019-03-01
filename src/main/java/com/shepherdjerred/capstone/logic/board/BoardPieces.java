@@ -5,7 +5,11 @@ import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -42,6 +46,18 @@ public class BoardPieces {
    */
   public Coordinate getPawnLocation(PlayerId playerId) {
     return pawnLocations.get(playerId);
+  }
+
+  public Set<Coordinate> getPawnLocations() {
+    return new HashSet<>(pawnLocations.values());
+  }
+
+  public Set<Coordinate> getWallLocations() {
+    return pieces.entrySet()
+        .stream()
+        .filter(entry -> entry.getValue() instanceof WallPiece)
+        .map(Entry::getKey)
+        .collect(Collectors.toSet());
   }
 
   /**

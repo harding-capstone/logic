@@ -43,7 +43,7 @@ public class Match {
     var matchHistory = new MatchHistory();
     var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(),
         new TurnValidator(),
-        new MatchStatusUpdater(),
+        new MatchStatusUpdater(new PlayerGoals()),
         new ActivePlayerTracker(matchSettings.getPlayerCount()));
 
     return new Match(board,

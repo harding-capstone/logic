@@ -1,20 +1,21 @@
 package com.shepherdjerred.capstone.logic.turn.validator.movepawn;
 
 import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.ValidatorRule;
 
-public class SourceBoardCellTypePawnValidatorRule implements ValidatorRule<MovePawnTurn> {
+public class SourcePieceTypeIsPawnValidatorRule implements ValidatorRule<MovePawnTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, MovePawnTurn turn) {
     var source = turn.getSource();
-    if (match.getBoard().isPawnBoardCell(source)) {
+    if (match.getBoard().getPiece(source) instanceof PawnPiece) {
       return new TurnValidationResult();
     } else {
-      return new TurnValidationResult(ErrorMessage.SOURCE_CELL_TYPE_NOT_PAWN);
+      return new TurnValidationResult(ErrorMessage.SOURCE_PIECE_NOT_PAWN);
     }
   }
 }
