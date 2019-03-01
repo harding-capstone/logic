@@ -8,6 +8,16 @@ import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.Err
 // TODO having rules for both moves and jumps in here is kinda weird, might want to extract?
 public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnTurn> {
 
+  static MovePawnTurnValidationRule isSourceCorrect() {
+    return (turn, match) -> {
+      if (turn.getSource() == match.getBoard().getPawnLocation(turn.getCauser())) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.INCORRECT_SOURCE);
+      }
+    };
+  }
+
   static MovePawnTurnValidationRule isSourceDifferentFromDest() {
     return (turn, match) -> {
       if (turn.getSource().equals(turn.getDestination())) {
