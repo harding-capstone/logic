@@ -51,15 +51,31 @@ public final class Coordinate {
   }
 
   /**
+   * Allows directional coordinate checking
+   */
+  public Coordinate adjacent(Direction direction, int i) {
+    if (direction == Direction.above) {
+      return above(i);
+    } else if (direction == Direction.below) {
+      return below(i);
+    } else if (direction == Direction.right) {
+      return toRight(i);
+    } else {
+      return toLeft(i);
+    }
+  }
+
+  /**
    * Checks if two Coordinates are diagonal to each other
    */
   public static boolean areCoordinatesCardinal(Coordinate left, Coordinate right) {
-    return left.x != right.x
-        || left.y != right.y;
+    return (left.x != right.x && left.y == right.y)
+        || (left.x == right.x && left.y != right.y);
   }
 
   public static boolean areCoordinatesDiagonal(Coordinate left, Coordinate right) {
-    return !areCoordinatesCardinal(left, right);
+    return left.x != right.x
+        && left.y != right.y;
   }
 
   /**
@@ -83,5 +99,12 @@ public final class Coordinate {
    */
   public static int calculateManhattanDistance(Coordinate left, Coordinate right) {
     return Math.abs(left.x - right.x) + Math.abs(left.y - right.y);
+  }
+
+  public enum Direction {
+    above,
+    below,
+    right,
+    left
   }
 }
