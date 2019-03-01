@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO refactor
+// TODO This class needs to be cleaned up
 public class BoardPiecesInitializer {
 
   /**

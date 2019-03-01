@@ -1,6 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
 import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
@@ -23,9 +24,9 @@ public final class PlaceWallTurnEnactor implements TurnEnactor {
   }
 
   private Board enactPlaceWallTurn(PlaceWallTurn turn, Board board) {
-    return board.placeWall(turn.getCauser(),
-        turn.getFirstCoordinate(),
+    var wallLocation = new WallPieceLocation(turn.getFirstCoordinate(),
         turn.getVertex(),
         turn.getSecondCoordinate());
+    return board.placeWall(turn.getCauser(), wallLocation);
   }
 }

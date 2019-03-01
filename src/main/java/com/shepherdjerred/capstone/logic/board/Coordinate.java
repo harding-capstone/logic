@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
-import lombok.AllArgsConstructor;
+import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,30 +8,36 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
-public final class Coordinate {
+public class Coordinate {
 
   private final int x;
   private final int y;
+
+  public Coordinate(int x, int y) {
+    Preconditions.checkArgument(x >= 0);
+    Preconditions.checkArgument(y >= 0);
+    this.x = x;
+    this.y = y;
+  }
 
   public Coordinate fromOffset(int xOffset, int yOffset) {
     return new Coordinate(x + xOffset, y + yOffset);
   }
 
   public Coordinate toLeft() {
-    return new Coordinate(x - 1, y);
+    return toLeft(1);
   }
 
   public Coordinate toRight() {
-    return new Coordinate(x + 1, y);
+    return toRight(1);
   }
 
   public Coordinate above() {
-    return new Coordinate(x, y + 1);
+    return above(1);
   }
 
   public Coordinate below() {
-    return new Coordinate(x, y - 1);
+    return below(1);
   }
 
   public Coordinate toLeft(int i) {
@@ -50,24 +56,26 @@ public final class Coordinate {
     return new Coordinate(x, y - i);
   }
 
+  public boolean isAdjacent(Coordinate c) {
+    var diff = Math.abs(x - c.x) + Math.abs(y - c.y);
+    return diff == 1;
+  }
+
   /**
    * Allows directional coordinate checking
    */
   public Coordinate adjacent(Direction direction, int i) {
-    if (direction == Direction.above) {
+    if (direction == Direction.ABOVE) {
       return above(i);
-    } else if (direction == Direction.below) {
+    } else if (direction == Direction.BELOW) {
       return below(i);
-    } else if (direction == Direction.right) {
+    } else if (direction == Direction.RIGHT) {
       return toRight(i);
     } else {
       return toLeft(i);
     }
   }
 
-  /**
-   * Checks if two Coordinates are diagonal to each other
-   */
   public static boolean areCoordinatesCardinal(Coordinate left, Coordinate right) {
     return (left.x != right.x && left.y == right.y)
         || (left.x == right.x && left.y != right.y);
@@ -83,7 +91,7 @@ public final class Coordinate {
    *
    * https://www.purplemath.com/modules/midpoint.htm
    */
-  public static Coordinate getMidpoint(Coordinate left, Coordinate right) {
+  public static Coordinate calculateMidpoint(Coordinate left, Coordinate right) {
     if (areCoordinatesDiagonal(left, right)) {
       throw new IllegalArgumentException("Cannot return a midpoint between diagonal coordinates");
     }
@@ -102,9 +110,9 @@ public final class Coordinate {
   }
 
   public enum Direction {
-    above,
-    below,
-    right,
-    left
+    ABOVE,
+    BELOW,
+    RIGHT,
+    LEFT
   }
 }

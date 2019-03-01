@@ -3,44 +3,41 @@ package com.shepherdjerred.capstone.logic.board.layout;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
 /**
  * Represents the Quoridor board layout. In a standard 9x9 game of Quoridor, the boardCells array
  * will be 17 * 17. The boardCells array stores both the pawn spaces and grooves where walls are
- * placed. Along with the wall and pawn spaces in the boardCells array, there are Null cells which
- * represent areas in the array where no element exists on the Quoridor board. These BoardCells
- * should be ignored.
+ * placed. Along with the WALL and PAWN BoardCells in the boardCells array, there are Vertex
+ * BoardCells which represent areas on the board where walls can intersect on the board.
  */
 @ToString
 @EqualsAndHashCode
-public final class BoardLayout {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class BoardLayout {
 
-  @Getter
-  private final BoardSettings boardSettings;
+  private final int gridSize;
   private final BoardCell[][] boardCells;
 
-  public static BoardLayout fromBoardSettings(BoardCellsInitializer boardCellsInitializer,
-      BoardSettings boardSettings) {
-    var boardCells = boardCellsInitializer.createBoardCells(boardSettings);
-    return new BoardLayout(boardSettings, boardCells);
+  public static BoardLayout from(BoardSettings boardSettings) {
+    var boardCellsInitializer = new BoardLayoutBoardCellsInitializer();
+    return from(boardSettings, boardCellsInitializer);
   }
 
   /**
-   * Constructor for a new BoardLayout. This constructor will create a BoardLayout based on the
-   * BoardSettings object it receives.
-   *
-   * @param boardSettings Settings to use when creating the BoardLayout
+   * Creates a new board layout.
    */
-  private BoardLayout(BoardSettings boardSettings, BoardCell[][] boardCells) {
-    this.boardSettings = boardSettings;
-    this.boardCells = boardCells;
+  public static BoardLayout from(BoardSettings boardSettings,
+      BoardLayoutBoardCellsInitializer initializer) {
+    var boardCells = initializer.createBoardCells(boardSettings);
+    return new BoardLayout(boardSettings.getGridSize(), boardCells);
   }
 
   /**
-   * Returns the BoardCell at a given Coordinate
+   * Returns the BoardCell at a given Coordinate.
    *
    * @param coordinate Coordinate of the BoardCell to get
    * @return The BoardCell at the Coordinate
@@ -54,46 +51,48 @@ public final class BoardLayout {
   }
 
   /**
-   * Checks if the BoardCell at the Coordinate can hold a pawn
-   *
-   * @param coordinate The Coordinate to check
-   * @return True if the BoardCell can hold a pawn, false otherwise
+   * Checks if the BoardCell is a PAWN BoardCell.
    */
-  public boolean isPawnBoardCell(Coordinate coordinate) {
-    return getBoardCell(coordinate).isPawnBoardCell();
-  }
-
-  public boolean isWallBoardCell(Coordinate coordinate) {
-    return getBoardCell(coordinate).isWallBoardCell();
-  }
-
-  public boolean isVertexBoardCell(Coordinate coordinate) {
-    return getBoardCell(coordinate).isVertexBoardCell();
+  public boolean isPawn(Coordinate coordinate) {
+    return getBoardCell(coordinate).isPawn();
   }
 
   /**
-   * Checks if a Coordinate is invalid on this board
-   *
-   * @param coordinate The Coordinate to check
-   * @return True if the Coordinate is invalid, false otherwise
+   * Checks if the BoardCell is a WALL BoardCell.
    */
-  public boolean isCoordinateInvalid(Coordinate coordinate) {
-    return !isCoordinateValid(coordinate);
+  public boolean isWall(Coordinate coordinate) {
+    return getBoardCell(coordinate).isWall();
   }
 
   /**
-   * Checks if a coordinate is valid on this board
+   * Checks if the BoardCell is a WALL_VERTEX BoardCell.
+   */
+  public boolean isWallVertex(Coordinate coordinate) {
+    return getBoardCell(coordinate).isVertex();
+  }
+
+  /**
+   * Checks if a coordinate is valid in this BoardLayout.
    *
    * @param coordinate The Coordinate to check
    * @return True if the Coordinate is valid, false otherwise
    */
   public boolean isCoordinateValid(Coordinate coordinate) {
-    var gridSize = boardSettings.getGridSize();
     var x = coordinate.getX();
     var y = coordinate.getY();
     return x >= 0
         && x <= gridSize - 1
         && y >= 0
         && y <= gridSize - 1;
+  }
+
+  /**
+   * Checks if a Coordinate is invalid in this BoardLayout.
+   *
+   * @param coordinate The Coordinate to check
+   * @return True if the Coordinate is invalid, false otherwise
+   */
+  public boolean isCoordinateInvalid(Coordinate coordinate) {
+    return !isCoordinateValid(coordinate);
   }
 }

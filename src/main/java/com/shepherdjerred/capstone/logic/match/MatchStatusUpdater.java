@@ -7,13 +7,11 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
 public final class MatchStatusUpdater {
-  // TODO Stalemate rule goes here (if we have one)
+
   public MatchStatus updateMatchStatus(Turn turn, Match match) {
     var player = turn.getCauser();
     if (turn instanceof MovePawnTurn) {
-      var board = match.getBoard();
-      var boardSettings = board.getBoardSettings();
-      var gridSize = boardSettings.getGridSize();
+      var gridSize = match.getBoard().getBoardSettings().getGridSize();
       var movePawnTurn = (MovePawnTurn) turn;
       var destination = movePawnTurn.getDestination();
 

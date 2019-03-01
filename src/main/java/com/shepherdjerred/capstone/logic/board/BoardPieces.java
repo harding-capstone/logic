@@ -6,35 +6,32 @@ import com.shepherdjerred.capstone.logic.piece.WallPiece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
-// This is my least favorite class
 @ToString
 @EqualsAndHashCode
-public final class BoardPieces {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class BoardPieces {
 
   private final Map<Coordinate, Piece> pieces;
   private final Map<PlayerId, Coordinate> pawnLocations;
-  @Getter
-  private final BoardSettings boardSettings;
+  private final int gridSize;
 
-  public static BoardPieces initializePieceLocations(BoardSettings boardSettings,
+  public static BoardPieces from(BoardSettings boardSettings) {
+    return from(boardSettings, new BoardPiecesInitializer());
+  }
+
+  public static BoardPieces from(BoardSettings boardSettings,
       BoardPiecesInitializer boardPiecesInitializer) {
+    var gridSize = boardSettings.getGridSize();
     Map<PlayerId, Coordinate> pawnLocations = boardPiecesInitializer.initializePawnLocations(
         boardSettings);
     Map<Coordinate, Piece> pieces = boardPiecesInitializer.pawnLocationsToPieceLocations(
         pawnLocations);
-    return new BoardPieces(pieces, pawnLocations, boardSettings);
-  }
-
-  public BoardPieces(Map<Coordinate, Piece> pieces,
-      Map<PlayerId, Coordinate> pawnLocations,
-      BoardSettings boardSettings) {
-    this.pieces = pieces;
-    this.pawnLocations = pawnLocations;
-    this.boardSettings = boardSettings;
+    return new BoardPieces(pieces, pawnLocations, gridSize);
   }
 
   /**
@@ -64,7 +61,7 @@ public final class BoardPieces {
     newPiecesMap.put(destination, originalPiece);
     newPawnLocations.put(playerId, destination);
 
-    return new BoardPieces(newPiecesMap, newPawnLocations, boardSettings);
+    return new BoardPieces(newPiecesMap, newPawnLocations, gridSize);
   }
 
   /**
@@ -81,7 +78,7 @@ public final class BoardPieces {
     newPiecesMap.put(vertex, new WallPiece(playerId));
     newPiecesMap.put(c2, new WallPiece(playerId));
 
-    return new BoardPieces(newPiecesMap, pawnLocations, boardSettings);
+    return new BoardPieces(newPiecesMap, pawnLocations, gridSize);
   }
 
 

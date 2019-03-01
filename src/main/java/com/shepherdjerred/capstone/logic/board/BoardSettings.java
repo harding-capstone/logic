@@ -1,5 +1,6 @@
 package com.shepherdjerred.capstone.logic.board;
 
+import com.google.common.base.Preconditions;
 import com.shepherdjerred.capstone.logic.match.MatchSettings.PlayerCount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,19 +9,16 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class BoardSettings {
+public class BoardSettings {
 
   private final int boardSize;
   private final int gridSize;
   private final PlayerCount playerCount;
 
   public BoardSettings(int boardSize, PlayerCount playerCount) {
+    Preconditions.checkArgument(boardSize % 2 != 1);
     this.boardSize = boardSize;
     this.gridSize = boardSize * 2 - 1;
     this.playerCount = playerCount;
-
-    if (boardSize % 2 != 1) {
-      throw new IllegalArgumentException("Board size must be odd");
-    }
   }
 }

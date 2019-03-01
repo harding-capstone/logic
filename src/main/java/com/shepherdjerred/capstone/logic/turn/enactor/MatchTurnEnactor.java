@@ -7,18 +7,16 @@ import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
+import lombok.AllArgsConstructor;
 
 // TODO this needs to be cleaned up
+@AllArgsConstructor
 public class MatchTurnEnactor {
 
   private final TurnEnactorFactory turnEnactorFactory;
   private final TurnValidator turnValidator;
-
-  public MatchTurnEnactor(TurnEnactorFactory turnEnactorFactory,
-      TurnValidator turnValidator) {
-    this.turnEnactorFactory = turnEnactorFactory;
-    this.turnValidator = turnValidator;
-  }
+  private final MatchStatusUpdater matchStatusUpdater;
+  private final ActivePlayerTracker activePlayerTracker;
 
   public Match enactTurn(Turn turn, Match match) {
     var validatorResult = turnValidator.isTurnValid(turn, match);
@@ -34,7 +32,7 @@ public class MatchTurnEnactor {
     var board = match.getBoard();
 
     var newBoard = enactor.enactTurn(turn, board);
-    var newMatchStatus = new MatchStatusUpdater().updateMatchStatus(turn, match);
+    var newMatchStatus = matchStatusUpdater.updateMatchStatus(turn, match);
 
     // TODO I think this would be better to do in the turn specific handler, but I'm not sure how that can be done well
     var newWallPool = match.getPlayerWallBank();
@@ -47,7 +45,7 @@ public class MatchTurnEnactor {
 
     var matchSettings = match.getMatchSettings();
 
-    var newActivePlayerTracker = new ActivePlayerTracker().getNextActivePlayer(match.getActivePlayerId(),
+    var newActivePlayerTracker = activePlayerTracker.getNextActivePlayer(match.getActivePlayerId(),
         matchSettings.getBoardSettings().getPlayerCount());
 
     return new Match(newBoard, matchSettings, newActivePlayerTracker,

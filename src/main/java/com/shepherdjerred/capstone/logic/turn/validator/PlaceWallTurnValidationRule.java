@@ -1,15 +1,11 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
-import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.Coordinate.Direction;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
-import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
-import java.util.LinkedList;
-import java.util.List;
 
 public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWallTurn> {
 
@@ -32,7 +28,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
       var vertex = turn.getVertex();
       var board = match.getBoard();
       if (board.hasWall(vertex)) {
-        return new TurnValidationResult(ErrorMessage.VERTEX_TAKEN);
+        return new TurnValidationResult(ErrorMessage.VERTEX_NOT_FREE);
       } else {
         return new TurnValidationResult();
       }
@@ -68,7 +64,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
       if (isC1Card && isC2Card) {
         return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(ErrorMessage.COORDIANTES_NOT_STRAIGHT);
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_STRAIGHT);
       }
     };
   }
@@ -79,7 +75,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
       if (board.isCoordinateInvalid(turn.getFirstCoordinate())
           || board.isCoordinateInvalid(turn.getSecondCoordinate())
           || board.isCoordinateInvalid(turn.getVertex())) {
-        return new TurnValidationResult(ErrorMessage.COORDINATE_INVALID);
+        return new TurnValidationResult(ErrorMessage.COORDINATES_INVALID);
       } else {
         return new TurnValidationResult();
       }
@@ -90,10 +86,10 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
     return (turn, match) -> {
       var vertex = turn.getVertex();
       var board = match.getBoard();
-      if (board.isVertexBoardCell(vertex)) {
+      if (board.isWallVertex(vertex)) {
         return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(ErrorMessage.VERTEX_NOT_ON_VERTEX_CELL);
+        return new TurnValidationResult(ErrorMessage.VERTEX_COORDINATE_IS_NOT_VERTEX_CELL);
       }
     };
   }
@@ -113,7 +109,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
           && board.isWallBoardCell(secondCoordinate)) {
         return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(ErrorMessage.NOT_WALL_CELL);
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_WALL_CELLS);
       }
     };
   }
@@ -128,7 +124,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
           && board.isEmpty(secondCoordinate)) {
         return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(ErrorMessage.DESTINATION_NOT_EMPTY);
+        return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_EMPTY);
       }
     };
   }
@@ -139,7 +135,7 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
       if (match.getWallsLeft(player) > 0) {
         return new TurnValidationResult();
       } else {
-        return new TurnValidationResult(ErrorMessage.NO_WALLS_TO_PLACE);
+        return new TurnValidationResult(ErrorMessage.PLAYER_HAS_NO_WALLS);
       }
     };
   }
@@ -149,10 +145,10 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
   }
 
   static Direction oppositeDirection(Direction direction) {
-    if (direction == Direction.above) {
-      return Direction.below;
+    if (direction == Direction.ABOVE) {
+      return Direction.BELOW;
     } else {
-      return Direction.above;
+      return Direction.ABOVE;
     }
   }
 
@@ -168,11 +164,11 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
         coordinate = coordinate.above(2);
         return foundPath(coordinate, match, direction, visited);
       }
-      if (canMakeStep(coordinate, match, Direction.right)) {
+      if (canMakeStep(coordinate, match, Direction.RIGHT)) {
         coordinate = coordinate.toRight(2);
         return foundPath(coordinate, match, direction, visited);
       }
-      if (canMakeStep(coordinate, match, Direction.left)) {
+      if (canMakeStep(coordinate, match, Direction.LEFT)) {
         coordinate = coordinate.toLeft(2);
         return foundPath(coordinate, match, direction, visited);
       }
@@ -194,13 +190,13 @@ public interface PlaceWallTurnValidationRule extends TurnValidationRule<PlaceWal
 
       var coordinate = match.getBoard().getPawnLocation(PlayerId.ONE);
 
-      boolean foundPath = foundPath(coordinate, match, Direction.above, visited);
+      boolean foundPath = foundPath(coordinate, match, Direction.ABOVE, visited);
 
       visited = new int[17][17];
 
       coordinate = match.getBoard().getPawnLocation(PlayerId.TWO);
 
-      foundPath = foundPath && foundPath(coordinate, match, Direction.below, visited);
+      foundPath = foundPath && foundPath(coordinate, match, Direction.BELOW, visited);
 
       if (foundPath) {
         return new TurnValidationResult();

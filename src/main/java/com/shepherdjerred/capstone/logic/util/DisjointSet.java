@@ -53,10 +53,10 @@ public class DisjointSet {
     int rParent = find(r);
 
     if (leftSize < rightSize) {
-      // union left -> right
+      // union LEFT -> RIGHT
       set[lParent] = rParent;
     } else {
-      // union right -> left
+      // union RIGHT -> LEFT
       set[rParent] = lParent;
     }
   }

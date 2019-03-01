@@ -27,21 +27,22 @@ public final class Match {
   private final MatchHistory matchHistory;
   private final MatchTurnEnactor matchTurnEnactor;
 
-  // TODO refactor
-  // This static factory might result in matches with their invariants violated
-  // Maybe there's a better way to do it?
-  // Should playerWallBank and matchHistory be extracted?
-  public static Match startNewMatch(MatchSettings matchSettings, Board board) {
-    if (matchSettings.getBoardSettings() != board.getBoardSettings()) {
-      throw new IllegalArgumentException("Board not compatible with match");
-    }
+  public static Match from(MatchSettings matchSettings) {
+    var board = Board.from(matchSettings.getBoardSettings());
+    return from(matchSettings, board);
+  }
 
+  // TODO board validation
+  public static Match from(MatchSettings matchSettings, Board board) {
     var startingPlayer = matchSettings.getStartingPlayerId();
-    var wallPool = PlayerWallBank.createWallPool(matchSettings.getBoardSettings().getPlayerCount(),
+    var wallPool = PlayerWallBank.from(matchSettings.getBoardSettings().getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(PlayerId.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
-    var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(), new TurnValidator());
+    var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(),
+        new TurnValidator(),
+        new MatchStatusUpdater(),
+        new ActivePlayerTracker());
 
     return new Match(board,
         matchSettings,
@@ -52,7 +53,6 @@ public final class Match {
         matchTurnEnactor);
   }
 
-  // I don't like this constructor being public (ideally would be private), but it's the only way we can split up logic for turns
   public Match(Board board,
       MatchSettings matchSettings,
       PlayerId activePlayerId,
@@ -73,9 +73,6 @@ public final class Match {
     return matchTurnEnactor.enactTurn(turn, this);
   }
 
-  /**
-   * Get the number of walls a playerId has left.
-   */
   public int getWallsLeft(PlayerId playerId) {
     return playerWallBank.getWallsLeft(playerId);
   }

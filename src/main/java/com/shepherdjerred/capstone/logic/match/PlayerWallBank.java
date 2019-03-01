@@ -15,7 +15,7 @@ public final class PlayerWallBank {
 
   public final Map<PlayerId, Integer> playerWalls;
 
-  public static PlayerWallBank createWallPool(PlayerCount playerCount, int numberOfWalls) {
+  public static PlayerWallBank from(PlayerCount playerCount, int numberOfWalls) {
     Map<PlayerId, Integer> walls = new HashMap<>();
     Set<PlayerId> playerIds = new HashSet<>();
     playerIds.add(PlayerId.ONE);

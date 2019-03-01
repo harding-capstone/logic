@@ -4,9 +4,9 @@ import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 
 /**
- * Creates a matrix of BoardCells based on board settings
+ * Creates a matrix of BoardCells based on board settings.
  */
-public final class BoardCellsInitializer {
+public class BoardLayoutBoardCellsInitializer {
 
   /**
    * Creates a matrix of BoardCells. Used for constructor initialization.
@@ -28,14 +28,14 @@ public final class BoardCellsInitializer {
   }
 
   /**
-   * Creates a single BoardCell
+   * Creates a single BoardCell.
    *
    * @param coordinate The Coordinate at which that the BoardCell will exist
    * @return The BoardCell to should use
    */
   private BoardCell createBoardCell(Coordinate coordinate) {
-    if (shouldBeVertexCell(coordinate)) {
-      return BoardCell.VERTEX;
+    if (shouldBeWallVertexCell(coordinate)) {
+      return BoardCell.WALL_VERTEX;
     } else if (shouldBePawnCell(coordinate)) {
       return BoardCell.PAWN;
     } else if (shouldBeWallCell(coordinate)) {
@@ -46,12 +46,12 @@ public final class BoardCellsInitializer {
   }
 
   /**
-   * Checks if a BoardCell should be a Vertex BoardCell
+   * Checks if a BoardCell should be a Vertex BoardCell.
    *
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be Null, or false otherwise
    */
-  private boolean shouldBeVertexCell(Coordinate coordinate) {
+  private boolean shouldBeWallVertexCell(Coordinate coordinate) {
     int x = coordinate.getX();
     int y = coordinate.getY();
 
@@ -60,7 +60,7 @@ public final class BoardCellsInitializer {
   }
 
   /**
-   * Checks if a BoardCell should be a Pawn BoardCell
+   * Checks if a BoardCell should be a Pawn BoardCell.
    *
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be a Pawn BoardCell, or false otherwise
@@ -74,7 +74,7 @@ public final class BoardCellsInitializer {
   }
 
   /**
-   * Checks if a BoardCell should be a wall BoardCell
+   * Checks if a BoardCell should be a wall BoardCell.
    *
    * @param coordinate The Coordinate to check
    * @return True if the BoardCell should be a Wall BoardCell, or false otherwise

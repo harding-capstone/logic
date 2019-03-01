@@ -1,47 +1,48 @@
 package com.shepherdjerred.capstone.logic.board;
 
+import com.google.common.base.Preconditions;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 
 /**
- * Represents the positions that Pieces exist on the game board.
+ * Composes BoardLayout and BoardPieces to represent a Quoridor Board.
  */
-// TODO add a graph representation
 @ToString
 @EqualsAndHashCode
-public final class Board {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Board {
 
   private final BoardLayout boardLayout;
   private final BoardPieces boardPieces;
+  @Getter
+  private final BoardSettings boardSettings;
 
-  // This works but could make us create an invalid match state.. but that is probably outside of the scope of the class
-  public static Board createBoard(BoardLayout boardLayout,
-      BoardPieces boardPieces) {
-    if (!boardLayout.getBoardSettings().equals(boardPieces.getBoardSettings())) {
-      throw new IllegalArgumentException(
-          "Board settings must match between layout and piece locations");
-    }
-
-    return new Board(boardLayout, boardPieces);
+  public static Board from(BoardSettings boardSettings) {
+    return from(boardSettings,
+        new BoardLayoutBoardCellsInitializer(),
+        new BoardPiecesInitializer());
   }
 
   /**
-   * Private constructor used to update the object.
+   * Creates a new Board.
    */
-  private Board(BoardLayout boardLayout, BoardPieces boardPieces) {
-    this.boardLayout = boardLayout;
-    this.boardPieces = boardPieces;
-  }
-
-  public BoardSettings getBoardSettings() {
-    return boardLayout.getBoardSettings();
+  public static Board from(BoardSettings boardSettings,
+      BoardLayoutBoardCellsInitializer boardLayoutBoardCellsInitializer,
+      BoardPiecesInitializer boardPiecesInitializer) {
+    var layout = BoardLayout.from(boardSettings, boardLayoutBoardCellsInitializer);
+    var pieces = BoardPieces.from(boardSettings, boardPiecesInitializer);
+    return new Board(layout, pieces, boardSettings);
   }
 
   /**
@@ -54,7 +55,6 @@ public final class Board {
     return boardPieces.getPawnLocation(playerId);
   }
 
-
   /**
    * Moves a pawn.
    *
@@ -62,48 +62,45 @@ public final class Board {
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
-  // TODO better validation (return error messages)
+  // TODO better validation (return error messages?)
   // TODO extract validation
   public Board movePawn(PlayerId playerId, Coordinate destination) {
     if (boardLayout.isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
-    if (!boardLayout.isPawnBoardCell(destination) && !isEmpty(destination)) {
+    if (!boardLayout.isPawn(destination) || !isEmpty(destination)) {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPiecesLocationTracker = boardPieces.movePawn(playerId, destination);
-    return new Board(boardLayout, newPiecesLocationTracker);
+    var newBoardPieces = boardPieces.movePawn(playerId, destination);
+    return new Board(boardLayout, newBoardPieces, boardSettings);
   }
-
 
   /**
    * Places a wall.
-   *
-   * @param playerId The owner of the wall to place
-   * @param c1 First coordinate of the wall
-   * @param c2 Second coordinate of the wall
-   * @return The BoardPieces after the move
    */
-  // TODO better validation (return error messages)
+  // TODO better validation (return error messages?)
   // TODO extract validation
-  public Board placeWall(PlayerId playerId, Coordinate c1, Coordinate vertex, Coordinate c2) {
-    if (boardLayout.isCoordinateInvalid(c1)) {
-      throw new CoordinateOutOfBoundsException(c1);
-    }
-    if (boardLayout.isCoordinateInvalid(c2)) {
-      throw new CoordinateOutOfBoundsException(c2);
-    }
-    if (boardLayout.isCoordinateInvalid(vertex)) {
-      throw new CoordinateOutOfBoundsException(vertex);
-    }
-    if (!boardLayout.isWallBoardCell(c1) || !boardLayout.isWallBoardCell(c2) || !isEmpty(c1)
+  public Board placeWall(PlayerId playerId, WallPieceLocation location) {
+    var c1 = location.getC1();
+    var vertex = location.getVertex();
+    var c2 = location.getC2();
+
+    Preconditions.checkArgument(isCoordinateValid(c1));
+    Preconditions.checkArgument(isCoordinateValid(vertex));
+    Preconditions.checkArgument(isCoordinateValid(c2));
+
+    if (!boardLayout.isWall(c1)
+        || !boardLayout.isWallVertex(vertex)
+        || !boardLayout.isWall(c2)
+        || !isEmpty(c1)
+        || !isEmpty(vertex)
         || !isEmpty(c2)) {
       throw new InvalidBoardTransformationException();
     }
 
-    var newPieceLocationTracker = boardPieces.placeWall(playerId, c1, vertex, c2);
-    return new Board(boardLayout, newPieceLocationTracker);
+    var newBoardPieces = boardPieces.placeWall(playerId, c1, vertex, c2);
+    return new Board(boardLayout, newBoardPieces, boardSettings);
   }
 
   public BoardCell getBoardCell(Coordinate coordinate) {
@@ -111,15 +108,15 @@ public final class Board {
   }
 
   public boolean isPawnBoardCell(Coordinate coordinate) {
-    return boardLayout.isPawnBoardCell(coordinate);
+    return boardLayout.isPawn(coordinate);
   }
 
   public boolean isWallBoardCell(Coordinate coordinate) {
-    return boardLayout.isWallBoardCell(coordinate);
+    return boardLayout.isWall(coordinate);
   }
 
-  public boolean isVertexBoardCell(Coordinate coordinate) {
-    return boardLayout.isVertexBoardCell(coordinate);
+  public boolean isWallVertex(Coordinate coordinate) {
+    return boardLayout.isWallVertex(coordinate);
   }
 
   public boolean isCoordinateValid(Coordinate coordinate) {
@@ -141,11 +138,11 @@ public final class Board {
    * Checks if a piece exists at a Coordinate.
    */
   public boolean isEmpty(Coordinate coordinate) {
-    return boardPieces.isEmpty(coordinate);
+    return !hasPiece(coordinate);
   }
 
   public boolean hasWall(Coordinate coordinate) {
-    return isWallBoardCell(coordinate) || isVertexBoardCell(coordinate) && boardPieces.hasPiece(
+    return isWallBoardCell(coordinate) || isWallVertex(coordinate) && hasPiece(
         coordinate);
   }
 

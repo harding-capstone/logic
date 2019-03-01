@@ -3,24 +3,23 @@ package com.shepherdjerred.capstone.logic.board.layout;
 import lombok.ToString;
 
 /**
- * This enum represents the three types of cells there are. A PAWN BoardCell can have a PawnPiece
- * placed on it, a WALL BoardCell can have a WallPiece placed on it, and a NullCell cannot have any
- * piece placed on it. It is used for the places in the BoardLayout array where four walls meet.
+ * This enum represents the types of cells there are. A PAWN BoardCell can have a PawnPiece placed
+ * on it, a WALL and WALL_VERTEX BoardCell can have a WallPiece placed on it.
  */
 @ToString
 public enum BoardCell {
-  PAWN, WALL, VERTEX;
+  PAWN, WALL, WALL_VERTEX;
 
-  public boolean isPawnBoardCell() {
+  public boolean isPawn() {
     return this == PAWN;
   }
 
-  public boolean isWallBoardCell() {
+  public boolean isWall() {
     return this == WALL;
   }
 
-  public boolean isVertexBoardCell() {
-    return this == VERTEX;
+  public boolean isVertex() {
+    return this == WALL_VERTEX;
   }
 
   public char toChar() {
@@ -28,7 +27,7 @@ public enum BoardCell {
       return '■';
     } else if (this == WALL) {
       return ' ';
-    } else if (this == VERTEX) {
+    } else if (this == WALL_VERTEX) {
       return ' ';
     } else {
       throw new IllegalStateException("Unknown BoardCell " + this);
