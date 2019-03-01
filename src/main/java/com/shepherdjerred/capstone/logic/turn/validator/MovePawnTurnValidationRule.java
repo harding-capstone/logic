@@ -1,6 +1,8 @@
 package com.shepherdjerred.capstone.logic.turn.validator;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.Coordinate.Direction;
+import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
@@ -65,13 +67,28 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
     };
   }
 
+  static MovePawnTurnValidationRule isTwoSpacesAway() {
+    return (turn, match) -> {
+      var dist = Coordinate.calculateManhattanDistance(turn.getSource(), turn.getDestination());
+
+      // We check if the distance equals two because wall cells count in the calculation
+      if (dist == 4) {
+        return new TurnValidationResult();
+      } else if (dist > 4) {
+        return new TurnValidationResult(ErrorMessage.MOVE_TOO_FAR);
+      } else {
+        return new TurnValidationResult(true);
+      }
+    };
+  }
+
   static MovePawnTurnValidationRule isWallBlocking() {
     return (turn, match) -> {
       var dist = Coordinate.calculateManhattanDistance(turn.getSource(), turn.getDestination());
 
       // If the distance != 2 then we can't do this check
       if (dist != 2) {
-        return new TurnValidationResult(true);
+        return new TurnValidationResult();
       }
 
       var coordinateBetween = Coordinate.getMidpoint(turn.getSource(), turn.getDestination());
@@ -157,11 +174,107 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
     };
   }
 
+  static MovePawnTurnValidationRule isMoveDiagonal() {
+    return (turn, match) -> {
+      var source = turn.getSource();
+      var destination = turn.getDestination();
+      if (Coordinate.areCoordinatesDiagonal(source, destination)) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.MOVE_IS_CARDINAL);
+      }
+    };
+  }
+
+  static Direction getDirectionOfMove(Coordinate source, Coordinate destination) {
+    if (source.getX() < destination.getX()) {
+      return Direction.right;
+    } else if (source.getX() > destination.getX()) {
+      return Direction.left;
+    } else if (source.getY() < destination.getY()) {
+      return Direction.above;
+    } else {
+      return Direction.below;
+    }
+  }
+
+  static boolean isFreeToJump(Coordinate source, Match match, Direction direction)
+  {
+    var boardSpaceDirectlyAdjacent = source.adjacent(direction, 1);
+    var pawnSpaceAdjacent = source.adjacent(direction, 2);
+
+    boolean isNotBlockedByWall = match.getBoard().isEmpty(boardSpaceDirectlyAdjacent);
+    boolean isBlockedByPawn = match.getBoard().hasPiece(pawnSpaceAdjacent);
+
+    return isNotBlockedByWall && isBlockedByPawn;
+  }
+
+  static boolean isStraightJumpAllowed(Coordinate source, Match match, Direction direction) {
+    var boardSpaceBehindOpponentPawn = source.adjacent(direction, 3);
+
+    boolean isEmptyBehindNextPawnSpace = match.getBoard().isEmpty(boardSpaceBehindOpponentPawn);
+
+    return  isFreeToJump(source, match, direction) && isEmptyBehindNextPawnSpace;
+  }
+
+  static MovePawnTurnValidationRule isJumpValid() {
+    return (turn, match) -> {
+      var source = turn.getSource();
+      var destination = turn.getDestination();
+
+      Direction directionOfMove = getDirectionOfMove(source, destination);
+
+      if (Coordinate.calculateManhattanDistance(source, destination) == 4) {
+        if (isStraightJumpAllowed(source, match, directionOfMove)) {
+          return new TurnValidationResult();
+        } else {
+          return new TurnValidationResult(ErrorMessage.JUMP_NOT_ALLOWED);
+        }
+      } else {
+        return new TurnValidationResult(ErrorMessage.MOVE_IS_NOT_A_JUMP);
+      }
+    };
+  }
+
+  static boolean isDiagonalJumpAllowed(Coordinate source, Match match, Direction direction) {
+    var boardSpaceBehindOpponentPawn = source.adjacent(direction, 3);
+
+    boolean isWallBehindNextPawnSpace = match.getBoard().hasPiece(boardSpaceBehindOpponentPawn);
+
+    return isFreeToJump(source, match, direction) && isWallBehindNextPawnSpace;
+  }
+
+  static boolean isDiagonalMoveLegal(Coordinate source, Match match, Boolean isMoveAbove, Boolean isMoveRight) {
+    if (isMoveAbove && isMoveRight) {
+      return isDiagonalJumpAllowed(source, match, Direction.above) || isDiagonalJumpAllowed(source, match, Direction.right);
+    } else if (isMoveAbove) {
+      return isDiagonalJumpAllowed(source, match, Direction.above) || isDiagonalJumpAllowed(source, match, Direction.left);
+    } else if (isMoveRight) {
+      return isDiagonalJumpAllowed(source, match, Direction.below) || isDiagonalJumpAllowed(source, match, Direction.right);
+    } else {
+      return isDiagonalJumpAllowed(source, match, Direction.below) || isDiagonalJumpAllowed(source, match, Direction.left);
+    }
+  }
+
+  static MovePawnTurnValidationRule isDiagonalJumpValid() {
+    return (turn, match) -> {
+      var source = turn.getSource();
+      var destination = turn.getDestination();
+
+      boolean isMoveAbove = source.getY() < destination.getY();
+      boolean isMoveRight = source.getX() < destination.getX();
+
+      boolean isDiagonalMoveLegal = isDiagonalMoveLegal(source, match, isMoveAbove, isMoveRight);
+
+      if (isDiagonalMoveLegal) {
+        return new TurnValidationResult();
+      } else {
+        return new TurnValidationResult(ErrorMessage.DIAGONAL_MOVE_NOT_ALLOWED);
+      }
+    };
+  }
+
   static TurnValidationRule<MovePawnTurn> jumpDiagonal() {
-    // TODO Check if a diagonal jump is allowed (is there a wall behind the pawn we're jumping?
-    // TODO Check if a wall is blocking the diagonal jump
-    // TODO Check that the distance of the jump is valid
-    // TODO Check that the move isn't cardinal
     return isSourceCoordinateValid()
         .and(isDestinationCoordinateValid())
         .and(isDestinationCellTypePawn())
@@ -169,13 +282,14 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
         .and(isSourcePiecePawn())
+        .and(isTwoSpacesAway())
+        .and(isMoveDiagonal())
+        .and(isDiagonalJumpValid())
+        .and(isWallBlocking())
         .and(isSourceDifferentFromDest());
   }
 
   static TurnValidationRule<MovePawnTurn> jumpStraight() {
-    // TODO Check that there is a pawn inbetween src and dest
-    // TODO Check that there isn't a wall behind the pawn
-    // TODO Check that the distance == 2
     return isSourceCoordinateValid()
         .and(isDestinationCoordinateValid())
         .and(isDestinationCellTypePawn())
@@ -184,6 +298,7 @@ public interface MovePawnTurnValidationRule extends TurnValidationRule<MovePawnT
         .and(isPieceOwnedByPlayer())
         .and(isSourceCellTypePawn())
         .and(isSourcePiecePawn())
+        .and(isJumpValid())
         .and(isSourceDifferentFromDest());
   }
 
