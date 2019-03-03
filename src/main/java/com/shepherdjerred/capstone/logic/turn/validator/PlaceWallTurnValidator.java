@@ -33,7 +33,7 @@ public class PlaceWallTurnValidator implements TurnValidator<PlaceWallTurn> {
     var result = new TurnValidationResult();
     for (ValidatorRule<PlaceWallTurn> rule : rules) {
       var ruleResult = rule.validate(match, turn);
-      TurnValidationResult.combine(result, ruleResult);
+      result = TurnValidationResult.combine(result, ruleResult);
     }
 
     if (result.isError()) {

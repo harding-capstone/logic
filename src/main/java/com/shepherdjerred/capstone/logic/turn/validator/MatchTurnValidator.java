@@ -23,7 +23,7 @@ public class MatchTurnValidator implements TurnValidator<Turn> {
     var result = new TurnValidationResult();
     for (ValidatorRule<Turn> rule : rules) {
       var ruleResult = rule.validate(match, turn);
-      TurnValidationResult.combine(result, ruleResult);
+      result = TurnValidationResult.combine(result, ruleResult);
     }
     return result;
   }
