@@ -7,6 +7,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validators.match.MatchStatusValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.match.PlayerTurnValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.movepawn.DestinationBoardCellTypeIsPawnValidatorRule;
@@ -26,8 +27,8 @@ import com.shepherdjerred.capstone.logic.turn.validators.movepawn.TurnSourceIsSa
 import com.shepherdjerred.capstone.logic.turn.validators.movepawn.WallBetweenIsNotSourceAndDestinationValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.placewall.PlayerHasWallsLeftToPlaceValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallDoesntBlockPawnsValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreFreeValidationRule;
-import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreValid;
+import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreFreeValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreValidValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreWallBoardCellsValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationVertexIsFreeValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationVertexIsVertexBoardCellValidatorRule;
@@ -79,9 +80,26 @@ public class TurnValidator {
 
     var combinedResult = new TurnValidationResult();
     for (ValidatorRule rule : rules) {
-      var result = rule.validate(match, turn);
+      TurnValidationResult result;
+      try {
+        result = rule.validate(match, turn);
+      } catch (Exception e) {
+        log.error("Error running turn validator: " + rule + " " + turn, e);
+        result = new TurnValidationResult(ErrorMessage.VALIDATOR_FAILED);
+      }
       combinedResult = TurnValidationResult.combine(combinedResult, result);
+      // TODO failfast toggle
+      if (combinedResult.isError()) {
+        break;
+      }
     }
+
+    if (turn instanceof PlaceWallTurn && !combinedResult.isError()) {
+      var finalThing = new WallDoesntBlockPawnsValidatorRule(new AStarBoardSearch(),
+          new PlayerGoals()).validate(match, (PlaceWallTurn) turn);
+      combinedResult = TurnValidationResult.combine(combinedResult, finalThing);
+    }
+
     return combinedResult;
   }
 
@@ -95,12 +113,12 @@ public class TurnValidator {
   private Set<ValidatorRule<PlaceWallTurn>> createPlaceWallTurnRules() {
     Set<ValidatorRule<PlaceWallTurn>> rules = new HashSet<>();
     rules.add(new PlayerHasWallsLeftToPlaceValidatorRule());
-    rules.add(new WallDoesntBlockPawnsValidatorRule(new AStarBoardSearch(), new PlayerGoals()));
-    rules.add(new WallPieceLocationCoordinatesAreFreeValidationRule());
-    rules.add(new WallPieceLocationCoordinatesAreValid());
+    rules.add(new WallPieceLocationCoordinatesAreFreeValidatorRule());
+    rules.add(new WallPieceLocationCoordinatesAreValidValidatorRule());
     rules.add(new WallPieceLocationCoordinatesAreWallBoardCellsValidatorRule());
     rules.add(new WallPieceLocationVertexIsFreeValidatorRule());
     rules.add(new WallPieceLocationVertexIsVertexBoardCellValidatorRule());
+//    rules.add(new WallDoesntBlockPawnsValidatorRule(new AStarBoardSearch(), new PlayerGoals()));
     return rules;
   }
 
@@ -136,7 +154,7 @@ public class TurnValidator {
   }
 
   // TODO check for walls
-  // TODO check for pawn
+  // TODO check for pawn pivot
   private Set<ValidatorRule<MovePawnTurn>> createDiagonalJumpMovePawnTurnRules() {
     Set<ValidatorRule<MovePawnTurn>> rules = new HashSet<>();
     rules.add(new DestinationIsTwoPawnSpacesAwayValidatorRule());

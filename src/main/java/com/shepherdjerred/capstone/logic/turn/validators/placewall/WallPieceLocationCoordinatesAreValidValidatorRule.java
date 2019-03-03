@@ -6,20 +6,21 @@ import com.shepherdjerred.capstone.logic.turn.validators.TurnValidationResult;
 import com.shepherdjerred.capstone.logic.turn.validators.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validators.ValidatorRule;
 
-public class WallPieceLocationCoordinatesAreFreeValidationRule implements ValidatorRule<PlaceWallTurn> {
+public class WallPieceLocationCoordinatesAreValidValidatorRule implements ValidatorRule<PlaceWallTurn> {
 
   @Override
   public TurnValidationResult validate(Match match, PlaceWallTurn turn) {
-    var board = match.getBoard();
     var location = turn.getLocation();
-    var firstCoordinate = location.getFirstCoordinate();
-    var secondCoordinate = location.getSecondCoordinate();
-
-    if (board.isEmpty(firstCoordinate)
-        && board.isEmpty(secondCoordinate)) {
-      return new TurnValidationResult();
+    var c1 = location.getFirstCoordinate();
+    var vertex = location.getVertex();
+    var c2 = location.getSecondCoordinate();
+    var board = match.getBoard();
+    if (board.isCoordinateInvalid(c1)
+        || board.isCoordinateInvalid(vertex)
+        || board.isCoordinateInvalid(c2)) {
+      return new TurnValidationResult(ErrorMessage.COORDINATES_INVALID);
     } else {
-      return new TurnValidationResult(ErrorMessage.COORDINATES_NOT_EMPTY);
+      return new TurnValidationResult();
     }
   }
 }

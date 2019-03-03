@@ -3,6 +3,7 @@ package com.shepherdjerred.capstone.logic.board;
 import com.google.common.base.Preconditions;
 import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsException;
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException;
+import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException.Reason;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
@@ -112,14 +113,18 @@ public class Board {
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
-  // TODO better validation (return error messages?)
+  // TODO better validation
   // TODO extract validation
   public Board movePawn(PlayerId playerId, Coordinate destination) {
     if (isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
-    if (!isPawnBoardCell(destination) || !isEmpty(destination)) {
-      throw new InvalidBoardTransformationException();
+    if (!isPawnBoardCell(destination)) {
+      throw new InvalidBoardTransformationException(Reason.DESTINATION_NOT_PAWN_CELL, destination);
+    }
+
+    if (!isEmpty(destination)) {
+      throw new InvalidBoardTransformationException(Reason.DESTINATION_NOT_EMPTY, destination);
     }
 
     var newBoardPieces = boardPieces.movePawn(playerId, destination);
@@ -129,7 +134,7 @@ public class Board {
   /**
    * Places a wall.
    */
-  // TODO better validation (return error messages?)
+  // TODO better validation
   // TODO extract validation
   public Board placeWall(PlayerId playerId, WallPieceLocation location) {
     var c1 = location.getFirstCoordinate();
@@ -146,13 +151,40 @@ public class Board {
       throw new CoordinateOutOfBoundsException(c2);
     }
 
-    if (!boardLayout.isWall(c1)
-        || !boardLayout.isWallVertex(vertex)
-        || !boardLayout.isWall(c2)
-        || !isEmpty(c1)
-        || !isEmpty(vertex)
-        || !isEmpty(c2)) {
-      throw new InvalidBoardTransformationException();
+    Coordinate coordinate = null;
+    Reason reason = Reason.NULL;
+    if (!isWallBoardCell(c1)) {
+      coordinate = c1;
+      reason = Reason.C1_NOT_WALL_CELL;
+    }
+
+    if (!isWallVertexBoardCell(vertex)) {
+      coordinate = vertex;
+      reason = Reason.VERTEX_NOT_WALL_VERTEX_CELL;
+    }
+
+    if (!isWallBoardCell(c2)) {
+      coordinate = c2;
+      reason = Reason.C2_NOT_WALL_CELL;
+    }
+
+    if (!isEmpty(c1)) {
+      coordinate = c1;
+      reason = Reason.C1_NOT_EMPTY;
+    }
+
+    if (!isEmpty(vertex)) {
+      coordinate = vertex;
+      reason = Reason.VERTEX_NOT_EMPTY;
+    }
+
+    if (!isEmpty(c2)) {
+      coordinate = c2;
+      reason = Reason.C2_NOT_EMPTY;
+    }
+
+    if (reason != Reason.NULL) {
+      throw new InvalidBoardTransformationException(reason, coordinate);
     }
 
     var newBoardPieces = boardPieces.placeWall(playerId, c1, vertex, c2);
