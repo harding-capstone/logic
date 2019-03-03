@@ -9,7 +9,7 @@ import com.shepherdjerred.capstone.logic.turn.NormalMovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import org.junit.Test;
 
-public class NotionTurnFormatterTest {
+public class NotationFormatterTest {
 
   @Test
   public void turnToString_returnsCorrectNotation_WhenMovingToBottomLeft() {
@@ -17,7 +17,7 @@ public class NotionTurnFormatterTest {
         new Coordinate(2, 0),
         new Coordinate(0, 0));
 
-    var actual = NotionTurnFormatter.turnToString(movePawnTurn);
+    var actual = NotationFormatter.turnToString(movePawnTurn);
     var expected = "a1";
 
     assertEquals(expected, actual);
@@ -29,7 +29,7 @@ public class NotionTurnFormatterTest {
         new Coordinate(14, 0),
         new Coordinate(16, 0));
 
-    var actual = NotionTurnFormatter.turnToString(movePawnTurn);
+    var actual = NotationFormatter.turnToString(movePawnTurn);
     var expected = "a9";
 
     assertEquals(expected, actual);
@@ -41,7 +41,7 @@ public class NotionTurnFormatterTest {
         new Coordinate(0, 14),
         new Coordinate(0, 16));
 
-    var actual = NotionTurnFormatter.turnToString(movePawnTurn);
+    var actual = NotationFormatter.turnToString(movePawnTurn);
     var expected = "i1";
 
     assertEquals(expected, actual);
@@ -53,7 +53,7 @@ public class NotionTurnFormatterTest {
         new Coordinate(16, 14),
         new Coordinate(16, 16));
 
-    var actual = NotionTurnFormatter.turnToString(movePawnTurn);
+    var actual = NotationFormatter.turnToString(movePawnTurn);
     var expected = "i9";
 
     assertEquals(expected, actual);
@@ -64,7 +64,7 @@ public class NotionTurnFormatterTest {
     var placeWallTurn = new PlaceWallTurn(PlayerId.ONE,
         new WallPieceLocation(new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1)));
 
-    var actual = NotionTurnFormatter.turnToString(placeWallTurn);
+    var actual = NotationFormatter.turnToString(placeWallTurn);
     var expected = "a1h";
 
     assertEquals(expected, actual);
@@ -75,7 +75,7 @@ public class NotionTurnFormatterTest {
     var placeWallTurn = new PlaceWallTurn(PlayerId.ONE,
         new WallPieceLocation(new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)));
 
-    var actual = NotionTurnFormatter.turnToString(placeWallTurn);
+    var actual = NotationFormatter.turnToString(placeWallTurn);
     var expected = "a1v";
 
     assertEquals(expected, actual);
@@ -85,7 +85,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToBottomLeft() {
     var notation = "a1";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(0, 0));
 
     assertEquals(expected, actual);
@@ -95,7 +95,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToBottomRight() {
     var notation = "a9";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(16, 0));
 
     assertEquals(expected, actual);
@@ -105,7 +105,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToTopLeft() {
     var notation = "i1";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(0, 16));
 
     assertEquals(expected, actual);
@@ -115,7 +115,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToTopRight() {
     var notation = "i9";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(16, 16));
 
     assertEquals(expected, actual);
@@ -125,7 +125,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenPlacingWallHorizontally() {
     var notation = "a1h";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new PlaceWallTurn(PlayerId.NULL,
         new WallPieceLocation(new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1)));
 
@@ -136,7 +136,7 @@ public class NotionTurnFormatterTest {
   public void stringToTurn_returnsCorrectTurn_WhenPlacingWallVertically() {
     var notation = "a1v";
 
-    var actual = NotionTurnFormatter.stringToTurn(notation);
+    var actual = NotationFormatter.stringToTurn(notation);
     var expected = new PlaceWallTurn(PlayerId.NULL,
         new WallPieceLocation(new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(1, 2)));
 

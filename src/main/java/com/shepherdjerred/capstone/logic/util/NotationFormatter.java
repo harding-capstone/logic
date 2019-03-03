@@ -11,7 +11,7 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class NotionTurnFormatter {
+public class NotationFormatter {
 
   public static String turnToString(Turn turn) {
     if (turn instanceof MovePawnTurn) {
