@@ -1,8 +1,5 @@
 package com.shepherdjerred.capstone.logic.util;
 
 public enum Direction {
-  ABOVE,
-  BELOW,
-  RIGHT,
-  LEFT
+  UP, DOWN, LEFT, RIGHT
 }

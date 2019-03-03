@@ -5,6 +5,7 @@ import com.shepherdjerred.capstone.logic.turn.JumpPawnDiagonalTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.ValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.diagonal.DiagonalPivotIsValidValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.diagonal.MoveIsDiagonalValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.diagonal.WallIsBehindPivotValidatorRule;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public class JumpPawnDiagonalTurnValidator implements TurnValidator<JumpPawnDiag
     rules = new HashSet<>();
     rules.add(new DiagonalPivotIsValidValidatorRule());
     rules.add(new MoveIsDiagonalValidatorRule());
+    rules.add(new WallIsBehindPivotValidatorRule());
   }
 
   @Override

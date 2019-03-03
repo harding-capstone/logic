@@ -4,9 +4,10 @@ import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.JumpPawnTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.ValidatorRule;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.DestinationIsTwoPawnSpacesAwayValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.PivotIsSameAsActualLocationValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.WallIsNotBetweenPivotAndDestinationValidatorRule;
-import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.WallIsNotBetweenSourceAndPivotValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.PivotHasPawnAtCoordinateValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.PivotIsPawnBoardCellValidationRule;
+import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.WallIsBetweenPivotAndDestinationValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validator.rules.movepawn.jump.WallIsBetweenPivotAndSourceValidatorRule;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,9 +18,10 @@ public class JumpPawnTurnValidator implements TurnValidator<JumpPawnTurn> {
   public JumpPawnTurnValidator() {
     rules = new HashSet<>();
     rules.add(new DestinationIsTwoPawnSpacesAwayValidatorRule());
-    rules.add(new PivotIsSameAsActualLocationValidatorRule());
-    rules.add(new WallIsNotBetweenPivotAndDestinationValidatorRule());
-    rules.add(new WallIsNotBetweenSourceAndPivotValidatorRule());
+    rules.add(new PivotHasPawnAtCoordinateValidatorRule());
+    rules.add(new WallIsBetweenPivotAndDestinationValidatorRule());
+    rules.add(new WallIsBetweenPivotAndSourceValidatorRule());
+    rules.add(new PivotIsPawnBoardCellValidationRule());
   }
 
   @Override
