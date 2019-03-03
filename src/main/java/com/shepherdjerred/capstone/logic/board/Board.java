@@ -58,6 +58,10 @@ public class Board {
     return boardPieces.getPawnLocation(playerId);
   }
 
+  public Set<Coordinate> getPieceLocations() {
+    return boardPieces.getPieceLocations();
+  }
+
   public Set<Coordinate> getPawnLocations() {
     return boardPieces.getPawnLocations();
   }
@@ -68,25 +72,34 @@ public class Board {
 
   public Set<Coordinate> getAdjacentPawnSpaces(Coordinate coordinate) {
     Preconditions.checkArgument(isPawnBoardCell(coordinate));
+    return getValidCardinalCoordinatesInRadius(coordinate, 2);
+  }
+
+  public Set<Coordinate> getAdjacentWallSpaces(Coordinate coordinate) {
+    Preconditions.checkArgument(isPawnBoardCell(coordinate));
+    return getValidCardinalCoordinatesInRadius(coordinate, 1);
+  }
+
+  private Set<Coordinate> getValidCardinalCoordinatesInRadius(Coordinate origin, int range) {
     Set<Coordinate> spaces = new HashSet<>();
     var gridSize = boardSettings.getGridSize();
-    int x = coordinate.getX();
-    int y = coordinate.getY();
+    int x = origin.getX();
+    int y = origin.getY();
 
-    if (x > 0) {
-      spaces.add(coordinate.toLeft(2));
+    if (x - range >= 0) {
+      spaces.add(origin.toLeft(range));
     }
 
-    if (x < gridSize - 1) {
-      spaces.add(coordinate.toRight(2));
+    if (x + range <= gridSize - 1) {
+      spaces.add(origin.toRight(range));
     }
 
-    if (y > 0) {
-      spaces.add(coordinate.below(2));
+    if (y - range >= 0) {
+      spaces.add(origin.below(range));
     }
 
-    if (y < gridSize - 1) {
-      spaces.add(coordinate.above(2));
+    if (y + range <= gridSize - 1) {
+      spaces.add(origin.above(range));
     }
 
     return spaces;
@@ -158,7 +171,7 @@ public class Board {
     return boardLayout.isWall(coordinate);
   }
 
-  public boolean isWallVertex(Coordinate coordinate) {
+  public boolean isWallVertexBoardCell(Coordinate coordinate) {
     return boardLayout.isWallVertex(coordinate);
   }
 
@@ -185,7 +198,7 @@ public class Board {
   }
 
   public boolean hasWall(Coordinate coordinate) {
-    return isWallBoardCell(coordinate) || isWallVertex(coordinate) && hasPiece(
+    return (isWallBoardCell(coordinate) || isWallVertexBoardCell(coordinate)) && hasPiece(
         coordinate);
   }
 

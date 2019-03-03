@@ -60,6 +60,10 @@ public class BoardPieces {
         .collect(Collectors.toSet());
   }
 
+  public Set<Coordinate> getPieceLocations() {
+    return new HashSet<>(pieces.keySet());
+  }
+
   /**
    * Moves a pawn.
    *

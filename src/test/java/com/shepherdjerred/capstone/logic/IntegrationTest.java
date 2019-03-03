@@ -18,9 +18,9 @@ public class IntegrationTest {
     var match = Match.from(matchSettings, boardSettings);
 
     var turnGenerator = new TurnGenerator();
-    var valid = turnGenerator.generateValidTurns(match);
+//    var valid = turnGenerator.generateValidTurns(match);
     var invalid = turnGenerator.generateInvalidTurns(match);
 
-    log.info(invalid);
+    log.info("Invalid turns for player one at initial match state: " + invalid);
   }
 }

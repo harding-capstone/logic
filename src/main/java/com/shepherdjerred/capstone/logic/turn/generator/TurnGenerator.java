@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

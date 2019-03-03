@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidator;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,11 +23,11 @@ public class Match {
 
   private final Board board;
   private final MatchSettings matchSettings;
-  private final PlayerId activePlayerId;
   private final PlayerWallBank playerWallBank;
   private final MatchStatus matchStatus;
   private final MatchHistory matchHistory;
   private final MatchTurnEnactor matchTurnEnactor;
+  private final ActivePlayerTracker activePlayerTracker;
 
   public static Match from(MatchSettings matchSettings, BoardSettings boardSettings) {
     var board = Board.from(boardSettings);
@@ -36,35 +36,36 @@ public class Match {
 
   // TODO board validation
   public static Match from(MatchSettings matchSettings, Board board) {
+    var playerCount = matchSettings.getPlayerCount();
     var startingPlayer = matchSettings.getStartingPlayerId();
     var wallPool = PlayerWallBank.from(matchSettings.getPlayerCount(),
         matchSettings.getWallsPerPlayer());
     var matchStatus = new MatchStatus(PlayerId.NULL, Status.IN_PROGRESS);
     var matchHistory = new MatchHistory();
+    var activePlayerTracker = new ActivePlayerTracker(startingPlayer, playerCount);
     var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(),
         new TurnValidator(),
-        new MatchStatusUpdater(new PlayerGoals()),
-        new ActivePlayerTracker(matchSettings.getPlayerCount()));
+        new MatchStatusUpdater(new PlayerGoals()));
 
     return new Match(board,
         matchSettings,
-        startingPlayer,
         wallPool,
         matchStatus,
         matchHistory,
-        matchTurnEnactor);
+        matchTurnEnactor,
+        activePlayerTracker);
   }
 
   public Match(Board board,
       MatchSettings matchSettings,
-      PlayerId activePlayerId,
       PlayerWallBank playerWallBank,
       MatchStatus matchStatus,
       MatchHistory matchHistory,
-      MatchTurnEnactor matchTurnEnactor) {
+      MatchTurnEnactor matchTurnEnactor,
+      ActivePlayerTracker activePlayerTracker) {
     this.board = board;
     this.matchSettings = matchSettings;
-    this.activePlayerId = activePlayerId;
+    this.activePlayerTracker = activePlayerTracker;
     this.playerWallBank = playerWallBank;
     this.matchStatus = matchStatus;
     this.matchHistory = matchHistory;
@@ -77,5 +78,13 @@ public class Match {
 
   public int getWallsLeft(PlayerId playerId) {
     return playerWallBank.getWallsLeft(playerId);
+  }
+
+  public PlayerId getActivePlayerId() {
+    return activePlayerTracker.getActivePlayer();
+  }
+
+  public PlayerId getNextActivePlayerId() {
+    return activePlayerTracker.getNextActivePlayerId();
   }
 }

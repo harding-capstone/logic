@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.exception;
 
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidationResult;
 
 public class InvalidTurnException extends RuntimeException {
 
