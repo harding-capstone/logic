@@ -72,6 +72,14 @@ public class Match {
     this.matchTurnEnactor = matchTurnEnactor;
   }
 
+  /**
+   * Processes a turn without validation. Use only with turns already validated against this Match.
+   * Exists for performance
+   */
+  public Match doTurnUnchecked(Turn turn) {
+    return matchTurnEnactor.enactTurnUnchecked(turn, this);
+  }
+
   public Match doTurn(Turn turn) {
     return matchTurnEnactor.enactTurn(turn, this);
   }
