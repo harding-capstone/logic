@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -44,7 +44,7 @@ public class Match {
     var matchHistory = new MatchHistory();
     var activePlayerTracker = new ActivePlayerTracker(startingPlayer, playerCount);
     var matchTurnEnactor = new MatchTurnEnactor(new TurnEnactorFactory(),
-        new TurnValidator(),
+        new TurnValidatorFactory(),
         new MatchStatusUpdater(new PlayerGoals()));
 
     return new Match(board,

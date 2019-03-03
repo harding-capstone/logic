@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class TurnValidationResult {
+public class TurnValidationResult {
 
   private final boolean isError;
   private final List<ErrorMessage> errors;
@@ -51,7 +51,7 @@ public final class TurnValidationResult {
     NULL,
     VALIDATOR_FAILED,
     NOT_CAUSERS_TURN,
-    GAME_ALREADY_OVER,
+    MATCH_ALREADY_OVER,
     MOVE_NOT_CARDINAL,
     SOURCE_PIECE_NOT_OWNED_BY_PLAYER,
     SOURCE_PIECE_NOT_PAWN,
@@ -70,10 +70,8 @@ public final class TurnValidationResult {
     WALL_BLOCKS_PAWN_PATH,
     VERTEX_NOT_FREE,
     VERTEX_COORDINATE_IS_NOT_VERTEX_CELL,
-    WALL_COORDINATE_IS_NOT_WALL_COORDINATE,
     SOURCE_AND_DESTINATION_NOT_DIFFERENT,
     SOURCE_DIFFERENT_FROM_ACTUAL_LOCATION,
-    PIECE_NOT_BETWEEN_SOURCE_AND_DESTINATION,
     COORDINATES_NOT_EMPTY
   }
 }

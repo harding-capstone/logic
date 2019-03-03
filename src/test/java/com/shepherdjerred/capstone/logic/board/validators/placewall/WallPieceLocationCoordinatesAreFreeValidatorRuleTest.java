@@ -11,7 +11,7 @@ import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validators.TurnValidationResult.ErrorMessage;
-import com.shepherdjerred.capstone.logic.turn.validators.placewall.WallPieceLocationCoordinatesAreFreeValidatorRule;
+import com.shepherdjerred.capstone.logic.turn.validators.rules.placewall.WallPieceLocationCoordinatesAreFreeValidatorRule;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Before;

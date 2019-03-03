@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.turn;
 
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,9 +11,10 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class PlaceWallTurn implements Turn {
+public class JumpPawnStraightTurn implements JumpPawnTurn {
 
   private final PlayerId causer;
-
-  private final WallPieceLocation location;
+  private final Coordinate source;
+  private final Coordinate destination;
+  private final Coordinate pivot;
 }

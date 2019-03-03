@@ -41,7 +41,7 @@ public class BoardLayoutBoardCellsInitializer {
     } else if (shouldBeWallCell(coordinate)) {
       return BoardCell.WALL;
     } else {
-      throw new IllegalStateException("Couldn't get BoardCell for " + coordinate);
+      throw new UnsupportedOperationException("Couldn't get BoardCell for " + coordinate);
     }
   }
 

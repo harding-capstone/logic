@@ -3,16 +3,23 @@ package com.shepherdjerred.capstone.logic.turn.generator;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
 import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.turn.JumpPawnDiagonalTurn;
+import com.shepherdjerred.capstone.logic.turn.JumpPawnStraightTurn;
+import com.shepherdjerred.capstone.logic.turn.JumpPawnTurn;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
-import com.shepherdjerred.capstone.logic.turn.MovePawnTurn.MoveType;
+import com.shepherdjerred.capstone.logic.turn.NormalMovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class TurnGenerator {
+
+  private final TurnValidatorFactory turnValidatorFactory;
 
   public Set<Turn> generateValidTurns(Match match) {
     var allTurns = generateTurns(match);
@@ -34,16 +41,20 @@ public class TurnGenerator {
   }
 
   private Set<Turn> filterInvalidTurns(Match match, Set<Turn> turns) {
-    var validator = new TurnValidator();
     return turns.stream()
-        .filter(turn -> !validator.isTurnValid(turn, match).isError())
+        .filter(turn -> {
+          var validator = turnValidatorFactory.getValidator(turn);
+          return !validator.validate(match, turn).isError();
+        })
         .collect(Collectors.toSet());
   }
 
   private Set<Turn> filterValidTurns(Match match, Set<Turn> turns) {
-    var validator = new TurnValidator();
     return turns.stream()
-        .filter(turn -> validator.isTurnValid(turn, match).isError())
+        .filter(turn -> {
+          var validator = turnValidatorFactory.getValidator(turn);
+          return validator.validate(match, turn).isError();
+        })
         .collect(Collectors.toSet());
   }
 
@@ -56,8 +67,8 @@ public class TurnGenerator {
     return turns;
   }
 
-  private Set<MovePawnTurn> generateNormalMovePawnTurns(Match match) {
-    Set<MovePawnTurn> turns = new HashSet<>();
+  private Set<NormalMovePawnTurn> generateNormalMovePawnTurns(Match match) {
+    Set<NormalMovePawnTurn> turns = new HashSet<>();
 
     var player = match.getActivePlayerId();
     var pawnLocation = match.getBoard().getPawnLocation(player);
@@ -67,10 +78,10 @@ public class TurnGenerator {
     var coordAbove = pawnLocation.above(2);
     var coordBelow = pawnLocation.below(2);
 
-    var leftMove = new MovePawnTurn(player, MoveType.NORMAL, pawnLocation, coordLeft);
-    var rightMove = new MovePawnTurn(player, MoveType.NORMAL, pawnLocation, coordRight);
-    var aboveMove = new MovePawnTurn(player, MoveType.NORMAL, pawnLocation, coordAbove);
-    var belowMove = new MovePawnTurn(player, MoveType.NORMAL, pawnLocation, coordBelow);
+    var leftMove = new NormalMovePawnTurn(player, pawnLocation, coordLeft);
+    var rightMove = new NormalMovePawnTurn(player, pawnLocation, coordRight);
+    var aboveMove = new NormalMovePawnTurn(player, pawnLocation, coordAbove);
+    var belowMove = new NormalMovePawnTurn(player, pawnLocation, coordBelow);
 
     turns.add(leftMove);
     turns.add(rightMove);
@@ -81,8 +92,8 @@ public class TurnGenerator {
   }
 
   // Lots of repeated code :(
-  private Set<MovePawnTurn> generateJumpMovePawnTurns(Match match) {
-    Set<MovePawnTurn> turns = new HashSet<>();
+  private Set<JumpPawnTurn> generateJumpMovePawnTurns(Match match) {
+    Set<JumpPawnTurn> turns = new HashSet<>();
 
     var player = match.getActivePlayerId();
     var pawnLocation = match.getBoard().getPawnLocation(player);
@@ -97,9 +108,9 @@ public class TurnGenerator {
       var diagBelow = coordLeft.below(2);
       var straight = coordLeft.toLeft(2);
 
-      var diagAboveMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagAbove);
-      var diagBelowMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagBelow);
-      var straightMove = new MovePawnTurn(player, MoveType.JUMP_STRAIGHT, pawnLocation, straight);
+      var diagAboveMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagAbove, coordLeft);
+      var diagBelowMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagBelow, coordLeft);
+      var straightMove = new JumpPawnStraightTurn(player, pawnLocation, straight, coordLeft);
 
       turns.add(diagAboveMove);
       turns.add(diagBelowMove);
@@ -111,9 +122,9 @@ public class TurnGenerator {
       var diagBelow = coordRight.below(2);
       var straight = coordRight.toRight(2);
 
-      var diagAboveMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagAbove);
-      var diagBelowMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagBelow);
-      var straightMove = new MovePawnTurn(player, MoveType.JUMP_STRAIGHT, pawnLocation, straight);
+      var diagAboveMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagAbove, coordRight);
+      var diagBelowMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagBelow, coordRight);
+      var straightMove = new JumpPawnStraightTurn(player, pawnLocation, straight, coordRight);
 
       turns.add(diagAboveMove);
       turns.add(diagBelowMove);
@@ -125,9 +136,9 @@ public class TurnGenerator {
       var diagRight = coordAbove.toRight(2);
       var straight = coordAbove.above(2);
 
-      var diagLeftMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagLeft);
-      var diagRightMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagRight);
-      var straightMove = new MovePawnTurn(player, MoveType.JUMP_STRAIGHT, pawnLocation, straight);
+      var diagLeftMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagLeft, coordAbove);
+      var diagRightMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagRight, coordAbove);
+      var straightMove = new JumpPawnStraightTurn(player, pawnLocation, straight, coordAbove);
 
       turns.add(diagLeftMove);
       turns.add(diagRightMove);
@@ -139,9 +150,9 @@ public class TurnGenerator {
       var diagRight = coordBelow.toRight(2);
       var straight = coordBelow.below(2);
 
-      var diagLeftMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagLeft);
-      var diagRightMove = new MovePawnTurn(player, MoveType.JUMP_DIAGONAL, pawnLocation, diagRight);
-      var straightMove = new MovePawnTurn(player, MoveType.JUMP_STRAIGHT, pawnLocation, straight);
+      var diagLeftMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagLeft, coordBelow);
+      var diagRightMove = new JumpPawnDiagonalTurn(player, pawnLocation, diagRight, coordBelow);
+      var straightMove = new JumpPawnStraightTurn(player, pawnLocation, straight, coordBelow);
 
       turns.add(diagLeftMove);
       turns.add(diagRightMove);

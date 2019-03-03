@@ -30,7 +30,7 @@ public enum BoardCell {
     } else if (this == WALL_VERTEX) {
       return ' ';
     } else {
-      throw new IllegalStateException("Unknown BoardCell " + this);
+      throw new UnsupportedOperationException("Unknown BoardCell " + this);
     }
   }
 

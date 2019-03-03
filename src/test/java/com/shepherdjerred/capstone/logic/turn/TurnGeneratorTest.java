@@ -8,6 +8,7 @@ import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.generator.TurnGenerator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class TurnGeneratorTest {
   public void generateValidTurns_returns60_onInitialMatchStateWithStandardBoard() {
     var match = Match.from(new MatchSettings(10, PlayerId.ONE, PlayerCount.TWO),
         new BoardSettings(9, PlayerCount.TWO));
-    var generator = new TurnGenerator();
+    var generator = new TurnGenerator(new TurnValidatorFactory());
 
     assertEquals(60, generator.generateValidTurns(match).size());
   }
@@ -27,7 +28,7 @@ public class TurnGeneratorTest {
   public void generateInvalidTurns_returns1_onInitialMatchStateWithStandardBoard() {
     var match = Match.from(new MatchSettings(10, PlayerId.ONE, PlayerCount.TWO),
         new BoardSettings(9, PlayerCount.TWO));
-    var generator = new TurnGenerator();
+    var generator = new TurnGenerator(new TurnValidatorFactory());
 
     assertEquals(1, generator.generateInvalidTurns(match).size());
   }

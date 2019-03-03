@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Utility class for formatting a match state as a string
  */
-public final class MatchFormatter {
+public class MatchFormatter {
 
   public String matchesToString(List<Match> states) {
     var sb = new StringBuilder();

@@ -6,6 +6,7 @@ import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.generator.TurnGenerator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
@@ -17,10 +18,10 @@ public class IntegrationTest {
     var matchSettings = new MatchSettings(9, PlayerId.ONE, PlayerCount.TWO);
     var match = Match.from(matchSettings, boardSettings);
 
-    var turnGenerator = new TurnGenerator();
+    var turnGenerator = new TurnGenerator(new TurnValidatorFactory());
 //    var valid = turnGenerator.generateValidTurns(match);
     var invalid = turnGenerator.generateInvalidTurns(match);
 
-    log.info("Invalid turns for player one at initial match state: " + invalid);
+//    log.info("Invalid turns for player one at initial match state: " + invalid);
   }
 }

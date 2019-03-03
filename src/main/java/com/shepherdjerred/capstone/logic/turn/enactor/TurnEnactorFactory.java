@@ -4,7 +4,7 @@ import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
-public final class TurnEnactorFactory {
+public class TurnEnactorFactory {
 
   public TurnEnactor getEnactor(Turn turn) {
     if (turn instanceof MovePawnTurn) {
@@ -12,7 +12,7 @@ public final class TurnEnactorFactory {
     } else if (turn instanceof PlaceWallTurn) {
       return new PlaceWallTurnEnactor();
     } else {
-      throw new IllegalStateException("Unknown turn " + turn);
+      throw new UnsupportedOperationException("Unknown turn " + turn);
     }
   }
 }

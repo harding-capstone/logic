@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn;
 
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class PlaceWallTurn implements Turn {
+public class NormalMovePawnTurn implements MovePawnTurn {
 
   private final PlayerId causer;
-
-  private final WallPieceLocation location;
+  private final Coordinate source;
+  private final Coordinate destination;
 }

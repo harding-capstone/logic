@@ -5,7 +5,8 @@ import com.shepherdjerred.capstone.logic.match.MatchStatusUpdater;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.MatchTurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
 import lombok.AllArgsConstructor;
 
 // TODO this needs to be cleaned up
@@ -13,11 +14,17 @@ import lombok.AllArgsConstructor;
 public class MatchTurnEnactor {
 
   private final TurnEnactorFactory turnEnactorFactory;
-  private final TurnValidator turnValidator;
+  private final TurnValidatorFactory turnValidatorFactory;
   private final MatchStatusUpdater matchStatusUpdater;
 
   public Match enactTurn(Turn turn, Match match) {
-    var validatorResult = turnValidator.isTurnValid(turn, match);
+    var matchValidatorResult = new MatchTurnValidator().validate(match, turn);
+    if (matchValidatorResult.isError()) {
+      throw new InvalidTurnException(turn, matchValidatorResult);
+    }
+
+    var validator = turnValidatorFactory.getValidator(turn);
+    var validatorResult = validator.validate(match, turn);
     if (validatorResult.isError()) {
       throw new InvalidTurnException(turn, validatorResult);
     } else {
@@ -45,7 +52,12 @@ public class MatchTurnEnactor {
 
     var newActivePlayerTracker = match.getActivePlayerTracker().getNextActivePlayerTracker();
 
-    return new Match(newBoard, matchSettings,
-        newWallPool, newMatchStatus, newHistory, match.getMatchTurnEnactor(), newActivePlayerTracker);
+    return new Match(newBoard,
+        matchSettings,
+        newWallPool,
+        newMatchStatus,
+        newHistory,
+        match.getMatchTurnEnactor(),
+        newActivePlayerTracker);
   }
 }
