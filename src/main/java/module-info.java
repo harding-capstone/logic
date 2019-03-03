@@ -12,7 +12,7 @@ module com.shepherdjerred.capstone.logic {
   exports com.shepherdjerred.capstone.logic.player.exception;
   exports com.shepherdjerred.capstone.logic.match;
   exports com.shepherdjerred.capstone.logic.turn;
-  exports com.shepherdjerred.capstone.logic.turn.validators;
+  exports com.shepherdjerred.capstone.logic.turn.validator;
   exports com.shepherdjerred.capstone.logic.turn.enactor;
   exports com.shepherdjerred.capstone.logic.turn.exception;
   exports com.shepherdjerred.capstone.logic.turn.generator;

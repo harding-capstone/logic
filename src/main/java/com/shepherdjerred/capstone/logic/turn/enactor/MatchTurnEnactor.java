@@ -5,8 +5,8 @@ import com.shepherdjerred.capstone.logic.match.MatchStatusUpdater;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
-import com.shepherdjerred.capstone.logic.turn.validators.MatchTurnValidator;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.MatchTurnValidator;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 import lombok.AllArgsConstructor;
 
 // TODO this needs to be cleaned up

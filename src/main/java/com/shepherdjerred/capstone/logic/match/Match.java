@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
 import com.shepherdjerred.capstone.logic.turn.enactor.TurnEnactorFactory;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

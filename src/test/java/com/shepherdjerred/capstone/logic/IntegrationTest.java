@@ -6,7 +6,7 @@ import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.generator.TurnGenerator;
-import com.shepherdjerred.capstone.logic.turn.validators.TurnValidatorFactory;
+import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 
