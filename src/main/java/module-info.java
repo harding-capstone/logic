@@ -1,9 +1,8 @@
 module com.shepherdjerred.capstone.logic {
+  requires org.apache.logging.log4j;
   requires static lombok;
   requires com.google.common;
-  requires org.apache.logging.log4j;
   requires ai.algorithms;
-
   exports com.shepherdjerred.capstone.logic.board;
   exports com.shepherdjerred.capstone.logic.board.exception;
   exports com.shepherdjerred.capstone.logic.board.layout;
