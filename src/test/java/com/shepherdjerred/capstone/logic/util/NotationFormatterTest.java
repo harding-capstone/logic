@@ -30,7 +30,7 @@ public class NotationFormatterTest {
         new Coordinate(16, 0));
 
     var actual = NotationFormatter.turnToString(movePawnTurn);
-    var expected = "a9";
+    var expected = "i1";
 
     assertEquals(expected, actual);
   }
@@ -42,7 +42,7 @@ public class NotationFormatterTest {
         new Coordinate(0, 16));
 
     var actual = NotationFormatter.turnToString(movePawnTurn);
-    var expected = "i1";
+    var expected = "a9";
 
     assertEquals(expected, actual);
   }
@@ -93,7 +93,7 @@ public class NotationFormatterTest {
 
   @Test
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToBottomRight() {
-    var notation = "a9";
+    var notation = "i1";
 
     var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(16, 0));
@@ -103,7 +103,7 @@ public class NotationFormatterTest {
 
   @Test
   public void stringToTurn_returnsCorrectTurn_WhenMovingPawnToTopLeft() {
-    var notation = "i1";
+    var notation = "a9";
 
     var actual = NotationFormatter.stringToTurn(notation);
     var expected = new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(0, 16));

@@ -25,19 +25,19 @@ public class NotationFormatter {
 
   private static String movePawnTurnToString(MovePawnTurn turn) {
     var dest = turn.getDestination();
-    char yChar = yCoordToNotationChar(dest.getY());
-    int xInt = xCoordToNotationInt(dest.getX());
-    return String.format("%s%s", yChar, xInt);
+    int y = yCoordToNotationInt(dest.getY());
+    char x = xCoordToNotationChar(dest.getX());
+    return String.format("%s%s", x, y);
   }
 
   private static String placeWallTurnToString(PlaceWallTurn turn) {
     var location = turn.getLocation();
     var space = getLowerLeftPawnSpace(location);
     var direction = getWallOrientation(location);
-    char yChar = yCoordToNotationChar(space.getY());
-    int xInt = xCoordToNotationInt(space.getX());
+    int y = yCoordToNotationInt(space.getY());
+    char x = xCoordToNotationChar(space.getX());
     var directionChar = direction.toNotationChar();
-    return String.format("%s%s%s", yChar, xInt, directionChar);
+    return String.format("%s%s%s", x, y, directionChar);
   }
 
   private static Coordinate getLowerLeftPawnSpace(WallPieceLocation location) {
@@ -59,29 +59,29 @@ public class NotationFormatter {
     throw new UnsupportedOperationException();
   }
 
-  private static int xCoordToNotationInt(int xCoord) {
+  private static char xCoordToNotationChar(int xCoord) {
     Preconditions.checkArgument(xCoord % 2 == 0);
     Preconditions.checkArgument(xCoord <= 16);
-    return (xCoord / 2) + 1;
+    return (char) ((xCoord / 2) + 97);
   }
 
-  private static char yCoordToNotationChar(int yCoord) {
+  private static int yCoordToNotationInt(int yCoord) {
     Preconditions.checkArgument(yCoord % 2 == 0);
     Preconditions.checkArgument(yCoord <= 16);
-    return (char) ((yCoord / 2) + 97);
+    return (yCoord / 2) + 1;
   }
 
-  private static int notationIntToXCoord(int notationInt) {
-    Preconditions.checkArgument(notationInt >= 0);
-    Preconditions.checkArgument(notationInt <= 9);
-    return (notationInt - 1) * 2;
-  }
-
-  private static int notationCharToYCoord(char notationChar) {
+  private static int notationCharToXCoord(char notationChar) {
     var intValue = (int) notationChar - 97;
     Preconditions.checkArgument(intValue >= 0);
     Preconditions.checkArgument(intValue - 97 <= 9);
     return intValue * 2;
+  }
+
+  private static int notationIntToYCoord(int notationInt) {
+    Preconditions.checkArgument(notationInt >= 0);
+    Preconditions.checkArgument(notationInt <= 9);
+    return (notationInt - 1) * 2;
   }
 
   public static Turn stringToTurn(String string) {
@@ -96,17 +96,17 @@ public class NotationFormatter {
   }
 
   private static NormalMovePawnTurn stringToMovePawnTurn(String string) {
-    var xCoord = notationIntToXCoord(Character.getNumericValue(string.charAt(1)));
-    var yCoord = notationCharToYCoord(string.charAt(0));
-    return new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(xCoord, yCoord));
+    var y = notationIntToYCoord(Character.getNumericValue(string.charAt(1)));
+    var x = notationCharToXCoord(string.charAt(0));
+    return new NormalMovePawnTurn(PlayerId.NULL, null, new Coordinate(x, y));
   }
 
   private static PlaceWallTurn stringToPlaceWallTurn(String string) {
-    var xCoord = notationIntToXCoord(Character.getNumericValue(string.charAt(1)));
-    var yCoord = notationCharToYCoord(string.charAt(0));
+    var y = notationIntToYCoord(Character.getNumericValue(string.charAt(1)));
+    var x = notationCharToXCoord(string.charAt(0));
 
     var orientation = WallOrientation.fromNotationChar(string.charAt(2));
-    var wallLocation = getWallLocation(new Coordinate(xCoord, yCoord), orientation);
+    var wallLocation = getWallLocation(new Coordinate(x, y), orientation);
     return new PlaceWallTurn(PlayerId.NULL, wallLocation);
   }
 
