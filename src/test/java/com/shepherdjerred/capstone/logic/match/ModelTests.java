@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,14 +17,14 @@ public class ModelTests {
 
     Match returnedMatch = new Match(match);
 
-    assertTrue(returnedMatch.getActivePlayerId() == PlayerId.ONE);
-    assertTrue(returnedMatch.getBoard().getBoardSettings().getGridSize() == 17);
+    assertTrue(returnedMatch.getActivePlayerId() == QuoridorPlayer.ONE);
+    assertTrue(returnedMatch.getBoard().getGridSize() == 17);
     assertTrue(returnedMatch.getMatchSettings().getWallsPerPlayer() == 10);
   }
 
   @Test
   public void ToJson_ConvertsMatchToJson_ValidJson() {
-    var match = Match.from(new MatchSettings(10, PlayerId.ONE, PlayerCount.TWO),
+    var match = Match.from(new MatchSettings(10, QuoridorPlayer.ONE, PlayerCount.TWO),
         new BoardSettings(9, PlayerCount.TWO));
 
     var returnedJson = match.toJson();
