@@ -1,10 +1,10 @@
 package com.shepherdjerred.capstone.logic.piece;
 
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 
 public interface Piece {
 
-  PlayerId getOwner();
+  QuoridorPlayer getOwner();
 
   char toChar();
 }

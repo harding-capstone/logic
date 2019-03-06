@@ -9,7 +9,7 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(0, 0);
     var vertex = new Coordinate(1, 0);
     var c2 = new Coordinate(2, 0);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -17,7 +17,7 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(0, 0);
     var vertex = new Coordinate(2, 0);
     var c2 = new Coordinate(3, 0);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -25,7 +25,7 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(1, 0);
     var vertex = new Coordinate(2, 0);
     var c2 = new Coordinate(4, 0);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -33,7 +33,7 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(0, 1);
     var vertex = new Coordinate(1, 0);
     var c2 = new Coordinate(2, 0);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -41,7 +41,7 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(0, 0);
     var vertex = new Coordinate(1, 0);
     var c2 = new Coordinate(2, 1);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -49,6 +49,6 @@ public class WallPieceLocationTest {
     var c1 = new Coordinate(0, 0);
     var vertex = new Coordinate(1, 1);
     var c2 = new Coordinate(2, 0);
-    new WallPieceLocation(c1, vertex, c2);
+    new WallLocation(c1, vertex, c2);
   }
 }

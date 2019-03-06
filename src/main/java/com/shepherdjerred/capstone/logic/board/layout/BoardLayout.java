@@ -6,6 +6,7 @@ import com.shepherdjerred.capstone.logic.board.exception.CoordinateOutOfBoundsEx
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -19,11 +20,12 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardLayout {
 
+  @Getter
   private final int gridSize;
   private final BoardCell[][] boardCells;
 
   public static BoardLayout from(BoardSettings boardSettings) {
-    var boardCellsInitializer = new BoardLayoutBoardCellsInitializer();
+    var boardCellsInitializer = new BoardLayoutInitializer();
     return from(boardSettings, boardCellsInitializer);
   }
 
@@ -31,7 +33,7 @@ public class BoardLayout {
    * Creates a new board layout.
    */
   public static BoardLayout from(BoardSettings boardSettings,
-      BoardLayoutBoardCellsInitializer initializer) {
+      BoardLayoutInitializer initializer) {
     var boardCells = initializer.createBoardCells(boardSettings);
     return new BoardLayout(boardSettings.getGridSize(), boardCells);
   }

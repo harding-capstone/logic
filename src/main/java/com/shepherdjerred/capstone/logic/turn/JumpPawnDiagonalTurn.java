@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class JumpPawnDiagonalTurn implements JumpPawnTurn {
 
-  private final PlayerId causer;
+  private final QuoridorPlayer causer;
   private final Coordinate source;
   private final Coordinate destination;
   private final Coordinate pivot;

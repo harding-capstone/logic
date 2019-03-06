@@ -1,9 +1,11 @@
-package com.shepherdjerred.capstone.logic.board;
+package com.shepherdjerred.capstone.logic.board.pieces;
 
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.piece.WallPiece;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,45 +15,59 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Represents the pieces and their locations on a board.
+ */
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardPieces {
 
   private final Map<Coordinate, Piece> pieces;
-  private final Map<PlayerId, Coordinate> pawnLocations;
+  private final Map<QuoridorPlayer, Coordinate> pawnLocations;
+  @Getter
   private final int gridSize;
 
   public static BoardPieces from(BoardSettings boardSettings) {
     return from(boardSettings, new BoardPiecesInitializer());
   }
 
+  /**
+   * Creates a new BoardPieces object.
+   */
   public static BoardPieces from(BoardSettings boardSettings,
       BoardPiecesInitializer boardPiecesInitializer) {
     var gridSize = boardSettings.getGridSize();
-    Map<PlayerId, Coordinate> pawnLocations = boardPiecesInitializer.initializePawnLocations(
+    Map<QuoridorPlayer, Coordinate> pawnLocations = boardPiecesInitializer.getInitialPawnLocations(
         boardSettings);
-    Map<Coordinate, Piece> pieces = boardPiecesInitializer.pawnLocationsToPieceLocations(
+    Map<Coordinate, Piece> pieces = boardPiecesInitializer.convertPawnLocationsToPieceLocations(
         pawnLocations);
     return new BoardPieces(pieces, pawnLocations, gridSize);
   }
 
   /**
-   * Gets the location of the playerId's pawn.
+   * Gets the location of the quoridorPlayer's pawn.
    *
-   * @param playerId The playerId to get the pawn Coordinates of
-   * @return The coordinate of the playerId's pawn
+   * @param quoridorPlayer The quoridorPlayer to get the pawn Coordinates of
+   * @return The coordinate of the quoridorPlayer's pawn
    */
-  public Coordinate getPawnLocation(PlayerId playerId) {
-    return pawnLocations.get(playerId);
+  public Coordinate getPawnLocation(QuoridorPlayer quoridorPlayer) {
+    return pawnLocations.get(quoridorPlayer);
   }
 
+  /**
+   * Get the locations of all pawns on the board.
+   */
   public Set<Coordinate> getPawnLocations() {
     return new HashSet<>(pawnLocations.values());
   }
 
+  /**
+   * Get the locations of all walls on the board.
+   */
   public Set<Coordinate> getWallLocations() {
     return pieces.entrySet()
         .stream()
@@ -60,6 +76,9 @@ public class BoardPieces {
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Returns the locations of all pieces on the board.
+   */
   public Set<Coordinate> getPieceLocations() {
     return new HashSet<>(pieces.keySet());
   }
@@ -67,19 +86,19 @@ public class BoardPieces {
   /**
    * Moves a pawn.
    *
-   * @param playerId The owner of the pawn to move
+   * @param quoridorPlayer The owner of the pawn to move
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
-  public BoardPieces movePawn(PlayerId playerId, Coordinate destination) {
+  public BoardPieces movePawn(QuoridorPlayer quoridorPlayer, Coordinate destination) {
     var newPiecesMap = new HashMap<>(pieces);
     var newPawnLocations = new HashMap<>(pawnLocations);
-    var originalPawnLocation = getPawnLocation(playerId);
+    var originalPawnLocation = getPawnLocation(quoridorPlayer);
     var originalPiece = pieces.get(originalPawnLocation);
 
     newPiecesMap.remove(originalPawnLocation);
     newPiecesMap.put(destination, originalPiece);
-    newPawnLocations.put(playerId, destination);
+    newPawnLocations.put(quoridorPlayer, destination);
 
     return new BoardPieces(newPiecesMap, newPawnLocations, gridSize);
   }
@@ -87,16 +106,19 @@ public class BoardPieces {
   /**
    * Places a wall.
    *
-   * @param playerId The owner of the wall to place
+   * @param quoridorPlayer The owner of the wall to place
    * @param c1 First coordinate of the wall
    * @param c2 Second coordinate of the wall
    * @return The BoardPieces after the move
    */
-  public BoardPieces placeWall(PlayerId playerId, Coordinate c1, Coordinate vertex, Coordinate c2) {
+  public BoardPieces placeWall(QuoridorPlayer quoridorPlayer,
+      Coordinate c1,
+      Coordinate vertex,
+      Coordinate c2) {
     var newPiecesMap = new HashMap<>(pieces);
-    newPiecesMap.put(c1, new WallPiece(playerId));
-    newPiecesMap.put(vertex, new WallPiece(playerId));
-    newPiecesMap.put(c2, new WallPiece(playerId));
+    newPiecesMap.put(c1, new WallPiece(quoridorPlayer));
+    newPiecesMap.put(vertex, new WallPiece(quoridorPlayer));
+    newPiecesMap.put(c2, new WallPiece(quoridorPlayer));
 
     return new BoardPieces(newPiecesMap, pawnLocations, gridSize);
   }

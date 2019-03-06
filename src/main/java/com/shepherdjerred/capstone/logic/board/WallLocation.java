@@ -8,14 +8,14 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class WallPieceLocation {
+public class WallLocation {
 
   private final Coordinate firstCoordinate;
   private final Coordinate vertex;
   private final Coordinate secondCoordinate;
 
 
-  public WallPieceLocation(Coordinate firstCoordinate,
+  public WallLocation(Coordinate firstCoordinate,
       Coordinate vertex,
       Coordinate secondCoordinate) {
     Preconditions.checkNotNull(firstCoordinate);

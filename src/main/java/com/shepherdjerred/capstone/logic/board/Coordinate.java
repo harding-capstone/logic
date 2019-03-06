@@ -60,6 +60,22 @@ public class Coordinate {
     return diff == 1;
   }
 
+  public boolean isCardinalTo(Coordinate coordinate) {
+    return areCoordinatesCardinal(this, coordinate);
+  }
+
+  public boolean isDiagonalTo(Coordinate coordinate) {
+    return areCoordinatesDiagonal(this, coordinate);
+  }
+
+  public Coordinate getCoordinateBetween(Coordinate coordinate) {
+    return calculateMidpoint(this, coordinate);
+  }
+
+  public int getManhattanDistanceto(Coordinate coordinate) {
+    return calculateManhattanDistance(this, coordinate);
+  }
+
   public static boolean areCoordinatesCardinal(Coordinate left, Coordinate right) {
     return (left.x != right.x && left.y == right.y)
         || (left.x == right.x && left.y != right.y);
@@ -76,6 +92,9 @@ public class Coordinate {
   public static Coordinate calculateMidpoint(Coordinate left, Coordinate right) {
     if (areCoordinatesDiagonal(left, right)) {
       throw new IllegalArgumentException("Cannot return a midpoint between diagonal coordinates");
+    }
+    if (calculateManhattanDistance(left, right) / 2 != 1) {
+      throw new IllegalArgumentException("Distance between points must be odd");
     }
     int x = (left.x + right.x) / 2;
     int y = (left.y + right.y) / 2;

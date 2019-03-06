@@ -6,7 +6,7 @@ import com.shepherdjerred.capstone.logic.board.Coordinate;
 /**
  * Creates a matrix of BoardCells based on board settings.
  */
-public class BoardLayoutBoardCellsInitializer {
+public class BoardLayoutInitializer {
 
   /**
    * Creates a matrix of BoardCells. Used for constructor initialization.

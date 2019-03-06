@@ -4,7 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
-import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutInitializer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,7 +15,7 @@ public class BoardLayoutTest {
   @Mock
   private BoardSettings boardSettings;
   @Mock
-  private BoardLayoutBoardCellsInitializer initializer;
+  private BoardLayoutInitializer initializer;
 
   @Before
   public void setup() {

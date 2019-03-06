@@ -2,7 +2,7 @@ package com.shepherdjerred.capstone.logic.board.search;
 
 import static org.junit.Assert.assertTrue;
 
-import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
@@ -14,7 +14,7 @@ public class AStarBoardSearchTest {
 
   @Test
   public void hasPathToAnyDestination_returnTrue_whenFindingPathTwoDifferentDiagonalSidesOnOpenBoard() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
     var search = new AStarBoardSearch();
     var src = new Coordinate(0, 0);
     Set<Coordinate> dest = new HashSet<>();
@@ -25,7 +25,7 @@ public class AStarBoardSearchTest {
 
   @Test
   public void hasPathToAnyDestination_returnTrue_whenFindingPathTwoDifferentCardinalSidesOnOpenBoard() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
     var search = new AStarBoardSearch();
     var src = new Coordinate(8, 0);
     Set<Coordinate> dest = new HashSet<>();

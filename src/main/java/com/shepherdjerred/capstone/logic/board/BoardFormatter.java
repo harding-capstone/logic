@@ -1,13 +1,11 @@
-package com.shepherdjerred.capstone.logic.util;
+package com.shepherdjerred.capstone.logic.board;
 
-import com.shepherdjerred.capstone.logic.board.Board;
-import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.NullPiece;
 
 public class BoardFormatter {
 
-  public String boardToString(Board board) {
-    var gridSize = board.getBoardSettings().getGridSize();
+  public String boardToString(QuoridorBoard board) {
+    var gridSize = board.getGridSize();
 
     var sb = new StringBuilder();
     for (int y = gridSize - 1; y >= -4; y--) {
@@ -59,7 +57,7 @@ public class BoardFormatter {
     return sb.toString();
   }
 
-  public char coordinateToChar(Board board, Coordinate coordinate) {
+  private char coordinateToChar(QuoridorBoard board, Coordinate coordinate) {
     var cell = board.getBoardCell(coordinate).toChar();
     var piece = board.getPiece(coordinate);
     return piece == NullPiece.INSTANCE ? cell : piece.toChar();

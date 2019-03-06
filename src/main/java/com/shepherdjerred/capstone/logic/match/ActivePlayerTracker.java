@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,10 +11,10 @@ import lombok.ToString;
 public class ActivePlayerTracker {
 
   @Getter
-  private final PlayerId activePlayer;
+  private final QuoridorPlayer activePlayer;
   private final PlayerCount playerCount;
 
-  public PlayerId getNextActivePlayerId() {
+  public QuoridorPlayer getNextActivePlayerId() {
     return getNextActivePlayerTracker().getActivePlayer();
   }
 
@@ -22,11 +22,11 @@ public class ActivePlayerTracker {
     var activePlayerInt = activePlayer.toInt() + 1;
     var playerCountInt = playerCount.toInt();
 
-    PlayerId nextPlayer;
+    QuoridorPlayer nextPlayer;
     if (activePlayerInt > playerCountInt) {
-      nextPlayer = PlayerId.ONE;
+      nextPlayer = QuoridorPlayer.ONE;
     } else {
-      nextPlayer = PlayerId.fromInt(activePlayerInt);
+      nextPlayer = QuoridorPlayer.fromInt(activePlayerInt);
     }
 
     return new ActivePlayerTracker(nextPlayer, playerCount);

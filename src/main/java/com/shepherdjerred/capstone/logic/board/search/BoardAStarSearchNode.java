@@ -2,40 +2,42 @@ package com.shepherdjerred.capstone.logic.board.search;
 
 import com.github.bentorfs.ai.common.TreeNode;
 import com.github.bentorfs.ai.search.asearch.AStarSearchNode;
-import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @ToString(exclude = {"board", "goals"})
-@EqualsAndHashCode
 @AllArgsConstructor
 public class BoardAStarSearchNode extends AStarSearchNode {
 
   private final int cost;
-  private final Board board;
+  private final QuoridorBoard board;
   private final Coordinate location;
   private final Set<Coordinate> goals;
   private final BoardAStarSearchNode parent;
+  private final int depth;
+  private int numberOfChildren;
 
   @Override
   public List<TreeNode> getChildNodes() {
-    return board.getAdjacentPawnSpaces(location)
+    List<TreeNode> children = board.getPawnSpacesAdjacentToPawnSpace(location)
         .stream()
 //        .peek(log::info)
         .filter(coordinate -> {
           var midpoint = Coordinate.calculateMidpoint(location, coordinate);
           return !board.hasWall(midpoint);
         })
-        .map(space -> new BoardAStarSearchNode(cost + 1, board, space, goals, this))
+        .map(space -> new BoardAStarSearchNode(cost + 1, board, space, goals, this, depth, 0))
 //        .peek(log::info)
         .collect(Collectors.toList());
+    this.numberOfChildren = children.size();
+    return children;
   }
 
   @Override
@@ -50,12 +52,12 @@ public class BoardAStarSearchNode extends AStarSearchNode {
 
   @Override
   public int getEstimatedCostToSolution() {
-//    return getDistanceToNearestGoal(location, goals);
-    if (isSolutionNode()) {
-      return 0;
-    } else {
-      return 1;
-    }
+    return getDistanceToNearestGoal(location, goals);
+//    if (isSolutionNode()) {
+//      return 0;
+//    } else {
+//      return 1;
+//    }
   }
 
   @Override

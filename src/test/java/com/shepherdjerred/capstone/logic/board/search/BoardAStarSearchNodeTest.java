@@ -2,12 +2,12 @@ package com.shepherdjerred.capstone.logic.board.search;
 
 import static org.junit.Assert.assertEquals;
 
-import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
+import com.shepherdjerred.capstone.logic.board.WallLocation;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.HashSet;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
@@ -17,48 +17,78 @@ public class BoardAStarSearchNodeTest {
 
   @Test
   public void getChildNodes_ReturnsTwoNodes_WhenAtBottomLeft() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
-    var node = new BoardAStarSearchNode(0, board, new Coordinate(0, 0), new HashSet<>(), null);
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
+    var node = new BoardAStarSearchNode(0,
+        board,
+        new Coordinate(0, 0),
+        new HashSet<>(),
+        null,
+        0,
+        0);
 
     assertEquals(2, node.getChildNodes().size());
   }
 
   @Test
   public void getChildNodes_ReturnsTwoNodes_WhenAtBottomRight() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
-    var node = new BoardAStarSearchNode(0, board, new Coordinate(16, 0), new HashSet<>(), null);
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
+    var node = new BoardAStarSearchNode(0,
+        board,
+        new Coordinate(16, 0),
+        new HashSet<>(),
+        null,
+        0,
+        0);
 
     assertEquals(2, node.getChildNodes().size());
   }
 
   @Test
   public void getChildNodes_ReturnsTwoNodes_WhenAtTopLeft() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
-    var node = new BoardAStarSearchNode(0, board, new Coordinate(0, 16), new HashSet<>(), null);
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
+    var node = new BoardAStarSearchNode(0,
+        board,
+        new Coordinate(0, 16),
+        new HashSet<>(),
+        null,
+        0,
+        0);
 
     assertEquals(2, node.getChildNodes().size());
   }
 
   @Test
   public void getChildNodes_ReturnsTwoNodes_WhenAtTopRight() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
-    var node = new BoardAStarSearchNode(0, board, new Coordinate(16, 16), new HashSet<>(), null);
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
+    var node = new BoardAStarSearchNode(0,
+        board,
+        new Coordinate(16, 16),
+        new HashSet<>(),
+        null,
+        0,
+        0);
 
     assertEquals(2, node.getChildNodes().size());
   }
 
   @Test
   public void getChildNodes_ReturnsTwoNodes_WhenAtBottomMiddleAndBlockByWallAtTop() {
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
-    var wallOne = new WallPieceLocation(new Coordinate(8, 1),
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
+    var wallOne = new WallLocation(new Coordinate(8, 1),
         new Coordinate(9, 1),
         new Coordinate(10, 1));
-    var wallTwo = new WallPieceLocation(new Coordinate(6, 1),
+    var wallTwo = new WallLocation(new Coordinate(6, 1),
         new Coordinate(5, 1),
         new Coordinate(4, 1));
-    board = board.placeWall(PlayerId.ONE, wallOne);
-    board = board.placeWall(PlayerId.ONE, wallTwo);
-    var node = new BoardAStarSearchNode(0, board, new Coordinate(16, 16), new HashSet<>(), null);
+    board = board.placeWall(QuoridorPlayer.ONE, wallOne);
+    board = board.placeWall(QuoridorPlayer.ONE, wallTwo);
+    var node = new BoardAStarSearchNode(0,
+        board,
+        new Coordinate(16, 16),
+        new HashSet<>(),
+        null,
+        0,
+        0);
 
     assertEquals(2, node.getChildNodes().size());
   }

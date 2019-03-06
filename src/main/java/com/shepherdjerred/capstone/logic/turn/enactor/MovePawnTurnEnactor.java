@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
-import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 
@@ -14,7 +14,7 @@ public class MovePawnTurnEnactor implements TurnEnactor {
    * @return The board state transformed by the turn
    */
   @Override
-  public Board enactTurn(Turn turn, Board board) {
+  public QuoridorBoard enactTurn(Turn turn, QuoridorBoard board) {
     if (turn instanceof MovePawnTurn) {
       return enactMovePawnTurn((MovePawnTurn) turn, board);
     } else {
@@ -22,7 +22,7 @@ public class MovePawnTurnEnactor implements TurnEnactor {
     }
   }
 
-  private Board enactMovePawnTurn(MovePawnTurn turn, Board board) {
+  private QuoridorBoard enactMovePawnTurn(MovePawnTurn turn, QuoridorBoard board) {
     return board.movePawn(turn.getCauser(), turn.getDestination());
   }
 }

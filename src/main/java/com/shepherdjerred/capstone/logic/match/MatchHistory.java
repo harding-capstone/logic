@@ -4,28 +4,28 @@ import java.util.Stack;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-// TODO store turns
 @ToString
 @EqualsAndHashCode
 public class MatchHistory {
-  private final Stack<Match> matchHistory;
+
+  private final Stack<MatchHistoryEntry> matchHistory;
 
   public MatchHistory() {
     this.matchHistory = new Stack<>();
   }
 
-  public MatchHistory(Stack<Match> matchHistory) {
+  private MatchHistory(Stack<MatchHistoryEntry> matchHistory) {
     this.matchHistory = matchHistory;
   }
 
-  public MatchHistory push(Match match) {
-    Stack<Match> newMatchHistory = new Stack<>();
+  public MatchHistory push(MatchHistoryEntry entry) {
+    var newMatchHistory = new Stack<MatchHistoryEntry>();
     newMatchHistory.addAll(matchHistory);
-    newMatchHistory.push(match);
+    newMatchHistory.push(entry);
     return new MatchHistory(newMatchHistory);
   }
 
-  public Match pop() {
+  public MatchHistoryEntry pop() {
     return matchHistory.pop();
   }
 

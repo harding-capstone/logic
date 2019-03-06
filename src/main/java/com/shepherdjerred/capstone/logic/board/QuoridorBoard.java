@@ -6,57 +6,78 @@ import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformat
 import com.shepherdjerred.capstone.logic.board.exception.InvalidBoardTransformationException.Reason;
 import com.shepherdjerred.capstone.logic.board.layout.BoardCell;
 import com.shepherdjerred.capstone.logic.board.layout.BoardLayout;
-import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutBoardCellsInitializer;
+import com.shepherdjerred.capstone.logic.board.layout.BoardLayoutInitializer;
+import com.shepherdjerred.capstone.logic.board.pieces.BoardPieces;
+import com.shepherdjerred.capstone.logic.board.pieces.BoardPiecesInitializer;
 import com.shepherdjerred.capstone.logic.piece.Piece;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.PlayerCount;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 
 
 /**
- * Composes BoardLayout and BoardPieces to represent a Quoridor Board.
+ * Composes BoardLayout and BoardPieces to represent a Quoridor QuoridorBoard.
  */
-// TODO this is a hybrid data structure/object. should be refactored.
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Board {
+public class QuoridorBoard {
 
   private final BoardLayout boardLayout;
   private final BoardPieces boardPieces;
-  @Getter
   private final BoardSettings boardSettings;
 
-  public static Board from(BoardSettings boardSettings) {
+  public static QuoridorBoard from(BoardSettings boardSettings) {
     return from(boardSettings,
-        new BoardLayoutBoardCellsInitializer(),
+        new BoardLayoutInitializer(),
         new BoardPiecesInitializer());
   }
 
   /**
-   * Creates a new Board.
+   * Creates a new QuoridorBoard.
    */
-  public static Board from(BoardSettings boardSettings,
-      BoardLayoutBoardCellsInitializer boardLayoutBoardCellsInitializer,
+  public static QuoridorBoard from(BoardSettings boardSettings,
+      BoardLayoutInitializer boardLayoutInitializer,
       BoardPiecesInitializer boardPiecesInitializer) {
-    var layout = BoardLayout.from(boardSettings, boardLayoutBoardCellsInitializer);
+    var layout = BoardLayout.from(boardSettings, boardLayoutInitializer);
     var pieces = BoardPieces.from(boardSettings, boardPiecesInitializer);
-    return new Board(layout, pieces, boardSettings);
+    return new QuoridorBoard(layout, pieces, boardSettings);
   }
 
   /**
-   * Gets the location of the playerId's pawn.
-   *
-   * @param playerId The playerId to get the pawn Coordinates of
-   * @return The coordinate of the playerId's pawn
+   * Returns the number of pawn spaces and wall spaces on each axis of the board.
    */
-  public Coordinate getPawnLocation(PlayerId playerId) {
-    return boardPieces.getPawnLocation(playerId);
+  public int getGridSize() {
+    return boardSettings.getGridSize();
+  }
+
+  /**
+   * Returns how many player pawns are on this board.
+   */
+  public PlayerCount getPlayerCount() {
+    return boardSettings.getPlayerCount();
+  }
+
+  /**
+   * Returns the number of pawn spaces on each axis of the board.
+   */
+  public int getBoardSize() {
+    return boardSettings.getBoardSize();
+  }
+
+  /**
+   * Gets the location of the quoridorPlayer's pawn.
+   *
+   * @param quoridorPlayer The quoridorPlayer to get the pawn Coordinates of
+   * @return The coordinate of the quoridorPlayer's pawn
+   */
+  public Coordinate getPawnLocation(QuoridorPlayer quoridorPlayer) {
+    return boardPieces.getPawnLocation(quoridorPlayer);
   }
 
   public Set<Coordinate> getPieceLocations() {
@@ -71,17 +92,17 @@ public class Board {
     return boardPieces.getWallLocations();
   }
 
-  public Set<Coordinate> getAdjacentPawnSpaces(Coordinate coordinate) {
+  public Set<Coordinate> getPawnSpacesAdjacentToPawnSpace(Coordinate coordinate) {
     Preconditions.checkArgument(isPawnBoardCell(coordinate));
-    return getValidCardinalCoordinatesInRadius(coordinate, 2);
+    return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, 2);
   }
 
-  public Set<Coordinate> getAdjacentWallSpaces(Coordinate coordinate) {
+  public Set<Coordinate> getWallCellsAdjacentToPawnSpace(Coordinate coordinate) {
     Preconditions.checkArgument(isPawnBoardCell(coordinate));
-    return getValidCardinalCoordinatesInRadius(coordinate, 1);
+    return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, 1);
   }
 
-  private Set<Coordinate> getValidCardinalCoordinatesInRadius(Coordinate origin, int range) {
+  private Set<Coordinate> getValidCardinalCoordinatesThatAreDistanceAway(Coordinate origin, int range) {
     Set<Coordinate> spaces = new HashSet<>();
     var gridSize = boardSettings.getGridSize();
     int x = origin.getX();
@@ -109,16 +130,17 @@ public class Board {
   /**
    * Moves a pawn.
    *
-   * @param playerId The owner of the pawn to move
+   * @param quoridorPlayer The owner of the pawn to move
    * @param destination The new location of the pawn
    * @return The BoardPieces after the move
    */
   // TODO better validation
   // TODO extract validation
-  public Board movePawn(PlayerId playerId, Coordinate destination) {
+  public QuoridorBoard movePawn(QuoridorPlayer quoridorPlayer, Coordinate destination) {
     if (isCoordinateInvalid(destination)) {
       throw new CoordinateOutOfBoundsException(destination);
     }
+
     if (!isPawnBoardCell(destination)) {
       throw new InvalidBoardTransformationException(Reason.DESTINATION_NOT_PAWN_CELL, destination);
     }
@@ -127,8 +149,8 @@ public class Board {
       throw new InvalidBoardTransformationException(Reason.DESTINATION_NOT_EMPTY, destination);
     }
 
-    var newBoardPieces = boardPieces.movePawn(playerId, destination);
-    return new Board(boardLayout, newBoardPieces, boardSettings);
+    var newBoardPieces = boardPieces.movePawn(quoridorPlayer, destination);
+    return new QuoridorBoard(boardLayout, newBoardPieces, boardSettings);
   }
 
   /**
@@ -136,7 +158,7 @@ public class Board {
    */
   // TODO better validation
   // TODO extract validation
-  public Board placeWall(PlayerId playerId, WallPieceLocation location) {
+  public QuoridorBoard placeWall(QuoridorPlayer quoridorPlayer, WallLocation location) {
     var c1 = location.getFirstCoordinate();
     var vertex = location.getVertex();
     var c2 = location.getSecondCoordinate();
@@ -187,8 +209,8 @@ public class Board {
       throw new InvalidBoardTransformationException(reason, coordinate);
     }
 
-    var newBoardPieces = boardPieces.placeWall(playerId, c1, vertex, c2);
-    return new Board(boardLayout, newBoardPieces, boardSettings);
+    var newBoardPieces = boardPieces.placeWall(quoridorPlayer, c1, vertex, c2);
+    return new QuoridorBoard(boardLayout, newBoardPieces, boardSettings);
   }
 
   public BoardCell getBoardCell(Coordinate coordinate) {

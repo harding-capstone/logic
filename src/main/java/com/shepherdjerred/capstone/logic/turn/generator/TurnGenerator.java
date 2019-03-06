@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.generator;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
+import com.shepherdjerred.capstone.logic.board.WallLocation;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.turn.JumpPawnDiagonalTurn;
 import com.shepherdjerred.capstone.logic.turn.JumpPawnStraightTurn;
@@ -166,7 +166,7 @@ public class TurnGenerator {
     Set<PlaceWallTurn> turns = new HashSet<>();
     var player = match.getActivePlayerId();
 
-    var gridSize = match.getBoard().getBoardSettings().getGridSize();
+    var gridSize = match.getBoard().getGridSize();
     for (int x = 0; x < gridSize - 1; x++) {
       for (int y = 0; y < gridSize - 1; y++) {
         // Vertical walls
@@ -175,7 +175,7 @@ public class TurnGenerator {
           var v = new Coordinate(x, y + 1);
           var c2 = new Coordinate(x, y + 2);
 
-          var wallLocation = new WallPieceLocation(c1, v, c2);
+          var wallLocation = new WallLocation(c1, v, c2);
           var turn = new PlaceWallTurn(player, wallLocation);
           turns.add(turn);
         }
@@ -185,7 +185,7 @@ public class TurnGenerator {
           var v = new Coordinate(x + 1, y);
           var c2 = new Coordinate(x + 2, y);
 
-          var wallLocation = new WallPieceLocation(c1, v, c2);
+          var wallLocation = new WallLocation(c1, v, c2);
           var turn = new PlaceWallTurn(player, wallLocation);
           turns.add(turn);
         }

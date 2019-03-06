@@ -1,7 +1,7 @@
-package com.shepherdjerred.capstone.logic.util;
+package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.match.Match;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.board.BoardFormatter;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class MatchFormatter {
   public String matchToString(Match match) {
     var activePlayer = match.getActivePlayerId();
     var board = new BoardFormatter().boardToString(match.getBoard());
-    var turn = match.getMatchHistory().getSize();
+    var turn = match.getMatchHistory().getSize() + 1;
     var walls = getPlayerWallsString(match);
     var victor = match.getMatchStatus().getVictor();
     return String.format("%sTurn #%d\nActive Player: %s\n\nWalls Remaining\n%s\nVictor: %s\n",
@@ -33,7 +33,7 @@ public class MatchFormatter {
     var players = match.getMatchSettings().getPlayerCount().toInt();
     StringBuilder sb = new StringBuilder();
     for (int i = 1; i <= players; i++) {
-      var player = PlayerId.fromInt(i);
+      var player = QuoridorPlayer.fromInt(i);
       var walls = match.getWallsLeft(player);
       sb.append(String.format("Player %s: %d\n", player, walls));
     }

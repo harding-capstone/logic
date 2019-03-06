@@ -1,7 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn;
 
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.board.WallLocation;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PlaceWallTurn implements Turn {
 
-  private final PlayerId causer;
+  private final QuoridorPlayer causer;
 
-  private final WallPieceLocation location;
+  private final WallLocation location;
 }
