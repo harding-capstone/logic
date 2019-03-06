@@ -5,7 +5,9 @@ import com.shepherdjerred.capstone.logic.turn.JumpPawnStraightTurn;
 import com.shepherdjerred.capstone.logic.turn.NormalMovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 public class TurnValidatorFactory {
 
   public <T extends Turn> TurnValidator<T> getValidator(T turn) {

@@ -4,7 +4,9 @@ import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.turn.NormalMovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 @AllArgsConstructor
 public class MatchStatusUpdater {
 

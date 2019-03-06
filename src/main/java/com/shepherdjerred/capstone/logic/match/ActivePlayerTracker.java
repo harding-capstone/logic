@@ -3,10 +3,12 @@ package com.shepherdjerred.capstone.logic.match;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 public class ActivePlayerTracker {
 

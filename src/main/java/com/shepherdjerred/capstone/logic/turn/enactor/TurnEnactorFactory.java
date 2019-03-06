@@ -3,7 +3,9 @@ package com.shepherdjerred.capstone.logic.turn.enactor;
 import com.shepherdjerred.capstone.logic.turn.MovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 public class TurnEnactorFactory {
 
   public TurnEnactor getEnactor(Turn turn) {

@@ -1,0 +1,26 @@
+package com.shepherdjerred.capstone.logic.match.serialization;
+
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
+import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.match.MatchSettings;
+import com.shepherdjerred.capstone.logic.player.PlayerCount;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class MatchJsonSerializerTest {
+
+  @Test
+  public void test() throws IOException {
+    var originalMatch = Match.from(new MatchSettings(10, QuoridorPlayer.ONE, PlayerCount.TWO),
+        new BoardSettings(9, PlayerCount.TWO));
+
+    var serializer = new MatchJsonSerializer();
+
+    var bytes = serializer.toBytes(originalMatch);
+    var deserializedMatch = serializer.fromBytes(bytes);
+
+    Assert.assertEquals(originalMatch, deserializedMatch);
+  }
+}

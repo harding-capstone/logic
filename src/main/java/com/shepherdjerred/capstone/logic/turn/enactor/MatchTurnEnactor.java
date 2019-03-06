@@ -9,8 +9,10 @@ import com.shepherdjerred.capstone.logic.turn.exception.InvalidTurnException;
 import com.shepherdjerred.capstone.logic.turn.validator.MatchTurnValidator;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidatorFactory;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 // TODO this needs to be cleaned up
+@EqualsAndHashCode
 @AllArgsConstructor
 public class MatchTurnEnactor {
 
