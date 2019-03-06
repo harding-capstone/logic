@@ -3,6 +3,7 @@ module com.shepherdjerred.capstone.logic {
   requires com.google.common;
   requires org.apache.logging.log4j;
   requires ai.algorithms;
+  requires gson;
 
   exports com.shepherdjerred.capstone.logic.board;
   exports com.shepherdjerred.capstone.logic.board.exception;

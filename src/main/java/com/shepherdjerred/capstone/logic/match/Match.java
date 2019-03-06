@@ -1,8 +1,11 @@
 package com.shepherdjerred.capstone.logic.match;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.shepherdjerred.capstone.logic.board.Board;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
+import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.player.PlayerId;
 import com.shepherdjerred.capstone.logic.turn.Turn;
 import com.shepherdjerred.capstone.logic.turn.enactor.MatchTurnEnactor;
@@ -72,6 +75,28 @@ public class Match {
     this.matchTurnEnactor = matchTurnEnactor;
   }
 
+  public Match(String json) {
+    GsonBuilder builder = getGsonBuilder();
+    Gson gson = builder.create();
+
+    Match newMatch = gson.fromJson(json, Match.class);
+
+    this.board = newMatch.board;
+    this.matchSettings = newMatch.matchSettings;
+    this.activePlayerTracker = newMatch.activePlayerTracker;
+    this.playerWallBank = newMatch.playerWallBank;
+    this.matchStatus = newMatch.matchStatus;
+    this.matchHistory = newMatch.matchHistory;
+    this.matchTurnEnactor = newMatch.matchTurnEnactor;
+  }
+
+  private GsonBuilder getGsonBuilder() {
+    GsonBuilder builder = new GsonBuilder();
+    builder.registerTypeAdapter(Piece.class, new MatchInterfaceAdapter());
+
+    return builder;
+  }
+
   /**
    * Processes a turn without validation. Use only with turns already validated against this Match.
    * Exists for performance
@@ -94,5 +119,12 @@ public class Match {
 
   public PlayerId getNextActivePlayerId() {
     return activePlayerTracker.getNextActivePlayerId();
+  }
+
+  public String toJson() {
+    GsonBuilder builder = getGsonBuilder();
+    Gson gson = builder.enableComplexMapKeySerialization().create();
+
+    return gson.toJson(this);
   }
 }
