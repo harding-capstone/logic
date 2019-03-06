@@ -8,7 +8,7 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 
 public class TurnValidatorFactory {
 
-  public TurnValidator getValidator(Turn turn) {
+  public <T extends Turn> TurnValidator<T> getValidator(T turn) {
     TurnValidator validator;
 
     if (turn instanceof PlaceWallTurn) {

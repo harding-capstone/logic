@@ -1,6 +1,6 @@
 package com.shepherdjerred.capstone.logic.match;
 
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,10 +12,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MatchStatus {
 
-  private final PlayerId victor;
+  private final QuoridorPlayer victor;
   private final Status status;
 
   public enum Status {
-    IN_PROGRESS, VICTORY
+    IN_PROGRESS, VICTORY, STALEMATE
   }
 }

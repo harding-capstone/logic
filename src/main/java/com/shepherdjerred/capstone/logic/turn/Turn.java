@@ -1,8 +1,8 @@
 package com.shepherdjerred.capstone.logic.turn;
 
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 
 public interface Turn {
 
-  PlayerId getCauser();
+  QuoridorPlayer getCauser();
 }

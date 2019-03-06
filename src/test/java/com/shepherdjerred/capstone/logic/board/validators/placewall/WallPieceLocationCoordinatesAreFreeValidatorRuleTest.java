@@ -2,13 +2,13 @@ package com.shepherdjerred.capstone.logic.board.validators.placewall;
 
 import static org.mockito.Mockito.when;
 
-import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import com.shepherdjerred.capstone.logic.board.BoardSettings;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.board.WallPieceLocation;
+import com.shepherdjerred.capstone.logic.board.WallLocation;
 import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.validator.TurnValidationResult.ErrorMessage;
 import com.shepherdjerred.capstone.logic.turn.validator.rules.placewall.WallPieceLocationCoordinatesAreFreeValidatorRule;
@@ -33,24 +33,24 @@ public class WallPieceLocationCoordinatesAreFreeValidatorRuleTest {
   @Test
   public void validate_returnsFalse_WhenACoordinateIsNotFree() {
     var validator = new WallPieceLocationCoordinatesAreFreeValidatorRule();
-    var board = Board.from(new BoardSettings(9, PlayerCount.TWO));
+    var board = QuoridorBoard.from(new BoardSettings(9, PlayerCount.TWO));
 
-    var wall = new WallPieceLocation(new Coordinate(8, 1),
+    var wall = new WallLocation(new Coordinate(8, 1),
         new Coordinate(7, 1),
         new Coordinate(6, 1));
-    var offsetWallOnLeft = new WallPieceLocation(new Coordinate(6, 1),
+    var offsetWallOnLeft = new WallLocation(new Coordinate(6, 1),
         new Coordinate(5, 1),
         new Coordinate(4, 1));
-    var offsetWallOnRight = new WallPieceLocation(new Coordinate(8, 1),
+    var offsetWallOnRight = new WallLocation(new Coordinate(8, 1),
         new Coordinate(9, 1),
         new Coordinate(10, 1));
 
-    board = board.placeWall(PlayerId.ONE, wall);
+    board = board.placeWall(QuoridorPlayer.ONE, wall);
     when(match.getBoard()).thenReturn(board);
 
-    var turnOne = new PlaceWallTurn(PlayerId.ONE, wall);
-    var turnTwo = new PlaceWallTurn(PlayerId.ONE, offsetWallOnLeft);
-    var turnThree = new PlaceWallTurn(PlayerId.ONE, offsetWallOnRight);
+    var turnOne = new PlaceWallTurn(QuoridorPlayer.ONE, wall);
+    var turnTwo = new PlaceWallTurn(QuoridorPlayer.ONE, offsetWallOnLeft);
+    var turnThree = new PlaceWallTurn(QuoridorPlayer.ONE, offsetWallOnRight);
 
     var resultOne = validator.validate(match, turnOne);
     var resultTwo = validator.validate(match, turnTwo);

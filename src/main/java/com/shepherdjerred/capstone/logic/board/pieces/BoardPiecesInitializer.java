@@ -1,35 +1,39 @@
-package com.shepherdjerred.capstone.logic.board;
+package com.shepherdjerred.capstone.logic.board.pieces;
 
+import com.shepherdjerred.capstone.logic.board.BoardSettings;
+import com.shepherdjerred.capstone.logic.board.Coordinate;
 import com.shepherdjerred.capstone.logic.piece.PawnPiece;
 import com.shepherdjerred.capstone.logic.piece.Piece;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO This class needs to be cleaned up
+/**
+ * Creates initial locations for pieces on a board.
+ */
 public class BoardPiecesInitializer {
 
   /**
    * Initialize pawn pieces for the players.
    */
-  public Map<PlayerId, Coordinate> initializePawnLocations(BoardSettings boardSettings) {
+  public Map<QuoridorPlayer, Coordinate> getInitialPawnLocations(BoardSettings boardSettings) {
     var gridSize = boardSettings.getGridSize();
 
-    Map<PlayerId, Coordinate> pawns = new HashMap<>();
+    Map<QuoridorPlayer, Coordinate> pawns = new HashMap<>();
 
-    pawns.put(PlayerId.ONE, getStartingPawnCoordinateForPlayerOne(gridSize));
-    pawns.put(PlayerId.TWO, getStartingPawnCoordinateForPlayerTwo(gridSize));
+    pawns.put(QuoridorPlayer.ONE, getStartingPawnCoordinateForPlayerOne(gridSize));
+    pawns.put(QuoridorPlayer.TWO, getStartingPawnCoordinateForPlayerTwo(gridSize));
 
     if (boardSettings.getPlayerCount() == PlayerCount.FOUR) {
-      pawns.put(PlayerId.THREE, getStartingPawnCoordinateForPlayerThree(gridSize));
-      pawns.put(PlayerId.FOUR, getStartingPawnCoordinateForPlayerFour(gridSize));
+      pawns.put(QuoridorPlayer.THREE, getStartingPawnCoordinateForPlayerThree(gridSize));
+      pawns.put(QuoridorPlayer.FOUR, getStartingPawnCoordinateForPlayerFour(gridSize));
     }
 
     return pawns;
   }
 
-  public Map<Coordinate, Piece> pawnLocationsToPieceLocations(Map<PlayerId, Coordinate> pawnLocations) {
+  public Map<Coordinate, Piece> convertPawnLocationsToPieceLocations(Map<QuoridorPlayer, Coordinate> pawnLocations) {
     Map<Coordinate, Piece> pieces = new HashMap<>();
     pawnLocations.forEach((player, coordinate) -> pieces.put(coordinate, new PawnPiece(player)));
     return pieces;

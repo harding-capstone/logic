@@ -3,7 +3,7 @@ package com.shepherdjerred.capstone.logic.match;
 import static org.junit.Assert.assertEquals;
 
 import com.shepherdjerred.capstone.logic.board.Coordinate;
-import com.shepherdjerred.capstone.logic.player.PlayerId;
+import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class PlayerGoalsTest {
   @Test
   public void getGoalsCoordinatesForPlayer_returnsGoalCoordinatesForPlayerOne_whenCalledWithPlayerOneAndGridSizeOf17() {
     var playerGoals = new PlayerGoals();
-    var actual = playerGoals.getGoalCoordinatesForPlayer(PlayerId.ONE, 17);
+    var actual = playerGoals.getGoalCoordinatesForPlayer(QuoridorPlayer.ONE, 17);
     Set<Coordinate> expected = new HashSet<>();
     expected.add(new Coordinate(0, 16));
     expected.add(new Coordinate(2, 16));
@@ -31,7 +31,7 @@ public class PlayerGoalsTest {
   @Test
   public void getGoalsCoordinatesForPlayer_returnsGoalCoordinatesForPlayerTwo_whenCalledWithPlayerTwoAndGridSizeOf17() {
     var playerGoals = new PlayerGoals();
-    var actual = playerGoals.getGoalCoordinatesForPlayer(PlayerId.TWO, 17);
+    var actual = playerGoals.getGoalCoordinatesForPlayer(QuoridorPlayer.TWO, 17);
     Set<Coordinate> expected = new HashSet<>();
     expected.add(new Coordinate(0, 0));
     expected.add(new Coordinate(2, 0));
@@ -49,7 +49,7 @@ public class PlayerGoalsTest {
   @Test
   public void getGoalsCoordinatesForPlayer_returnsGoalCoordinatesForPlayerThree_whenCalledWithPlayerThreeAndGridSizeOf17() {
     var playerGoals = new PlayerGoals();
-    var actual = playerGoals.getGoalCoordinatesForPlayer(PlayerId.THREE, 17);
+    var actual = playerGoals.getGoalCoordinatesForPlayer(QuoridorPlayer.THREE, 17);
     Set<Coordinate> expected = new HashSet<>();
     expected.add(new Coordinate(16, 0));
     expected.add(new Coordinate(16, 2));
@@ -67,7 +67,7 @@ public class PlayerGoalsTest {
   @Test
   public void getGoalsCoordinatesForPlayer_returnsGoalCoordinatesForPlayerFour_whenCalledWithPlayerForAndGridSizeOf17() {
     var playerGoals = new PlayerGoals();
-    var actual = playerGoals.getGoalCoordinatesForPlayer(PlayerId.FOUR, 17);
+    var actual = playerGoals.getGoalCoordinatesForPlayer(QuoridorPlayer.FOUR, 17);
     Set<Coordinate> expected = new HashSet<>();
     expected.add(new Coordinate(0, 0));
     expected.add(new Coordinate(0, 2));

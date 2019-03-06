@@ -1,21 +1,21 @@
 package com.shepherdjerred.capstone.logic.board.search;
 
 import com.github.bentorfs.ai.search.asearch.AStarSearchNode;
-import com.shepherdjerred.capstone.logic.board.Board;
+import com.shepherdjerred.capstone.logic.board.QuoridorBoard;
 import com.shepherdjerred.capstone.logic.board.Coordinate;
 import java.util.Set;
 
 public interface BoardSearch {
 
-  boolean hasPathToDestination(Board board, Coordinate source, Coordinate destination);
+  boolean hasPathToDestination(QuoridorBoard board, Coordinate source, Coordinate destination);
 
-  boolean hasPathToAnyDestination(Board board, Coordinate source, Set<Coordinate> destinations);
+  boolean hasPathToAnyDestination(QuoridorBoard board, Coordinate source, Set<Coordinate> destinations);
 
-  int getShortestPathToDestination(Board board, Coordinate source, Coordinate destination);
+  int getShortestPathToDestination(QuoridorBoard board, Coordinate source, Coordinate destination);
 
-  int getShortestPathToAnyDestination(Board board, Coordinate source, Set<Coordinate> destinations);
+  int getShortestPathToAnyDestination(QuoridorBoard board, Coordinate source, Set<Coordinate> destinations);
 
-  AStarSearchNode getPathToDestination(Board board, Coordinate source, Coordinate destination);
+  AStarSearchNode getPathToDestination(QuoridorBoard board, Coordinate source, Coordinate destination);
 
-  AStarSearchNode getPathToAnyDestination(Board board, Coordinate source, Set<Coordinate> destination);
+  AStarSearchNode getPathToAnyDestination(QuoridorBoard board, Coordinate source, Set<Coordinate> destination);
 }

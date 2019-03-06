@@ -1,6 +1,7 @@
 package com.shepherdjerred.capstone.logic.turn.enactor;
 
 import com.shepherdjerred.capstone.logic.match.Match;
+import com.shepherdjerred.capstone.logic.match.MatchHistoryEntry;
 import com.shepherdjerred.capstone.logic.match.MatchStatusUpdater;
 import com.shepherdjerred.capstone.logic.turn.PlaceWallTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
@@ -40,13 +41,13 @@ public class MatchTurnEnactor {
     var newMatchStatus = matchStatusUpdater.updateMatchStatus(turn, match);
 
     // TODO I think this would be better to do in the turn specific handler, but I'm not sure how that can be done well
-    var newWallPool = match.getPlayerWallBank();
+    var newWallPool = match.getWallBank();
     if (turn instanceof PlaceWallTurn) {
       newWallPool = newWallPool.takeWall(turn.getCauser());
     }
 
     var matchHistory = match.getMatchHistory();
-    var newHistory = matchHistory.push(match);
+    var newHistory = matchHistory.push(new MatchHistoryEntry(match, turn));
 
     var matchSettings = match.getMatchSettings();
 
