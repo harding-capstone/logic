@@ -13,6 +13,11 @@ public class WallPieceLocationVertexIsFreeValidatorRule implements ValidatorRule
     var wallLocation = turn.getLocation();
     var vertex = wallLocation.getVertex();
     var board = match.getBoard();
+
+    if (board.isCoordinateInvalid(vertex)) {
+      return new TurnValidationResult(ErrorMessage.VALIDATOR_FAILED);
+    }
+
     if (board.hasWall(vertex)) {
       return new TurnValidationResult(ErrorMessage.VERTEX_NOT_FREE);
     } else {

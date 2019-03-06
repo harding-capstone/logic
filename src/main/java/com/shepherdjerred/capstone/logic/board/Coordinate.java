@@ -72,7 +72,7 @@ public class Coordinate {
     return calculateMidpoint(this, coordinate);
   }
 
-  public int getManhattanDistanceto(Coordinate coordinate) {
+  public int getManhattanDistanceTo(Coordinate coordinate) {
     return calculateManhattanDistance(this, coordinate);
   }
 
