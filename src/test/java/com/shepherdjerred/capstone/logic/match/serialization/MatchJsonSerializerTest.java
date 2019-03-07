@@ -5,14 +5,13 @@ import com.shepherdjerred.capstone.logic.match.Match;
 import com.shepherdjerred.capstone.logic.match.MatchSettings;
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class MatchJsonSerializerTest {
 
   @Test
-  public void test() throws IOException {
+  public void test() {
     var originalMatch = Match.from(new MatchSettings(10, QuoridorPlayer.ONE, PlayerCount.TWO),
         new BoardSettings(9, PlayerCount.TWO));
 
