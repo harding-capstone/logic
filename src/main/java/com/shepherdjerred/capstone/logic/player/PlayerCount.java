@@ -1,8 +1,5 @@
 package com.shepherdjerred.capstone.logic.player;
 
-import lombok.ToString;
-
-@ToString
 public enum PlayerCount {
   TWO, FOUR;
 

@@ -7,7 +7,7 @@ import com.shepherdjerred.capstone.logic.turn.Turn;
 public class PlaceWallTurnEnactor implements TurnEnactor {
 
   /**
-   * Takes the steps to transform a given board state by the parameters in a turn
+   * Takes the steps to transform a given board state by the parameters in a turn.
    *
    * @param turn The turn to use when transforming the board
    * @param board The board state
