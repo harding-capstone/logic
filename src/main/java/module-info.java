@@ -12,6 +12,7 @@ module com.shepherdjerred.capstone.logic {
   exports com.shepherdjerred.capstone.logic.player;
   exports com.shepherdjerred.capstone.logic.player.exception;
   exports com.shepherdjerred.capstone.logic.match;
+  exports com.shepherdjerred.capstone.logic.match.serialization;
   exports com.shepherdjerred.capstone.logic.turn;
   exports com.shepherdjerred.capstone.logic.turn.notation;
   exports com.shepherdjerred.capstone.logic.turn.validator;
@@ -20,4 +21,5 @@ module com.shepherdjerred.capstone.logic {
   exports com.shepherdjerred.capstone.logic.turn.generator;
   exports com.shepherdjerred.capstone.logic.board.search;
   exports com.shepherdjerred.capstone.logic.util;
+  exports com.shepherdjerred.capstone.logic.serialization;
 }
