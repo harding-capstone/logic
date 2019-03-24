@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 
@@ -18,8 +19,10 @@ public class BoardAStarSearchNode extends AStarSearchNode {
 
   private final int cost;
   private final QuoridorBoard board;
+  @Getter
   private final Coordinate location;
   private final Set<Coordinate> goals;
+  @Getter
   private final BoardAStarSearchNode parent;
   private final int depth;
   private int numberOfChildren;
