@@ -3,7 +3,6 @@ package com.shepherdjerred.capstone.logic.match;
 import com.shepherdjerred.capstone.logic.match.MatchStatus.Status;
 import com.shepherdjerred.capstone.logic.turn.NormalMovePawnTurn;
 import com.shepherdjerred.capstone.logic.turn.Turn;
-import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
@@ -25,9 +24,9 @@ public class MatchStatusUpdater {
         return new MatchStatus(player, Status.VICTORY);
       }
     }
-    if (match.getMatchHistory().getSize() >= 5 && doesStalemateRuleApply(match)) {
-      return new MatchStatus(QuoridorPlayer.NULL, Status.STALEMATE);
-    }
+//    if (match.getMatchHistory().getSize() >= 5 && doesStalemateRuleApply(match)) {
+//      return new MatchStatus(QuoridorPlayer.NULL, Status.STALEMATE);
+//    }
     return match.getMatchStatus();
   }
 

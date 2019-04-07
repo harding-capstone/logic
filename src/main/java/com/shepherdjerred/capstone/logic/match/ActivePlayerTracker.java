@@ -2,6 +2,7 @@ package com.shepherdjerred.capstone.logic.match;
 
 import com.shepherdjerred.capstone.logic.player.PlayerCount;
 import com.shepherdjerred.capstone.logic.player.QuoridorPlayer;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -36,6 +37,18 @@ public class ActivePlayerTracker {
   }
 
   public Set<QuoridorPlayer> getInactivePlayers() {
+    Set<QuoridorPlayer> inactivePlayers = new HashSet<>();
 
+    var activePlayerInt = activePlayer.toInt();
+    var currentPlayerCount = playerCount.toInt();
+
+    do{
+      if (currentPlayerCount != activePlayerInt){
+        inactivePlayers.add(QuoridorPlayer.fromInt(currentPlayerCount));
+      }
+      currentPlayerCount--;
+    }while(currentPlayerCount > 0);
+
+    return inactivePlayers;
   }
 }
