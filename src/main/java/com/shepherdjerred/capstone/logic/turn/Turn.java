@@ -6,3 +6,4 @@ public interface Turn {
 
   QuoridorPlayer getCauser();
 }
+//

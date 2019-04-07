@@ -97,9 +97,20 @@ public class QuoridorBoard {
     return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, 2);
   }
 
+  public Set<Coordinate> getPawnSpacesAdjacentToPawnSpace(Coordinate coordinate, int range) {
+    Preconditions.checkArgument(isPawnBoardCell(coordinate));
+    return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, range * 2);
+  }
+
   public Set<Coordinate> getWallCellsAdjacentToPawnSpace(Coordinate coordinate) {
     Preconditions.checkArgument(isPawnBoardCell(coordinate));
     return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, 1);
+  }
+
+  public Set<Coordinate> getWallCellsAdjacentToPawnSpace(Coordinate coordinate, int range) {
+    Preconditions.checkArgument(isPawnBoardCell(coordinate));
+    // TODO: challenge for Chase
+    return getValidCardinalCoordinatesThatAreDistanceAway(coordinate, (range * 2) - 1);
   }
 
   private Set<Coordinate> getValidCardinalCoordinatesThatAreDistanceAway(Coordinate origin, int range) {
